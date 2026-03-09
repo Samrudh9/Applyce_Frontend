@@ -1,45 +1,77 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Award, BarChart3, FileText, Plus, Target, Trash2, TrendingUp } from 'lucide-react';
+import { ArrowUpRight, Award, BarChart3, FileText, Loader2, Plus, Target, TrendingUp } from 'lucide-react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Link } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
-import { resumeHistory, scoreHistory } from '../data/mockData';
-
-const statCards = [
-  { icon: FileText, label: 'Resume Score', value: '88', trend: '+6%', trendUp: true, color: 'text-cyan' },
-  { icon: BarChart3, label: 'ATS Score', value: '86', trend: '+5%', trendUp: true, color: 'text-mint' },
-  { icon: Target, label: 'Top Career Match', value: 'ML Engineer', trend: '92% fit', trendUp: true, color: 'text-violet' },
-  { icon: Award, label: 'Best Grade', value: 'A', trend: 'Excellent', trendUp: true, color: 'text-success' },
-];
-
-const roadmapPhases = [
-  { name: 'Foundation', value: 85, color: 'from-success to-mint' },
-  { name: 'Intermediate', value: 62, color: 'from-cyan to-mint' },
-  { name: 'Advanced', value: 35, color: 'from-violet to-cyan' },
-  { name: 'Expert', value: 12, color: 'from-danger to-warning' },
-];
-
-const ownedSkills = ['Python', 'Flask', 'SQL', 'TensorFlow', 'Git', 'Communication'];
-const missingSkills = ['MLOps', 'System Design', 'Kubernetes', 'Distributed Systems'];
-
-const recommendations = [
-  { text: 'Add quantifiable achievements (e.g., "Improved model accuracy by 15%")', impact: 9.2 },
-  { text: 'Include missing ATS keywords: "MLOps", "Kubernetes", "CI/CD"', impact: 8.8 },
-  { text: 'Rewrite professional summary to target ML Engineer roles', impact: 8.5 },
-  { text: 'Add 2-3 relevant side projects with GitHub links', impact: 7.9 },
-];
+import { api } from '../lib/api';
+import type { DashboardStatsResponse, ScoreTrendsResponse } from '../types/api';
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState<DashboardStatsResponse | null>(null);
+  const [trends, setTrends] = useState<ScoreTrendsResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      api.dashboardStats().catch(() => null),
+      api.scoreTrends().catch(() => null),
+    ]).then(([s, t]) => {
+      if (s) setStats(s);
+      if (t) setTrends(t);
+    }).finally(() => setLoading(false));
+  }, []);
+
+  const chartData = trends?.has_data
+    ? trends.trends.dates.map((d, i) => ({
+      date: new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      resume: trends.trends.overall_scores[i],
+      ats: trends.trends.ats_scores[i],
+    }))
+    : [];
+
+  const summary = trends?.summary;
+
+  const statCards = [
+    { icon: FileText, label: 'Resume Score', value: summary?.latest_score?.toString() ?? '—', trend: summary ? `+${summary.total_improvement}` : '', color: 'text-mint-dark' },
+    { icon: BarChart3, label: 'Total Scans', value: summary?.total_scans?.toString() ?? '0', trend: '', color: 'text-purple' },
+    { icon: Target, label: 'Best Score', value: summary?.best_score?.toString() ?? '—', trend: '', color: 'text-emerald-600' },
+    { icon: Award, label: 'Average Score', value: summary?.average_score?.toFixed(0) ?? '—', trend: '', color: 'text-amber-600' },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[60vh] items-center justify-center">
+        <Loader2 className="animate-spin text-mint" size={40} />
+      </div>
+    );
+  }
+
+  const hasData = (stats && stats.total_resumes > 0) || (trends && trends.has_data);
+
+  if (!hasData) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-6 text-center">
+        <div className="rounded-2xl bg-slate-50 p-8 border border-border">
+          <FileText size={48} className="mx-auto text-mint" />
+          <h2 className="mt-4 font-display text-2xl font-bold text-text">No Data Yet</h2>
+          <p className="mt-2 max-w-md text-muted">Upload your first resume to see your dashboard come alive with scores, trends, and career insights.</p>
+          <Link to="/upload" className="mt-6 inline-block">
+            <Button><Plus size={16} /> Upload Resume</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
-      {/* Header */}
       <section className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-semibold">Welcome back, <span className="gradient-text">Username</span>!</h1>
+          <h1 className="font-display text-3xl font-bold text-text">Your <span className="gradient-text">Dashboard</span></h1>
           <p className="mt-1 text-muted">Here's your career progress overview.</p>
         </div>
         <Link to="/upload">
@@ -47,7 +79,6 @@ export default function DashboardPage() {
         </Link>
       </section>
 
-      {/* Stat cards */}
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {statCards.map((stat, i) => {
           const Icon = stat.icon;
@@ -58,10 +89,9 @@ export default function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.08, duration: 0.4 }}
             >
-              <Card className="relative overflow-hidden">
-                <div className="absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br from-amber/5 to-transparent" />
+              <Card>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-parchment/5">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-50">
                     <Icon size={20} className={stat.color} />
                   </div>
                   <div>
@@ -69,115 +99,87 @@ export default function DashboardPage() {
                     <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
                   </div>
                 </div>
-                <div className="mt-3 flex items-center gap-1 text-xs font-medium text-success">
-                  <TrendingUp size={12} /> {stat.trend}
-                </div>
+                {stat.trend && (
+                  <div className="mt-3 flex items-center gap-1 text-xs font-medium text-emerald-600">
+                    <TrendingUp size={12} /> {stat.trend}
+                  </div>
+                )}
               </Card>
             </motion.div>
           );
         })}
       </section>
 
-      {/* Chart */}
-      <Card>
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold">Score Progress</h2>
-          <div className="flex gap-4 text-xs">
-            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-amber" /> Resume Score</span>
-            <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-success" /> ATS Score</span>
-          </div>
-        </div>
-        <div className="h-72">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={scoreHistory}>
-              <CartesianGrid stroke="rgba(232, 224, 212, 0.04)" />
-              <XAxis dataKey="month" stroke="#7a7168" fontSize={12} tickLine={false} axisLine={false} />
-              <YAxis stroke="#7a7168" fontSize={12} tickLine={false} axisLine={false} domain={[50, 100]} />
-              <Tooltip
-                contentStyle={{ background: '#1c1a16', border: '1px solid rgba(232, 224, 212, 0.08)', borderRadius: '12px', fontSize: '12px' }}
-                itemStyle={{ color: '#e8e0d4' }}
-              />
-              <Line type="monotone" dataKey="resume" stroke="#f0a03c" strokeWidth={3} dot={{ r: 4, fill: '#f0a03c' }} activeDot={{ r: 6 }} />
-              <Line type="monotone" dataKey="ats" stroke="#6dba6a" strokeWidth={3} dot={{ r: 4, fill: '#6dba6a' }} activeDot={{ r: 6 }} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </Card>
-
-      {/* Resume History */}
-      <Card>
-        <h2 className="mb-4 text-lg font-bold">Resume History</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-parchment/[0.06] text-xs uppercase tracking-wider text-stone">
-                <th className="pb-3">Date</th><th className="pb-3">Filename</th><th className="pb-3">Resume</th><th className="pb-3">ATS</th><th className="pb-3">Career Match</th><th className="pb-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {resumeHistory.map((row) => (
-                <tr key={row.file} className="table-row-hover border-t border-parchment/[0.04] transition-colors">
-                  <td className="py-3.5 text-muted">{row.date}</td>
-                  <td className="font-medium">{row.file}</td>
-                  <td><Badge tone={row.resume >= 85 ? 'success' : row.resume >= 70 ? 'warning' : 'danger'}>{row.resume}</Badge></td>
-                  <td><Badge tone={row.ats >= 85 ? 'success' : row.ats >= 70 ? 'warning' : 'danger'}>{row.ats}</Badge></td>
-                  <td className="text-amber">{row.match}</td>
-                  <td>
-                    <div className="flex gap-2">
-                      <Link to="/result"><button className="text-amber hover:text-gold"><ArrowUpRight size={16} /></button></Link>
-                      <button className="text-muted hover:text-danger"><Trash2 size={16} /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-
-      {/* Two-column: Roadmap + Skills */}
-      <section className="grid gap-6 lg:grid-cols-2">
+      {chartData.length > 0 && (
         <Card>
-          <h3 className="mb-5 text-lg font-bold">Career Roadmap Progress</h3>
-          <div className="space-y-4">
-            {roadmapPhases.map((phase) => (
-              <ProgressBar key={phase.name} label={phase.name} value={phase.value} showValue colorClass={phase.color} />
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-text">Score Progress</h2>
+            <div className="flex gap-4 text-xs">
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-mint" /> Resume</span>
+              <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-purple" /> ATS</span>
+            </div>
+          </div>
+          <div className="h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid stroke="#e2e8f0" strokeDasharray="4 4" />
+                <XAxis dataKey="date" stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} />
+                <Tooltip
+                  contentStyle={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: '12px', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.06)' }}
+                  itemStyle={{ color: '#1e293b' }}
+                />
+                <Line type="monotone" dataKey="resume" stroke="#34d399" strokeWidth={3} dot={{ r: 4, fill: '#34d399' }} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="ats" stroke="#7c3aed" strokeWidth={3} dot={{ r: 4, fill: '#7c3aed' }} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+      )}
+
+      {stats && stats.score_history.length > 0 && (
+        <Card>
+          <h2 className="mb-4 text-lg font-bold text-text">Score History</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-xs uppercase tracking-wider text-muted">
+                  <th className="pb-3">Date</th><th className="pb-3">Score</th><th className="pb-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats.score_history.map((row) => (
+                  <tr key={row.date} className="table-row-hover border-t border-border/50 transition-colors">
+                    <td className="py-3.5 text-muted">{new Date(row.date).toLocaleDateString()}</td>
+                    <td><Badge tone={row.score >= 80 ? 'success' : row.score >= 60 ? 'warning' : 'danger'}>{row.score}</Badge></td>
+                    <td>
+                      <Link to="/result"><button className="text-mint-dark hover:text-mint"><ArrowUpRight size={16} /></button></Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
+
+      {stats && stats.skills_over_time.length > 0 && (
+        <Card>
+          <SectionHeading title="Skills Growth" subtitle="Number of detected skills over time." className="mb-4" />
+          <div className="flex items-end gap-2">
+            {stats.skills_over_time.map((entry) => (
+              <div key={entry.date} className="flex flex-col items-center gap-1">
+                <span className="text-xs font-bold text-mint-dark">{entry.count}</span>
+                <div
+                  className="w-10 rounded-t-lg bg-gradient-to-t from-mint/30 to-mint/60"
+                  style={{ height: `${Math.max(entry.count * 4, 8)}px` }}
+                />
+                <span className="text-[10px] text-muted">{new Date(entry.date).toLocaleDateString('en-US', { month: 'short' })}</span>
+              </div>
             ))}
           </div>
-          <Link to="/roadmap" className="mt-5 inline-block">
-            <Button variant="secondary" size="sm">View Full Roadmap</Button>
-          </Link>
         </Card>
-
-        <Card>
-          <h3 className="mb-5 text-lg font-bold">Skills Analysis</h3>
-          <div className="mb-4">
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Your Skills</p>
-            <div className="flex flex-wrap gap-2">
-              {ownedSkills.map((s) => <Badge key={s} tone="success">{s}</Badge>)}
-            </div>
-          </div>
-          <div>
-            <p className="mb-2 text-xs font-medium uppercase tracking-wider text-muted">Skills to Learn</p>
-            <div className="flex flex-wrap gap-2">
-              {missingSkills.map((s) => <Badge key={s} tone="warning">{s}</Badge>)}
-            </div>
-          </div>
-        </Card>
-      </section>
-
-      {/* Recommendations */}
-      <Card>
-        <SectionHeading title="AI Recommendations" subtitle="Prioritized actions to improve your career readiness." className="mb-4" />
-        <div className="space-y-3">
-          {recommendations.map((rec) => (
-            <div key={rec.text} className="flex items-start justify-between gap-4 rounded-xl border border-parchment/[0.06] bg-parchment/[0.02] px-4 py-3">
-              <p className="text-sm">{rec.text}</p>
-              <Badge tone="info" className="shrink-0">Impact {rec.impact}</Badge>
-            </div>
-          ))}
-        </div>
-      </Card>
+      )}
     </div>
   );
 }

@@ -23,7 +23,7 @@ export function SectionHeading({ title, subtitle, badge, align = 'left', classNa
       className={`mb-8 max-w-2xl ${centered} ${className}`}
     >
       {badge && <div className="mb-3">{badge}</div>}
-      <h2 className="font-display text-2xl font-semibold md:text-3xl">{title}</h2>
+      <h2 className="font-display text-2xl font-bold text-text md:text-3xl">{title}</h2>
       {subtitle && <p className="mt-2 text-muted md:text-lg">{subtitle}</p>}
     </motion.div>
   );

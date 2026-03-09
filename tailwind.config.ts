@@ -5,49 +5,64 @@ export default {
   theme: {
     extend: {
       colors: {
-        ink: '#0f0e0c',
-        surface: '#1c1a16',
-        'surface-elevated': '#262320',
-        amber: '#f0a03c',
-        ember: '#e85d3a',
-        parchment: '#e8e0d4',
-        stone: '#7a7168',
-        clay: '#b5846a',
-        gold: '#d4a843',
-        sage: '#6dba6a',
-        space: '#0f0e0c',
-        nebula: '#1c1a16',
-        cyan: '#f0a03c',
-        mint: '#d4a843',
-        violet: '#e85d3a',
-        success: '#6dba6a',
-        warning: '#e8a838',
-        danger: '#d94444',
-        text: '#e8e0d4',
-        muted: '#7a7168',
-        card: '#1c1a16',
-        'card-hover': '#262320',
+        /* ── Surfaces ── */
+        ink: '#f5f7fa',           /* page background – light blue-gray */
+        surface: '#ffffff',       /* card/container background – white */
+        'surface-elevated': '#f0f2f5',
+
+        /* ── Brand accents ── */
+        mint: '#34d399',          /* primary accent – mint green */
+        'mint-dark': '#10b981',
+        purple: '#7c3aed',        /* CTA accent – vivid purple */
+        'purple-dark': '#6d28d9',
+
+        /* ── Text ── */
+        text: '#1e293b',          /* primary – near-black / charcoal */
+        muted: '#64748b',         /* secondary – muted gray */
+        stone: '#94a3b8',         /* tertiary / placeholder */
+
+        /* ── Borders ── */
+        border: '#e2e8f0',        /* soft cool gray */
+        'border-hover': '#cbd5e1',
+
+        /* ── Semantic ── */
+        success: '#22c55e',
+        warning: '#f59e0b',
+        danger: '#ef4444',
+
+        /* ── Legacy aliases (for gradual migration) ── */
+        amber: '#34d399',
+        ember: '#7c3aed',
+        parchment: '#1e293b',
+        cyan: '#34d399',
+        gold: '#10b981',
+        violet: '#7c3aed',
+        sage: '#22c55e',
+        card: '#ffffff',
+        'card-hover': '#f8fafc',
+        space: '#ffffff',
+        nebula: '#f5f7fa',
       },
       fontFamily: {
-        display: ['"Fraunces"', 'Georgia', 'serif'],
-        sans: ['"Outfit"', 'system-ui', 'sans-serif'],
+        display: ['"Inter"', 'system-ui', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        glow: '0 4px 24px rgba(240, 160, 60, 0.15)',
-        'glow-lg': '0 8px 40px rgba(240, 160, 60, 0.2)',
-        violet: '0 4px 24px rgba(232, 93, 58, 0.15)',
-        'violet-lg': '0 8px 40px rgba(232, 93, 58, 0.2)',
-        success: '0 4px 24px rgba(109, 186, 106, 0.15)',
-        card: '0 4px 24px rgba(0, 0, 0, 0.35)',
-        'card-hover': '0 8px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(240, 160, 60, 0.08)',
+        glow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
+        'glow-lg': '0 4px 16px rgba(0, 0, 0, 0.08)',
+        card: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
+        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(52, 211, 153, 0.12)',
+        violet: '0 8px 30px rgba(124, 58, 237, 0.08)',
+        'violet-lg': '0 12px 40px rgba(124, 58, 237, 0.12)',
+        success: '0 4px 16px rgba(34, 197, 94, 0.1)',
+        soft: '0 1px 2px rgba(0, 0, 0, 0.04)',
+        md: '0 4px 12px rgba(0, 0, 0, 0.06)',
+        lg: '0 8px 30px rgba(0, 0, 0, 0.08)',
       },
       borderRadius: {
         '2xl': '1rem',
         '3xl': '1.5rem',
         '4xl': '2rem',
-      },
-      backdropBlur: {
-        '3xl': '64px',
       },
       animation: {
         float: 'float 6s ease-in-out infinite',
@@ -67,8 +82,8 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 12px rgba(240, 160, 60, 0.1)' },
-          '50%': { boxShadow: '0 0 24px rgba(240, 160, 60, 0.2)' },
+          '0%, 100%': { boxShadow: '0 0 12px rgba(52, 211, 153, 0.08)' },
+          '50%': { boxShadow: '0 0 24px rgba(52, 211, 153, 0.15)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },

@@ -76,7 +76,7 @@ export default function AboutPage() {
             {techStack.map((t) => {
               const Icon = t.icon;
               return (
-                <div key={t.name} className="flex items-center gap-2 rounded-lg border border-parchment/[0.06] bg-parchment/[0.02] px-3 py-2 text-sm">
+                <div key={t.name} className="flex items-center gap-2 rounded-lg border border-border bg-slate-50 px-3 py-2 text-sm">
                   <Icon size={16} className="text-cyan" />
                   <span>{t.name}</span>
                 </div>
@@ -117,7 +117,7 @@ export default function AboutPage() {
               <div className={`mx-auto mb-4 h-20 w-20 rounded-full bg-gradient-to-br ${member.gradient}`} />
               <p className="text-lg font-bold">{member.name}</p>
               <p className="text-sm text-muted">{member.role}</p>
-              <a href="#" className="mt-2 inline-flex items-center gap-1 text-sm text-amber hover:text-gold"><Linkedin size={14} /> LinkedIn</a>
+              <a href="#" className="mt-2 inline-flex items-center gap-1 text-sm text-mint-dark hover:text-mint"><Linkedin size={14} /> LinkedIn</a>
             </Card>
           ))}
         </div>
@@ -128,7 +128,7 @@ export default function AboutPage() {
         <Card glow className="mx-auto max-w-2xl">
           <h2 className="font-display text-2xl font-semibold">Ready to discover your perfect career?</h2>
           <p className="mt-2 text-muted">Join 10,000+ users and let AI map your career path.</p>
-          <Link to="/register"><Button className="mt-5">Get Started Free</Button></Link>
+          <Link to="/upload"><Button className="mt-5">Get Started Free</Button></Link>
         </Card>
       </section>
     </div>

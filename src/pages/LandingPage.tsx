@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight, BarChart3, BookOpen, Brain, Briefcase,
-  CheckCircle2, LightbulbIcon, Map, Search, Sparkles,
+  CheckCircle2, LightbulbIcon, Loader2, Map, Search, Sparkles,
   Target, TrendingUp, Zap,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -10,24 +11,26 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { api } from '../lib/api';
+import type { CareerPrediction } from '../types/api';
 
 /* ---------- data ---------- */
 const features = [
-  { icon: Brain, label: 'AI Career Matching', desc: 'Advanced ML models match your skills, experience, and interests to 500+ career paths with confidence scores.' },
-  { icon: BarChart3, label: 'ATS Score Analysis', desc: 'Get a detailed breakdown of how well your resume passes Applicant Tracking Systems used by top companies.' },
-  { icon: Briefcase, label: 'Real Job Search', desc: 'Search live job listings from LinkedIn, Indeed, and more — with personalized match percentages.' },
-  { icon: Map, label: 'Career Roadmaps', desc: 'Step-by-step learning paths with resources, projects, and milestones for any target career.' },
-  { icon: TrendingUp, label: 'Salary Estimation', desc: 'See market salary ranges for your career match, based on location, experience, and industry data.' },
-  { icon: Search, label: 'Skill Gap Analysis', desc: 'Identify exactly which skills you need to learn and which ones already make you competitive.' },
-  { icon: Target, label: 'Progress Tracking', desc: 'Track your resume scores, ATS improvements, and roadmap progress over time with rich charts.' },
-  { icon: LightbulbIcon, label: 'Improvement Tips', desc: 'Get AI-generated, prioritized recommendations ranked by impact on your career readiness.' },
+  { icon: Brain, label: 'AI Career Matching', desc: 'Advanced ML models match your skills to 500+ career paths with confidence scores.' },
+  { icon: BarChart3, label: 'ATS Score Analysis', desc: 'Detailed breakdown of how your resume performs against Applicant Tracking Systems.' },
+  { icon: Briefcase, label: 'Real Job Search', desc: 'Live job listings from LinkedIn, Indeed, and more with personalized match percentages.' },
+  { icon: Map, label: 'Career Roadmaps', desc: 'Step-by-step learning paths with resources, projects, and milestones.' },
+  { icon: TrendingUp, label: 'Salary Estimation', desc: 'Market salary ranges based on location, experience, and industry data.' },
+  { icon: Search, label: 'Skill Gap Analysis', desc: 'Identify which skills you need and which already make you competitive.' },
+  { icon: Target, label: 'Progress Tracking', desc: 'Track resume scores, ATS improvements, and roadmap progress with rich charts.' },
+  { icon: LightbulbIcon, label: 'Improvement Tips', desc: 'AI-generated recommendations ranked by impact on your career readiness.' },
 ];
 
 const steps = [
-  { num: '01', emoji: '🔐', title: 'Sign Up Free', desc: 'Create your account in seconds — no credit card required.' },
-  { num: '02', emoji: '📄', title: 'Upload Resume', desc: 'Upload a PDF or DOCX and let our parser extract key data.' },
-  { num: '03', emoji: '🤖', title: 'AI Analysis', desc: 'Our ML engine evaluates skills, ATS fit, and career alignment.' },
-  { num: '04', emoji: '🎯', title: 'Get Results', desc: 'Receive career matches, scores, roadmaps, and job suggestions.' },
+  { num: '01', title: 'Upload Resume', desc: 'Upload a PDF or DOCX and let our parser extract key data.' },
+  { num: '02', title: 'AI Analysis', desc: 'Our ML engine evaluates skills, ATS fit, and career alignment.' },
+  { num: '03', title: 'Get Results', desc: 'Receive career matches, scores, roadmaps, and job suggestions.' },
+  { num: '04', title: 'Take Action', desc: 'Search jobs, build your resume, and track your progress.' },
 ];
 
 const testimonials = [
@@ -54,14 +57,35 @@ const fadeUp = {
 
 /* ---------- component ---------- */
 export default function LandingPage() {
+  const [skills, setSkills] = useState('');
+  const [interests, setInterests] = useState('');
+  const [predictions, setPredictions] = useState<CareerPrediction[]>([]);
+  const [predicting, setPredicting] = useState(false);
+  const [predError, setPredError] = useState('');
+
+  const handlePredict = async () => {
+    if (!skills.trim()) return;
+    setPredicting(true);
+    setPredError('');
+    setPredictions([]);
+    try {
+      const res = await api.predict({ skills: skills.trim(), interests: interests.trim() });
+      setPredictions(res.predictions);
+    } catch {
+      setPredError('Could not get predictions. Please try again.');
+    } finally {
+      setPredicting(false);
+    }
+  };
+
   return (
     <div className="space-y-28">
       {/* ───── HERO ───── */}
-      <section className="relative -mx-4 -mt-10 overflow-hidden border-b border-parchment/[0.06] px-6 py-24 md:-mx-8 md:px-16 md:py-36">
-        {/* Geometric accents */}
-        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-amber/[0.03] to-transparent" />
-        <div className="absolute bottom-0 left-12 h-2/3 w-px bg-gradient-to-t from-amber/20 to-transparent" />
-        <div className="absolute right-16 top-0 h-1/2 w-px bg-gradient-to-b from-ember/15 to-transparent hidden md:block" />
+      <section className="relative -mx-4 -mt-10 overflow-hidden px-6 py-24 md:-mx-8 md:px-16 md:py-36" style={{ background: 'linear-gradient(180deg, #f0f4f8 0%, #f5f7fa 100%)' }}>
+        {/* Subtle geometric accents */}
+        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-mint/[0.04] to-transparent" />
+        <div className="absolute bottom-0 left-12 h-2/3 w-px bg-gradient-to-t from-mint/15 to-transparent" />
+        <div className="absolute right-16 top-0 h-1/2 w-px bg-gradient-to-b from-purple/10 to-transparent hidden md:block" />
 
         <div className="relative z-10 mx-auto max-w-4xl">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
@@ -74,10 +98,10 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-display text-5xl font-semibold leading-[1.05] tracking-tight md:text-7xl lg:text-8xl"
+            className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-text md:text-7xl lg:text-8xl"
           >
             Discover Your{' '}
-            <em className="text-amber not-italic">Ideal Career</em>{' '}
+            <em className="not-italic gradient-text">Ideal Career</em>{' '}
             Path with AI
           </motion.h1>
 
@@ -85,14 +109,14 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-4 h-[3px] w-16 rounded-full bg-gradient-to-r from-amber to-ember"
+            className="mt-4 h-[3px] w-16 rounded-full bg-gradient-to-r from-mint to-purple"
           />
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="mt-8 max-w-2xl text-lg leading-relaxed text-stone md:text-xl"
+            className="mt-8 max-w-2xl text-lg leading-relaxed text-muted md:text-xl"
           >
             Applyce analyzes your resume, evaluates ATS compatibility, maps skill gaps, and delivers personalised career recommendations — all in seconds.
           </motion.p>
@@ -103,28 +127,90 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <Link to="/register">
-              <Button size="lg">
-                Get Started Free <ArrowRight size={18} />
+            <Link to="/upload">
+              <Button variant="purple" size="lg">
+                Upload Resume <ArrowRight size={18} />
               </Button>
             </Link>
-            <Link to="/login">
-              <Button variant="outline" size="lg">Sign In</Button>
+            <Link to="/dashboard">
+              <Button variant="outline" size="lg">View Dashboard</Button>
             </Link>
           </motion.div>
 
-          {/* Trusted by */}
+          {/* Author / metadata row */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="mt-16 flex flex-wrap items-center gap-6 text-xs uppercase tracking-widest text-stone/50"
+            className="mt-16 flex flex-wrap items-center gap-6 text-xs uppercase tracking-widest text-muted"
           >
             <span>Trusted by professionals at</span>
             {['Google', 'Meta', 'Amazon', 'Microsoft', 'Tesla'].map((co) => (
-              <span key={co} className="font-semibold text-stone/70">{co}</span>
+              <span key={co} className="font-semibold text-text/50">{co}</span>
             ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* ───── LARGE ROUNDED CONTENT CONTAINER ───── */}
+      <section className="mx-auto -mt-16 max-w-5xl">
+        <div className="rounded-3xl border border-border bg-white p-8 shadow-lg md:p-12">
+          <SectionHeading
+            align="center"
+            badge={<Badge tone="violet" dot>Try It Now</Badge>}
+            title="Quick Career Prediction"
+            subtitle="Enter your skills and interests to instantly see AI-matched career paths."
+          />
+          <div className="mx-auto max-w-xl space-y-4">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-text">Your Skills</label>
+              <input
+                type="text"
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+                placeholder="e.g. python, machine learning, sql, react"
+                className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text placeholder-stone outline-none transition-colors focus:border-mint hover:border-border-hover"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-text">Your Interests</label>
+              <input
+                type="text"
+                value={interests}
+                onChange={(e) => setInterests(e.target.value)}
+                placeholder="e.g. data analysis, AI, web development"
+                className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text placeholder-stone outline-none transition-colors focus:border-mint hover:border-border-hover"
+              />
+            </div>
+            <Button onClick={handlePredict} disabled={predicting || !skills.trim()} className="w-full">
+              {predicting ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+              {predicting ? 'Predicting…' : 'Get Career Predictions'}
+            </Button>
+          </div>
+
+          {predError && <p className="mt-3 text-center text-sm text-danger">{predError}</p>}
+
+          {predictions.length > 0 && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto mt-8 max-w-xl space-y-3">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted">Top Matches</p>
+              {predictions.map((p, i) => (
+                <div key={p.career} className="flex items-center justify-between rounded-xl border border-border bg-slate-50/50 px-5 py-3">
+                  <div className="flex items-center gap-3">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-mint/10 text-sm font-bold text-mint-dark">{i + 1}</span>
+                    <span className="font-semibold text-text">{p.career}</span>
+                  </div>
+                  <Badge tone={p.confidence >= 80 ? 'success' : p.confidence >= 60 ? 'warning' : 'neutral'}>
+                    {p.confidence.toFixed(1)}%
+                  </Badge>
+                </div>
+              ))}
+              <Link to={`/roadmap?career=${encodeURIComponent(predictions[0].career)}`}>
+                <Button variant="secondary" size="sm" className="mt-2 w-full">
+                  <Map size={14} /> View Roadmap for {predictions[0].career}
+                </Button>
+              </Link>
+            </motion.div>
+          )}
         </div>
       </section>
 
@@ -148,10 +234,10 @@ export default function LandingPage() {
             return (
               <motion.div key={f.label} variants={fadeUp}>
                 <Card className="group h-full">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber/15 to-ember/10 text-amber transition-colors group-hover:from-amber/25 group-hover:to-ember/20">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-mint/8 text-mint-dark transition-colors group-hover:bg-mint/15">
                     <Icon size={22} />
                   </div>
-                  <h3 className="font-display text-base font-semibold">{f.label}</h3>
+                  <h3 className="font-display text-base font-bold text-text">{f.label}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{f.desc}</p>
                 </Card>
               </motion.div>
@@ -166,11 +252,10 @@ export default function LandingPage() {
           align="center"
           badge={<Badge tone="success" dot>How It Works</Badge>}
           title="Get Started in 4 Simple Steps"
-          subtitle="From sign-up to career clarity in under 5 minutes."
+          subtitle="From upload to career clarity in under 5 minutes."
         />
         <div className="relative">
-          {/* Connection line */}
-          <div className="absolute left-1/2 top-8 hidden h-[calc(100%-4rem)] w-px -translate-x-1/2 bg-gradient-to-b from-cyan/30 via-mint/20 to-transparent md:block lg:left-0 lg:right-0 lg:top-1/2 lg:mx-auto lg:h-px lg:w-[calc(100%-6rem)] lg:-translate-x-0 lg:-translate-y-1/2" />
+          <div className="absolute left-1/2 top-8 hidden h-[calc(100%-4rem)] w-px -translate-x-1/2 bg-gradient-to-b from-mint/20 via-purple/10 to-transparent md:block lg:left-0 lg:right-0 lg:top-1/2 lg:mx-auto lg:h-px lg:w-[calc(100%-6rem)] lg:-translate-x-0 lg:-translate-y-1/2" />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, i) => (
@@ -182,11 +267,10 @@ export default function LandingPage() {
                 transition={{ delay: i * 0.12, duration: 0.5 }}
               >
                 <Card className="relative text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-amber to-gold text-xl font-bold text-ink shadow-[0_4px_20px_rgba(240,160,60,0.25)]">
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-mint to-emerald-400 text-xl font-bold text-white shadow-[0_4px_20px_rgba(52,211,153,0.2)]">
                     {step.num}
                   </div>
-                  <span className="text-2xl">{step.emoji}</span>
-                  <h3 className="mt-2 font-display text-base font-semibold">{step.title}</h3>
+                  <h3 className="mt-2 font-display text-base font-bold text-text">{step.title}</h3>
                   <p className="mt-1.5 text-sm text-muted">{step.desc}</p>
                 </Card>
               </motion.div>
@@ -196,14 +280,14 @@ export default function LandingPage() {
       </section>
 
       {/* ───── STATS ───── */}
-      <section className="glass rounded-2xl px-6 py-14 md:px-12">
+      <section className="rounded-3xl border border-border bg-white px-6 py-14 shadow-md md:px-12">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label} className="text-center">
               <AnimatedCounter
                 end={s.value}
                 suffix={s.suffix}
-                className="font-display text-4xl font-semibold gradient-text md:text-5xl"
+                className="font-display text-4xl font-bold gradient-text md:text-5xl"
               />
               <p className="mt-2 text-sm font-medium text-muted">{s.label}</p>
             </div>
@@ -231,16 +315,16 @@ export default function LandingPage() {
               <Card className="h-full">
                 <div className="mb-4 flex gap-1">
                   {Array.from({ length: 5 }).map((_, idx) => (
-                    <Sparkles key={idx} size={14} className="text-warning" />
+                    <Sparkles key={idx} size={14} className="text-amber-400" />
                   ))}
                 </div>
                 <p className="text-sm leading-relaxed text-muted">"{t.text}"</p>
                 <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-cyan to-violet text-sm font-bold text-space">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-mint to-purple text-sm font-bold text-white">
                     {t.name.split(' ').map((n) => n[0]).join('')}
                   </div>
                   <div>
-                    <p className="text-sm font-semibold">{t.name}</p>
+                    <p className="text-sm font-semibold text-text">{t.name}</p>
                     <p className="text-xs text-muted">{t.role}</p>
                   </div>
                 </div>
@@ -251,20 +335,20 @@ export default function LandingPage() {
       </section>
 
       {/* ───── CTA ───── */}
-      <section className="relative overflow-hidden rounded-2xl border border-parchment/[0.08] bg-surface px-8 py-20 text-center">
-        <div className="absolute right-0 top-0 h-full w-1/4 bg-gradient-to-l from-amber/[0.04] to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber/20 to-transparent" />
+      <section className="relative overflow-hidden rounded-3xl border border-border bg-white px-8 py-20 text-center shadow-md">
+        <div className="absolute right-0 top-0 h-full w-1/4 bg-gradient-to-l from-mint/[0.04] to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-mint/20 to-transparent" />
 
         <div className="relative z-10">
-          <Zap className="mx-auto mb-4 text-amber" size={36} />
-          <h3 className="font-display text-3xl font-semibold md:text-4xl">Ready to Find Your Dream Career?</h3>
+          <Zap className="mx-auto mb-4 text-mint" size={36} />
+          <h3 className="font-display text-3xl font-bold text-text md:text-4xl">Ready to Find Your Dream Career?</h3>
           <p className="mx-auto mt-3 max-w-lg text-muted md:text-lg">
-            Join 10,000+ professionals who accelerated their career growth with Applyce. Start free — no credit card required.
+            Join 10,000+ professionals who accelerated their career growth with Applyce.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-            <Link to="/register">
-              <Button size="lg">
-                Start Free Today <ArrowRight size={18} />
+            <Link to="/upload">
+              <Button variant="purple" size="lg">
+                Upload Resume <ArrowRight size={18} />
               </Button>
             </Link>
             <Link to="/about">
@@ -272,7 +356,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <p className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
-            <CheckCircle2 size={14} className="text-success" /> Free forever plan available
+            <CheckCircle2 size={14} className="text-mint" /> Free forever plan available
           </p>
         </div>
       </section>

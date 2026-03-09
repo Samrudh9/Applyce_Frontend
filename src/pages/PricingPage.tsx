@@ -59,7 +59,7 @@ export default function PricingPage() {
           const Icon = tier.icon;
           return (
             <motion.div key={tier.name} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-              <Card glow={tier.popular} className={`relative flex h-full flex-col ${tier.popular ? 'border-violet/40 shadow-lg shadow-violet/10' : ''}`}>
+              <Card glow={tier.popular} className={`relative flex h-full flex-col ${tier.popular ? 'border-purple/30 shadow-lg shadow-purple/10' : ''}`}>
                 {tier.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <Badge tone="violet" icon={<Sparkles size={10} />}>Most Popular</Badge>
@@ -74,7 +74,7 @@ export default function PricingPage() {
                 </div>
 
                 <div className="mb-2">
-                  <span className={`font-display text-4xl font-semibold ${tier.popular ? 'gradient-text' : 'text-amber'}`}>{tier.price}</span>
+                  <span className={`font-display text-4xl font-bold ${tier.popular ? 'gradient-text' : 'text-mint-dark'}`}>{tier.price}</span>
                   <span className="text-sm text-muted">{tier.period}</span>
                 </div>
                 <p className="mb-5 text-sm text-muted">{tier.description}</p>

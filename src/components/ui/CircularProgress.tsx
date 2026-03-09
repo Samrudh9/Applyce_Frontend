@@ -16,8 +16,8 @@ export function CircularProgress({
   value,
   size = 160,
   strokeWidth = 10,
-  color = '#f0a03c',
-  trailColor = 'rgba(232, 224, 212, 0.08)',
+  color = '#34d399',
+  trailColor = '#e2e8f0',
   className = '',
   label,
   children,
@@ -44,13 +44,12 @@ export function CircularProgress({
           initial={{ strokeDashoffset: circumference }}
           animate={isInView ? { strokeDashoffset: offset } : { strokeDashoffset: circumference }}
           transition={{ duration: 1.5, ease: 'easeOut' }}
-          style={{ filter: `drop-shadow(0 0 8px ${color}50)` }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         {children ?? (
           <>
-            <span className="font-display text-3xl font-semibold" style={{ color }}>{value}</span>
+            <span className="font-display text-3xl font-bold text-text">{value}</span>
             {label && <span className="text-xs text-muted">{label}</span>}
           </>
         )}

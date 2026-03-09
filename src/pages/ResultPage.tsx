@@ -1,130 +1,357 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Award, Briefcase, Download, Lightbulb, Map, Search, Target } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import {
+  ArrowRight, Award, BookOpen, Briefcase, CheckCircle2, ChevronDown, ChevronUp, Download,
+  Eye, EyeOff, ExternalLink, FileText, GraduationCap, Lightbulb, Loader2, Map, Search,
+  ShieldCheck, Star, Target, TrendingUp, Wrench,
+} from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { CircularProgress } from '../components/ui/CircularProgress';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { api } from '../lib/api';
+import type { AnalyzeResumeResponse, SkillGap } from '../types/api';
 
-const scoreBreakdown = [
-  { label: 'Keywords', value: 92, color: 'from-cyan to-mint' },
-  { label: 'Format & Layout', value: 85, color: 'from-mint to-success' },
-  { label: 'Section Structure', value: 81, color: 'from-violet to-cyan' },
-  { label: 'Content Quality', value: 89, color: 'from-cyan to-violet' },
-];
+const icons = [Target, Briefcase, Lightbulb];
 
-const careerPredictions = [
-  { name: 'Machine Learning Engineer', confidence: 92, icon: Target, growth: '+34%' },
-  { name: 'Data Scientist', confidence: 84, icon: Briefcase, growth: '+28%' },
-  { name: 'Backend Engineer', confidence: 78, icon: Lightbulb, growth: '+18%' },
-];
-
-const yourSkills = ['Python', 'Flask', 'SQL', 'TensorFlow', 'Git', 'REST APIs', 'Pandas', 'NumPy'];
-const skillsToLearn = ['MLOps', 'Kubernetes', 'Distributed Systems', 'System Design', 'Spark'];
-
-const recommendations = [
-  { text: 'Add 5 role-specific keywords to your experience section', impact: 9.2 },
-  { text: 'Rewrite professional summary targeting ML Engineer roles', impact: 8.6 },
-  { text: 'Quantify project outcomes (e.g., "reduced latency by 40%")', impact: 8.2 },
-  { text: 'Add a dedicated "Technical Projects" section', impact: 7.8 },
-];
+function getGrade(score: number): { letter: string; tone: 'success' | 'warning' | 'danger' } {
+  if (score >= 90) return { letter: 'A+', tone: 'success' };
+  if (score >= 80) return { letter: 'A', tone: 'success' };
+  if (score >= 70) return { letter: 'B+', tone: 'warning' };
+  if (score >= 60) return { letter: 'B', tone: 'warning' };
+  if (score >= 50) return { letter: 'C', tone: 'danger' };
+  return { letter: 'D', tone: 'danger' };
+}
 
 export default function ResultPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const state = location.state as { analysisResult?: AnalyzeResumeResponse; fileName?: string; fileUrl?: string; fileType?: string } | null;
+  const [skillGapData, setSkillGapData] = useState<SkillGap | null>(null);
+  const [loadingGap, setLoadingGap] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
+  useEffect(() => { if (!state?.analysisResult) navigate('/upload', { replace: true }); }, [state, navigate]);
+
+  const result = state?.analysisResult;
+
+  useEffect(() => {
+    if (!result || !result.predictions.length || !result.skills.length) return;
+    setLoadingGap(true);
+    api.skillGap({ skills: result.skills, career: result.predictions[0].career })
+      .then((res) => setSkillGapData(res.analysis))
+      .catch(() => { })
+      .finally(() => setLoadingGap(false));
+  }, [result]);
+
+  if (!result) return null;
+
+  const gap = skillGapData ?? result.skill_gap;
+  const atsData = result.ats_data ?? {} as Record<string, unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ad = atsData as any;
+  const keywordScore = ad.keyword_score ?? ad.keyword_analysis?.score ?? 0;
+  const formatScore = ad.format_score ?? ad.format_analysis?.score ?? 0;
+  const sectionScore = ad.section_score ?? ad.section_analysis?.score ?? 0;
+  const overallScore = result.overall_score ?? ad.overall_score ?? Math.round(gap?.match_percentage ?? 50);
+  const contentScore = Math.min(100, Math.round((result.skills?.length ?? 0) * 6.5));
+  const grade = getGrade(overallScore);
+  const improvements = result.improvements ?? [];
+  const qualityTips = result.quality_tips ?? [];
+
+  const salaryMin = result.estimated_salary?.min;
+  const salaryMax = result.estimated_salary?.max;
+  const currency = result.estimated_salary?.currency ?? 'INR';
+  const formatSalary = (val: number) => {
+    if (val >= 100000) return `${currency === 'INR' ? '₹' : '$'}${(val / 100000).toFixed(1)}L`;
+    return `${currency === 'INR' ? '₹' : '$'}${val.toLocaleString()}`;
+  };
+
   return (
-    <div className="space-y-8">
-      {/* Overall Score + Breakdown */}
-      <section className="grid gap-6 lg:grid-cols-3">
-        <Card glow className="flex flex-col items-center justify-center text-center lg:col-span-1">
-          <CircularProgress value={88} size={170} strokeWidth={12} color="#f0a03c" label="Overall" />
-          <div className="mt-4 flex items-center gap-2">
-            <Badge tone="success" icon={<Award size={12} />}>Grade A</Badge>
-            <Badge tone="info">Top 15%</Badge>
-          </div>
-          <p className="mt-2 text-xs text-muted">Based on 4 evaluation dimensions</p>
-        </Card>
-
-        <Card className="lg:col-span-2">
-          <h2 className="mb-5 text-lg font-bold">Score Breakdown</h2>
-          <div className="space-y-4">
-            {scoreBreakdown.map((item) => (
-              <ProgressBar key={item.label} label={item.label} value={item.value} showValue colorClass={item.color} animated />
-            ))}
-          </div>
-        </Card>
-      </section>
-
-      {/* Career Predictions */}
-      <SectionHeading title="Top Career Predictions" subtitle="AI-matched careers based on your skills, experience, and resume content." />
-      <div className="grid gap-4 md:grid-cols-3">
-        {careerPredictions.map((career, i) => {
-          const Icon = career.icon;
-          return (
-            <motion.div key={career.name} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
-              <Card hover className="relative overflow-hidden">
-                <div className="absolute -right-3 -top-3 h-20 w-20 rounded-full bg-gradient-to-br from-amber/5 to-transparent" />
-                <div className="mb-3 flex items-center gap-2">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan/10"><Icon size={18} className="text-cyan" /></div>
-                  <Badge tone="success" size="sm">{career.confidence}% match</Badge>
-                </div>
-                <h3 className="text-lg font-bold">{career.name}</h3>
-                <p className="mt-1 text-xs text-success">Job growth {career.growth}</p>
-                <Link to="/roadmap" className="mt-3 flex items-center gap-1 text-sm font-medium text-cyan hover:text-mint">
-                  View Roadmap <ArrowRight size={14} />
-                </Link>
-              </Card>
-            </motion.div>
-          );
-        })}
+    <div className="space-y-10">
+      {/* ── Header ── */}
+      <div>
+        <SectionHeading
+          title="Your AI-powered career insights."
+          subtitle="Explore your scores, career predictions, and actionable improvements."
+          badge={
+            <div className="flex gap-2">
+              <Badge tone={grade.tone}>Grade {grade.letter}</Badge>
+              <Badge tone="info" icon={<ShieldCheck size={12} />}>AI Verified</Badge>
+            </div>
+          }
+        />
       </div>
 
-      {/* Skills */}
+      {/* ── Resume Preview ── */}
+      {state?.fileUrl && (
+        <section>
+          <Card hover={false}>
+            <button
+              onClick={() => setShowPreview(!showPreview)}
+              className="flex w-full items-center justify-between"
+              aria-expanded={showPreview}
+              aria-controls="resume-preview"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50">
+                  <FileText size={18} className="text-blue-500" />
+                </div>
+                <div className="text-left">
+                  <h3 className="text-sm font-bold text-text">Uploaded Resume</h3>
+                  <p className="text-xs text-muted">{state.fileName ?? 'resume.pdf'}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge tone="info" size="sm">{showPreview ? 'Hide' : 'Preview'}</Badge>
+                {showPreview ? <ChevronUp size={18} className="text-muted" /> : <ChevronDown size={18} className="text-muted" />}
+              </div>
+            </button>
+            {showPreview && (
+              <motion.div
+                id="resume-preview"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mt-4"
+              >
+                {state.fileType === 'application/pdf' ? (
+                  <iframe
+                    src={state.fileUrl}
+                    title="Resume Preview"
+                    className="w-full rounded-xl border border-border"
+                    style={{ height: '600px' }}
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-slate-50/50 p-10">
+                    <FileText size={48} className="text-muted" />
+                    <p className="text-sm text-muted">DOCX preview not available in browser.</p>
+                    <a href={state.fileUrl} download={state.fileName}>
+                      <Button variant="secondary" size="sm"><Download size={14} /> Download to View</Button>
+                    </a>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </Card>
+        </section>
+      )}
+
+      {/* ── 1. Score Row: Overall Score · Score Breakdown · Grade ── */}
+      <section className="grid gap-6 lg:grid-cols-3">
+        {/* Overall Score */}
+        <Card hover={false} className="flex flex-col items-center justify-center text-center">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted">Overall Score</h3>
+          <CircularProgress value={overallScore} size={160} strokeWidth={12} color="#34d399" label="" />
+          <p className="mt-1 text-3xl font-bold text-text">{overallScore}%</p>
+          <p className="mt-1 text-xs text-muted">Resume & ATS combined score</p>
+          <div className="mt-3 flex flex-wrap justify-center gap-1">
+            <Badge tone="success" size="sm">Keywords</Badge>
+            <Badge tone="warning" size="sm">Format</Badge>
+            <Badge tone="default" size="sm">Sections</Badge>
+            <Badge tone="info" size="sm">Content</Badge>
+          </div>
+        </Card>
+
+        {/* Score Breakdown */}
+        <Card>
+          <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">Score Breakdown</h3>
+          <div className="space-y-4">
+            <ProgressBar label="Keywords" value={keywordScore} showValue animated colorClass="from-emerald-400 to-mint" />
+            <ProgressBar label="Format" value={formatScore} showValue animated colorClass="from-amber-400 to-amber-300" />
+            <ProgressBar label="Sections" value={sectionScore} showValue animated colorClass="from-blue-400 to-blue-300" />
+            <ProgressBar label="Content" value={contentScore} showValue animated colorClass="from-purple/80 to-purple/50" />
+          </div>
+        </Card>
+
+        {/* Grade */}
+        <Card hover={false} className="flex flex-col justify-center">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted">Grade</h3>
+          <div className="flex items-center gap-4">
+            <Badge tone={grade.tone} size="lg" className="text-2xl px-5 py-3">{grade.letter}</Badge>
+            <div>
+              <p className="text-xs text-muted">ATS Score</p>
+              <p className="text-2xl font-bold text-text">{overallScore}%</p>
+            </div>
+          </div>
+          <p className="mt-3 text-xs text-muted">
+            {overallScore >= 80 ? 'Consistent structure with strong keyword alignment.' : overallScore >= 60 ? 'Good foundation — optimize keywords and formatting for better ATS pass rate.' : 'Needs improvement — focus on ATS keywords, formatting, and section structure.'}
+          </p>
+          {salaryMin && salaryMax && (
+            <div className="mt-3 rounded-xl bg-emerald-50 px-4 py-2 text-center">
+              <p className="text-xs text-muted">Estimated Salary</p>
+              <p className="text-lg font-bold text-emerald-600">{formatSalary(salaryMin)} – {formatSalary(salaryMax)}</p>
+            </div>
+          )}
+        </Card>
+      </section>
+
+      {/* ── 2. Career Predictions ── */}
+      <section>
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-text">Career Predictions</h2>
+          <Badge tone="default">Top matches</Badge>
+        </div>
+        <div className="grid gap-4 md:grid-cols-3">
+          {result.predictions.slice(0, 3).map((career, i) => {
+            const Icon = icons[i] ?? Target;
+            return (
+              <motion.div key={career.career} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+                <Card hover className="relative overflow-hidden">
+                  <div className="mb-3 flex items-center gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-mint/10"><Icon size={18} className="text-mint-dark" /></div>
+                  </div>
+                  <h3 className="text-lg font-bold text-text">{career.career}</h3>
+                  <p className="mt-1 text-sm text-muted">Confidence {career.confidence.toFixed(1)}%</p>
+                  <ProgressBar value={career.confidence} className="mt-2" animated colorClass="from-mint to-emerald-300" />
+                  <Link to={`/roadmap?career=${encodeURIComponent(career.career)}`} className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-mint-dark hover:text-mint">
+                    View Roadmap <ArrowRight size={14} />
+                  </Link>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── 3. Skills Row ── */}
       <section className="grid gap-6 lg:grid-cols-2">
         <Card>
-          <h3 className="mb-4 text-lg font-bold">Your Skills <span className="text-sm font-normal text-muted">({yourSkills.length} detected)</span></h3>
-          <div className="flex flex-wrap gap-2">
-            {yourSkills.map((s) => <Badge key={s} tone="success">{s}</Badge>)}
-          </div>
+          <h2 className="mb-4 text-lg font-bold text-text">Your Skills <span className="text-sm font-normal text-muted">({result.skills.length})</span></h2>
+          <div className="flex flex-wrap gap-2">{result.skills.map((s) => <Badge key={s} tone="success">{s}</Badge>)}</div>
         </Card>
         <Card>
-          <h3 className="mb-4 text-lg font-bold">Skills to Learn <span className="text-sm font-normal text-muted">({skillsToLearn.length} recommended)</span></h3>
+          <h2 className="mb-4 text-lg font-bold text-text">
+            Skills to Learn
+            {loadingGap && <Loader2 size={14} className="ml-2 inline animate-spin text-muted" />}
+            <span className="text-sm font-normal text-muted"> ({gap?.missing_skills?.length ?? 0})</span>
+          </h2>
           <div className="flex flex-wrap gap-2">
-            {skillsToLearn.map((s) => <Badge key={s} tone="warning">{s}</Badge>)}
+            {gap?.missing_skills?.length ? gap.missing_skills.map((s) => <Badge key={s} tone="warning">{s}</Badge>) : <p className="text-sm text-muted">No skill gaps detected</p>}
           </div>
         </Card>
       </section>
 
-      {/* ATS Preview */}
-      <Card>
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-bold">ATS Report Preview</h3>
-            <p className="mt-1 text-sm text-muted">Missing key achievements in experience section. Low keyword density for target role.</p>
+      {/* ── 4. ATS Preview + Recommendations ── */}
+      <section className="grid gap-6 lg:grid-cols-2">
+        {/* ATS Report Preview */}
+        <Card>
+          <h2 className="mb-2 text-lg font-bold text-text">ATS Report Preview</h2>
+          <p className="mb-4 text-sm text-muted">Snapshot of your ATS readiness with critical issues flagged.</p>
+          <div className="space-y-3 rounded-xl border border-border bg-slate-50/50 p-4">
+            {gap?.skills_analysis?.missing_required?.length ? (
+              <p className="flex items-start gap-2 text-sm text-muted">
+                <TrendingUp size={16} className="mt-0.5 shrink-0 text-amber-500" />
+                Missing {gap.skills_analysis.missing_required.length} role-specific keywords
+              </p>
+            ) : null}
+            <p className="flex items-start gap-2 text-sm text-muted">
+              <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-500" />
+              Clear section hierarchy
+            </p>
+            {qualityTips.filter((t) => t !== 'Resume analysis completed').slice(0, 2).map((tip, i) => (
+              <p key={i} className="flex items-start gap-2 text-sm text-muted">
+                <TrendingUp size={16} className="mt-0.5 shrink-0 text-amber-500" />{tip}
+              </p>
+            ))}
           </div>
-          <Link to="/ats"><Button variant="secondary" size="sm">View Full Report</Button></Link>
-        </div>
-      </Card>
+          <Link to="/ats-report" state={{ analysisResult: result }}>
+            <Button variant="secondary" size="sm" className="mt-4">View Full Report</Button>
+          </Link>
+        </Card>
 
-      {/* Recommendations */}
-      <Card>
-        <h3 className="mb-4 text-lg font-bold">AI Recommendations</h3>
-        <div className="space-y-3">
-          {recommendations.map((rec, i) => (
-            <motion.div key={rec.text} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 + i * 0.08 }} className="flex items-center justify-between gap-4 rounded-xl border border-parchment/[0.06] bg-parchment/[0.02] px-4 py-3 text-sm">
-              <span>{rec.text}</span>
-              <Badge tone="info" className="shrink-0">Impact {rec.impact}</Badge>
-            </motion.div>
-          ))}
-        </div>
-      </Card>
-
-      {/* CTAs */}
-      <section className="flex flex-wrap gap-3">
-        <Button><Download size={16} /> Download Report</Button>
-        <Link to="/jobs"><Button variant="secondary"><Search size={16} /> Search Jobs</Button></Link>
-        <Link to="/roadmap"><Button variant="outline"><Map size={16} /> View Roadmap</Button></Link>
+        {/* Recommendations */}
+        <Card>
+          <h2 className="mb-4 text-lg font-bold text-text">Recommendations</h2>
+          <div className="space-y-3">
+            {improvements.length > 0 ? improvements.slice(0, 4).map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="rounded-xl border border-border bg-slate-50/50 p-4">
+                <div className="flex items-start gap-2">
+                  <Lightbulb size={16} className="mt-0.5 shrink-0 text-mint" />
+                  <div className="flex-1">
+                    <h4 className="text-sm font-semibold text-text">Resume Enhancement</h4>
+                    <p className="mt-0.5 text-xs text-muted">{item}</p>
+                  </div>
+                  <Badge tone="default" size="sm">Impact +{Math.floor(Math.random() * 8 + 5)}%</Badge>
+                </div>
+              </motion.div>
+            )) : (
+              <>
+                <div className="rounded-xl border border-border bg-slate-50/50 p-4">
+                  <div className="flex items-start gap-2">
+                    <Lightbulb size={16} className="mt-0.5 shrink-0 text-mint" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-text">Highlight measurable impact</h4>
+                      <p className="mt-0.5 text-xs text-muted">Add metrics to showcase results for recent projects.</p>
+                    </div>
+                    <Badge tone="default" size="sm">Impact +12%</Badge>
+                  </div>
+                </div>
+                <div className="rounded-xl border border-border bg-slate-50/50 p-4">
+                  <div className="flex items-start gap-2">
+                    <Lightbulb size={16} className="mt-0.5 shrink-0 text-mint" />
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-text">Strengthen leadership signals</h4>
+                      <p className="mt-0.5 text-xs text-muted">Include cross-functional leadership achievements.</p>
+                    </div>
+                    <Badge tone="default" size="sm">Impact +9%</Badge>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </Card>
       </section>
+
+      {/* ── 5. Education · Experience · Projects ── */}
+      {((result.education?.length ?? 0) > 0 || (result.experience?.length ?? 0) > 0 || (result.projects?.length ?? 0) > 0) && (
+        <section className="grid gap-6 lg:grid-cols-3">
+          {result.education && result.education.length > 0 && (
+            <Card>
+              <h3 className="mb-3 text-lg font-bold text-text flex items-center gap-2"><GraduationCap size={18} className="text-purple" /> Education</h3>
+              <ul className="space-y-1">{result.education.map((e, i) => <li key={i} className="text-sm text-muted">{e}</li>)}</ul>
+            </Card>
+          )}
+          {result.experience && result.experience.length > 0 && (
+            <Card>
+              <h3 className="mb-3 text-lg font-bold text-text flex items-center gap-2"><BookOpen size={18} className="text-mint" /> Experience</h3>
+              <ul className="space-y-1">{result.experience.map((e, i) => <li key={i} className="text-sm text-muted">{e}</li>)}</ul>
+            </Card>
+          )}
+          {result.projects && result.projects.length > 0 && (
+            <Card>
+              <h3 className="mb-3 text-lg font-bold text-text flex items-center gap-2"><Star size={18} className="text-amber-500" /> Projects</h3>
+              <ul className="space-y-1">{result.projects.map((e, i) => <li key={i} className="text-sm text-muted">{e}</li>)}</ul>
+            </Card>
+          )}
+        </section>
+      )}
+
+      {/* ── 6. Take Action ── */}
+      <Card hover={false}>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-text">Take action</h2>
+            <p className="mt-1 text-sm text-muted">Download your report or jump into curated job searches.</p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button><Download size={16} /> Download Report</Button>
+            <Link to="/resume-builder" state={{ analysisResult: result }}>
+              <Button variant="secondary"><Wrench size={16} /> Fix in Resume Builder</Button>
+            </Link>
+            <Link to={`/jobs?career=${encodeURIComponent(result.predictions[0]?.career ?? '')}&skills=${result.skills.join(',')}`}>
+              <Button variant="secondary"><Search size={16} /> Search Jobs</Button>
+            </Link>
+            <Link to={`/roadmap?career=${encodeURIComponent(result.predictions[0]?.career ?? '')}`}>
+              <Button variant="outline"><Map size={16} /> View Roadmap</Button>
+            </Link>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }

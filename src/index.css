@@ -1,21 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Outfit:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --ink: #0f0e0c;
-  --surface: #1c1a16;
-  --surface-elevated: #262320;
-  --amber: #f0a03c;
-  --ember: #e85d3a;
-  --parchment: #e8e0d4;
-  --stone: #7a7168;
+  --mint: #34d399;
+  --mint-dark: #10b981;
+  --purple: #7c3aed;
+  --purple-dark: #6d28d9;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --surface: #ffffff;
+  --ink: #f5f7fa;
 
-  font-family: 'Outfit', system-ui, sans-serif;
-  color: #e8e0d4;
-  background-color: #0f0e0c;
+  /* Legacy aliases */
+  --amber: #34d399;
+  --ember: #7c3aed;
+  --parchment: #1e293b;
+  --stone: #94a3b8;
+
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--text);
+  background-color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -27,12 +35,8 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(240, 160, 60, 0.035), transparent),
-    radial-gradient(ellipse 60% 50% at 80% 100%, rgba(232, 93, 58, 0.025), transparent),
-    #0f0e0c;
-  background-attachment: fixed;
-  color: #e8e0d4;
+  background: var(--ink);
+  color: var(--text);
 }
 
 a {
@@ -40,12 +44,13 @@ a {
   text-decoration: none;
 }
 
+/* Glass – light surface with subtle border */
 .glass {
-  @apply border border-parchment/[0.08] bg-card;
+  @apply border border-border bg-surface;
 }
 
 .glass-strong {
-  @apply border border-parchment/[0.12] bg-card;
+  @apply border border-border bg-surface;
 }
 
 .glow-btn {
@@ -53,18 +58,18 @@ a {
 }
 
 .orb {
-  @apply pointer-events-none absolute rounded-full blur-3xl opacity-60;
+  @apply pointer-events-none absolute rounded-full blur-3xl opacity-30;
 }
 
-/* Gradient text utility — warm palette */
+/* Gradient text – Mint → Purple */
 .gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, var(--amber), var(--ember));
+  background-image: linear-gradient(135deg, var(--mint), var(--purple));
 }
 
 .gradient-text-violet {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, var(--ember), var(--amber));
+  background-image: linear-gradient(135deg, var(--purple), var(--mint));
 }
 
 /* Section spacing */
@@ -72,21 +77,29 @@ a {
   @apply space-y-6 md:space-y-8;
 }
 
-/* Input focus ring */
+/* Input focus ring – mint */
 .input-glow:focus {
-  box-shadow: 0 0 0 3px rgba(240, 160, 60, 0.15), 0 0 20px rgba(240, 160, 60, 0.06);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15), 0 0 16px rgba(52, 211, 153, 0.06);
 }
 
 /* Table row hover */
 .table-row-hover:hover {
-  background: rgba(240, 160, 60, 0.04);
+  background: rgba(52, 211, 153, 0.04);
 }
 
 /* Animated border accent */
 @keyframes borderGlow {
-  0%, 100% { border-color: rgba(240, 160, 60, 0.2); }
-  50% { border-color: rgba(232, 93, 58, 0.35); }
+
+  0%,
+  100% {
+    border-color: rgba(52, 211, 153, 0.2);
+  }
+
+  50% {
+    border-color: rgba(124, 58, 237, 0.3);
+  }
 }
+
 .border-glow {
   animation: borderGlow 3s ease-in-out infinite;
 }
@@ -96,21 +109,24 @@ a {
   width: 5px;
   height: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background: #7a7168;
+  background: #cbd5e1;
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: #f0a03c;
+  background: var(--mint);
 }
 
 /* Selection color */
 ::selection {
-  background: rgba(240, 160, 60, 0.3);
-  color: #fff;
+  background: rgba(52, 211, 153, 0.2);
+  color: var(--text);
 }
 
 /* Editorial line accent */
@@ -120,6 +136,16 @@ a {
   width: 48px;
   height: 3px;
   margin-top: 12px;
-  background: linear-gradient(90deg, #f0a03c, #e85d3a);
+  background: linear-gradient(90deg, var(--mint), var(--purple));
   border-radius: 2px;
+}
+
+/* Select styling for light theme */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
 }
