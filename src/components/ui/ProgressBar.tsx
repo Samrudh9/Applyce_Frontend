@@ -8,6 +8,7 @@ type Props = {
   showValue?: boolean;
   label?: string;
   animated?: boolean;
+  className?: string;
 };
 
 export function ProgressBar({
@@ -17,6 +18,7 @@ export function ProgressBar({
   showValue,
   label,
   animated = true,
+  className = '',
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: '-20px' });
@@ -24,7 +26,7 @@ export function ProgressBar({
   const heightClass = typeof height === 'string' ? height : '';
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className={className}>
       {(label || showValue) && (
         <div className="mb-1.5 flex items-center justify-between text-sm">
           {label && <span className="text-text font-medium">{label}</span>}
