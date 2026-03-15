@@ -152,7 +152,7 @@ export default function ResultPage() {
           <div className="mt-3 flex flex-wrap justify-center gap-1">
             <Badge tone="success" size="sm">Keywords</Badge>
             <Badge tone="warning" size="sm">Format</Badge>
-            <Badge tone="default" size="sm">Sections</Badge>
+            <Badge tone="neutral" size="sm">Sections</Badge>
             <Badge tone="info" size="sm">Content</Badge>
           </div>
         </Card>
@@ -194,7 +194,7 @@ export default function ResultPage() {
       <section>
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-bold text-text">Career Predictions</h2>
-          <Badge tone="default">Top matches</Badge>
+          <Badge tone="neutral">Top matches</Badge>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           {result.predictions.slice(0, 3).map((career, i) => {
@@ -276,7 +276,7 @@ export default function ResultPage() {
                     <h4 className="text-sm font-semibold text-text">Resume Enhancement</h4>
                     <p className="mt-0.5 text-xs text-muted">{item}</p>
                   </div>
-                  <Badge tone="default" size="sm">Impact +{Math.floor(Math.random() * 8 + 5)}%</Badge>
+                  <Badge tone="neutral" size="sm">Impact +{Math.floor(Math.random() * 8 + 5)}%</Badge>
                 </div>
               </motion.div>
             )) : (
@@ -288,7 +288,7 @@ export default function ResultPage() {
                       <h4 className="text-sm font-semibold text-text">Highlight measurable impact</h4>
                       <p className="mt-0.5 text-xs text-muted">Add metrics to showcase results for recent projects.</p>
                     </div>
-                    <Badge tone="default" size="sm">Impact +12%</Badge>
+                    <Badge tone="neutral" size="sm">Impact +12%</Badge>
                   </div>
                 </div>
                 <div className="rounded-xl border border-border bg-slate-50/50 p-4">
@@ -298,7 +298,7 @@ export default function ResultPage() {
                       <h4 className="text-sm font-semibold text-text">Strengthen leadership signals</h4>
                       <p className="mt-0.5 text-xs text-muted">Include cross-functional leadership achievements.</p>
                     </div>
-                    <Badge tone="default" size="sm">Impact +9%</Badge>
+                    <Badge tone="neutral" size="sm">Impact +9%</Badge>
                   </div>
                 </div>
               </>

@@ -118,7 +118,7 @@ export default function InterviewPrepPage() {
                     <Card>
                         <div className="mb-3 flex items-center justify-between">
                             <Badge tone="info">Question {currentQ + 1} of {questions.length}</Badge>
-                            {q.category && <Badge tone="default">{q.category}</Badge>}
+                            {q.category && <Badge tone="neutral">{q.category}</Badge>}
                         </div>
                         <p className="text-lg font-semibold text-text">{q.question}</p>
                     </Card>
