@@ -47,7 +47,11 @@ import type {
 } from '../types/api';
 
 // ── Base URL ─────────────────────────────────────────────────
-const BASE = (import.meta as any).env?.VITE_API_URL ?? '';
+// Set VITE_API_URL to the backend origin in your deployment environment (Vercel).
+// In local dev the Vite proxy forwards bare /api/* paths to localhost, so BASE
+// intentionally defaults to an empty string when the variable is absent.
+const PRODUCTION_API_URL = 'https://skillfit.onrender.com';
+const BASE: string = import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? PRODUCTION_API_URL : '');
 
 // ── Helpers ──────────────────────────────────────────────────
 class ApiError extends Error {
