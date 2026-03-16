@@ -108,20 +108,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section>
-        <SectionHeading title="Meet the Team" subtitle="A passionate crew building the future of career intelligence." />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {team.map((member) => (
-            <Card key={member.name} hover className="text-center">
-              <div className={`mx-auto mb-4 h-20 w-20 rounded-full bg-gradient-to-br ${member.gradient}`} />
-              <p className="text-lg font-bold">{member.name}</p>
-              <p className="text-sm text-muted">{member.role}</p>
-              <a href="#" className="mt-2 inline-flex items-center gap-1 text-sm text-mint-dark hover:text-mint"><Linkedin size={14} /> LinkedIn</a>
-            </Card>
-          ))}
-        </div>
-      </section>
+
 
       {/* CTA */}
       <section className="text-center">
