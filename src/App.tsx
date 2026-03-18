@@ -17,7 +17,7 @@ import RoadmapPage from './pages/RoadmapPage';
 import ScorecardPage from './pages/ScorecardPage';
 import SkillQuizzesPage from './pages/SkillQuizzesPage';
 import UploadPage from './pages/UploadPage';
-import { Analytics } from "@vercel/analytics/next"
+
 
 const PageWrap = ({ children }: { children: ReactNode }) => (
   <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.3 }}>
