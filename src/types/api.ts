@@ -425,6 +425,20 @@ export interface InterviewAnswerResponse {
     overall_score: number | null;
 }
 
+export interface InterviewVoiceAnswerResponse {
+    success: true;
+    transcript: string;
+    evaluation: InterviewEvaluation;
+    answered_count: number;
+    is_complete: boolean;
+    overall_score: number | null;
+}
+
+export interface InterviewVoiceEnabledResponse {
+    success: true;
+    voice_enabled: boolean;
+}
+
 export interface InterviewHistoryResponse {
     success: true;
     sessions: InterviewSession[];

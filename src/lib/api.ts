@@ -19,6 +19,8 @@ import type {
     InterviewHistoryResponse,
     InterviewSessionResponse,
     InterviewStartRequest,
+    InterviewVoiceAnswerResponse,
+    InterviewVoiceEnabledResponse,
     JobInsightsResponse,
     JobMatchRequest,
     JobMatchResponse,
@@ -187,6 +189,16 @@ export const api = {
     interviewGet: (id: number) => get<InterviewSessionResponse>(`/api/interview/session/${id}`),
     interviewAnswer: (data: InterviewAnswerRequest) => post<InterviewAnswerResponse>('/api/interview/answer', data),
     interviewHistory: () => get<InterviewHistoryResponse>('/api/interview/history'),
+    interviewVoiceAnswer: (sessionId: number, questionIndex: number, audioBlob: Blob) => {
+        const fd = new FormData();
+        fd.append('session_id', String(sessionId));
+        fd.append('question_index', String(questionIndex));
+        fd.append('audio', audioBlob, 'recording.webm');
+        return postForm<InterviewVoiceAnswerResponse>('/api/interview/voice-answer', fd);
+    },
+    interviewQuestionAudioUrl: (sessionId: number, questionIndex: number) =>
+        `${BASE}/api/interview/question-audio?session_id=${sessionId}&q=${questionIndex}`,
+    interviewVoiceEnabled: () => get<InterviewVoiceEnabledResponse>('/api/interview/voice-enabled'),
 
     // 13. Skill Quizzes
     quizStart: (skill: string) => post<QuizStartResponse>('/quizzes/start', { skill }),

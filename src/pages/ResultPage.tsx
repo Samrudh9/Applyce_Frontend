@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
-  ArrowRight, Award, BookOpen, Briefcase, CheckCircle2, ChevronDown, ChevronUp, Download,
+  ArrowRight, Award, BookOpen, Briefcase, CheckCircle2, Download,
   Eye, EyeOff, ExternalLink, FileText, GraduationCap, Lightbulb, Loader2, Map, Search,
   ShieldCheck, Star, Target, TrendingUp, Wrench,
 } from 'lucide-react';
@@ -86,75 +86,40 @@ export default function ResultPage() {
         />
       </div>
 
-      {/* ── Resume Preview ── */}
-      {state?.fileUrl && (
-        <section>
-          <Card hover={false}>
-            <button
-              onClick={() => setShowPreview(!showPreview)}
-              className="flex w-full items-center justify-between"
-              aria-expanded={showPreview}
-              aria-controls="resume-preview"
-            >
-              <div className="flex items-center gap-3">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50">
-                  <FileText size={18} className="text-blue-500" />
-                </div>
-                <div className="text-left">
-                  <h3 className="text-sm font-bold text-text">Uploaded Resume</h3>
-                  <p className="text-xs text-muted">{state.fileName ?? 'resume.pdf'}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge tone="info" size="sm">{showPreview ? 'Hide' : 'Preview'}</Badge>
-                {showPreview ? <ChevronUp size={18} className="text-muted" /> : <ChevronDown size={18} className="text-muted" />}
-              </div>
-            </button>
-            {showPreview && (
-              <motion.div
-                id="resume-preview"
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="mt-4"
-              >
-                {state.fileType === 'application/pdf' ? (
-                  <iframe
-                    src={state.fileUrl}
-                    title="Resume Preview"
-                    className="w-full rounded-xl border border-border"
-                    style={{ height: '600px' }}
-                  />
-                ) : (
-                  <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-slate-50/50 p-10">
-                    <FileText size={48} className="text-muted" />
-                    <p className="text-sm text-muted">DOCX preview not available in browser.</p>
-                    <a href={state.fileUrl} download={state.fileName}>
-                      <Button variant="secondary" size="sm"><Download size={14} /> Download to View</Button>
-                    </a>
-                  </div>
-                )}
-              </motion.div>
-            )}
-          </Card>
-        </section>
-      )}
-
-      {/* ── 1. Score Row: Overall Score · Score Breakdown · Grade ── */}
+      {/* ── 1. Score Row: Overall Score · Score Breakdown · Grade · Resume ── */}
       <section className="grid gap-6 lg:grid-cols-3">
         {/* Overall Score */}
         <Card hover={false} className="flex flex-col items-center justify-center text-center">
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted">Overall Score</h3>
           <CircularProgress value={overallScore} size={160} strokeWidth={12} color="#34d399" label="" />
           <p className="mt-1 text-3xl font-bold text-text">{overallScore}%</p>
-          <p className="mt-1 text-xs text-muted">Resume & ATS combined score</p>
+          <p className="mt-1 text-xs text-muted">Resume &amp; ATS combined score</p>
           <div className="mt-3 flex flex-wrap justify-center gap-1">
             <Badge tone="success" size="sm">Keywords</Badge>
             <Badge tone="warning" size="sm">Format</Badge>
             <Badge tone="neutral" size="sm">Sections</Badge>
             <Badge tone="info" size="sm">Content</Badge>
           </div>
+
+          {/* Compact resume preview under score */}
+          {state?.fileUrl && (
+            <div className="mt-5 w-full border-t border-border pt-4">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50">
+                  <FileText size={15} className="text-blue-500" />
+                </div>
+                <div className="min-w-0 flex-1 text-left">
+                  <p className="truncate text-xs font-semibold text-text">{state.fileName ?? 'resume.pdf'}</p>
+                </div>
+                <button
+                  onClick={() => setShowPreview(!showPreview)}
+                  className="flex items-center gap-1 rounded-lg border border-border bg-white px-2.5 py-1.5 text-xs font-medium text-muted transition-colors hover:bg-slate-50 hover:text-text"
+                >
+                  {showPreview ? <><EyeOff size={12} /> Hide</> : <><Eye size={12} /> Preview</>}
+                </button>
+              </div>
+            </div>
+          )}
         </Card>
 
         {/* Score Breakdown */}
@@ -189,6 +154,48 @@ export default function ResultPage() {
           )}
         </Card>
       </section>
+
+      {/* ── Resume Preview Panel (shown/hidden) ── */}
+      <AnimatePresence>
+        {showPreview && state?.fileUrl && (
+          <motion.section
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card hover={false}>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-text flex items-center gap-2">
+                  <FileText size={16} className="text-blue-500" /> Resume Preview
+                </h3>
+                <button
+                  onClick={() => setShowPreview(false)}
+                  className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-muted hover:bg-slate-50"
+                >
+                  <EyeOff size={12} /> Close
+                </button>
+              </div>
+              {state.fileType === 'application/pdf' ? (
+                <iframe
+                  src={state.fileUrl}
+                  title="Resume Preview"
+                  className="w-full rounded-xl border border-border"
+                  style={{ height: '500px' }}
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-slate-50/50 p-10">
+                  <FileText size={48} className="text-muted" />
+                  <p className="text-sm text-muted">DOCX preview not available in browser.</p>
+                  <a href={state.fileUrl} download={state.fileName}>
+                    <Button variant="secondary" size="sm"><Download size={14} /> Download to View</Button>
+                  </a>
+                </div>
+              )}
+            </Card>
+          </motion.section>
+        )}
+      </AnimatePresence>
 
       {/* ── 2. Career Predictions ── */}
       <section>
