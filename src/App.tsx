@@ -19,7 +19,8 @@ import RoadmapPage from './pages/RoadmapPage';
 import ScorecardPage from './pages/ScorecardPage';
 import SkillQuizzesPage from './pages/SkillQuizzesPage';
 import UploadPage from './pages/UploadPage';
-import VoiceInterviewPage from './pages/VoiceInterviewPage';
+
+
 
 const PageWrap = ({ children }: { children: ReactNode }) => (
   <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.3 }}>
@@ -46,7 +47,7 @@ function App() {
           <Route path="/resume-builder" element={<AppShell><PageWrap><ResumeBuilderPage /></PageWrap></AppShell>} />
           <Route path="/cover-letter" element={<AppShell><PageWrap><CoverLetterPage /></PageWrap></AppShell>} />
           <Route path="/interview" element={<AppShell><PageWrap><InterviewPrepPage /></PageWrap></AppShell>} />
-          <Route path="/voice-interview" element={<AppShell><PageWrap><VoiceInterviewPage /></PageWrap></AppShell>} />
+
           <Route path="/quizzes" element={<AppShell><PageWrap><SkillQuizzesPage /></PageWrap></AppShell>} />
           <Route path="/tracker" element={<AppShell><PageWrap><ApplicationTrackerPage /></PageWrap></AppShell>} />
           <Route path="/scorecard" element={<AppShell><PageWrap><ScorecardPage /></PageWrap></AppShell>} />
