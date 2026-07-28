@@ -118,23 +118,8 @@ export default function LandingPage() {
                 Upload Resume <ArrowRight size={18} />
               </Button>
             </Link>
-            <Link to="/dashboard">
-              <Button variant="outline" size="lg">View Dashboard</Button>
-            </Link>
           </motion.div>
 
-          {/* Author / metadata row */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="mt-16 flex flex-wrap items-center gap-6 text-xs uppercase tracking-widest text-muted"
-          >
-            <span>Trusted by professionals at</span>
-            {['Google', 'Meta', 'Amazon', 'Microsoft', 'Tesla'].map((co) => (
-              <span key={co} className="font-semibold text-text/50">{co}</span>
-            ))}
-          </motion.div>
         </div>
       </section>
 
