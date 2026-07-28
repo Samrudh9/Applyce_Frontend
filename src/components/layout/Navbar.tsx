@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown, Github, LayoutDashboard, LogOut, Menu, Upload, X } from 'lucide-react';
+import { ChevronDown, LogOut, Menu, X } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -14,25 +14,6 @@ const isGroup = (e: NavEntry): e is NavGroup => 'items' in e;
 
 const nav: NavEntry[] = [
   { to: '/', label: 'Home' },
-  { to: '/dashboard', label: 'Dashboard' },
-  { to: '/upload', label: 'Upload' },
-  { to: '/jobs', label: 'Jobs' },
-  {
-    label: 'Tools',
-    items: [
-      { to: '/resume-builder', label: 'Resume Builder' },
-      { to: '/cover-letter', label: 'Cover Letters' },
-      { to: '/interview', label: 'Interview Prep' },
-      { to: '/quizzes', label: 'Skill Quizzes' },
-    ],
-  },
-  {
-    label: 'More',
-    items: [
-      { to: '/tracker', label: 'Application Tracker' },
-      { to: '/scorecard', label: 'Score Card' },
-    ],
-  },
 ];
 
 /* ─── Logo icon (inline SVG) ─── */
@@ -161,24 +142,6 @@ function UserMenu() {
               </div>
             </div>
 
-            {/* Quick links */}
-            <div className="p-1.5">
-              <Link
-                to="/dashboard"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-slate-50 hover:text-text"
-              >
-                <LayoutDashboard size={15} /> Dashboard
-              </Link>
-              <Link
-                to="/upload"
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-slate-50 hover:text-text"
-              >
-                <Upload size={15} /> Upload Resume
-              </Link>
-            </div>
-
             {/* Sign out */}
             <div className="border-t border-border p-1.5">
               <button
@@ -199,7 +162,7 @@ function UserMenu() {
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const { user, login, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-white/80 backdrop-blur-xl">
@@ -243,14 +206,7 @@ export function Navbar() {
         <div className="hidden items-center gap-2.5 md:flex shrink-0 ml-6">
           {user ? (
             <UserMenu />
-          ) : (
-            <Link to="/login">
-              <button className="flex items-center gap-1.5 rounded-xl border border-border bg-white px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-slate-50 hover:border-border-hover">
-                <Github size={15} />
-                Sign in
-              </button>
-            </Link>
-          )}
+          ) : null}
         </div>
 
         {/* ── Mobile toggle ── */}
@@ -331,13 +287,7 @@ export function Navbar() {
                       <LogOut size={15} /> Sign out
                     </button>
                   </div>
-                ) : (
-                  <Link to="/login" className="block" onClick={() => setMobileOpen(false)}>
-                    <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#24292f] px-4 py-2.5 text-sm font-semibold text-white hover:bg-[#1b1f23]">
-                      <Github size={15} /> Sign in with GitHub
-                    </button>
-                  </Link>
-                )}
+                ) : null}
               </div>
             </div>
           </motion.div>

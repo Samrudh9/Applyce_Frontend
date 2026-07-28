@@ -2,13 +2,6 @@ import { useState } from 'react';
 import { Github, Heart, Linkedin, Mail, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const quickLinks = [
-  { to: '/pricing', label: 'Pricing' },
-  { to: '/jobs', label: 'Job Search' },
-  { to: '/roadmap', label: 'Roadmaps' },
-  { to: '/about', label: 'About Us' },
-];
-
 const resources = [
   { to: '/upload', label: 'Upload Resume' },
   { to: '/resume-builder', label: 'Resume Builder' },
@@ -59,7 +52,7 @@ export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-white">
       <div className="mx-auto max-w-7xl px-4 py-16 md:px-8">
-        <div className="grid gap-10 md:grid-cols-4">
+        <div className="grid gap-10 md:grid-cols-3">
           {/* Brand */}
           <div className="md:col-span-1">
             <h4 className="font-display text-xl font-bold">
@@ -81,18 +74,6 @@ export function Footer() {
                 </a>
               ))}
             </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h5 className="mb-4 text-sm font-semibold uppercase tracking-wider text-muted">Quick Links</h5>
-            <ul className="space-y-2.5">
-              {quickLinks.map((link) => (
-                <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-muted transition-colors hover:text-mint-dark">{link.label}</Link>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Resources */}

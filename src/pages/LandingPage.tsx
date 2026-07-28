@@ -6,7 +6,6 @@ import {
   Target, TrendingUp, Zap,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -31,19 +30,6 @@ const steps = [
   { num: '02', title: 'AI Analysis', desc: 'Our ML engine evaluates skills, ATS fit, and career alignment.' },
   { num: '03', title: 'Get Results', desc: 'Receive career matches, scores, roadmaps, and job suggestions.' },
   { num: '04', title: 'Take Action', desc: 'Search jobs, build your resume, and track your progress.' },
-];
-
-const testimonials = [
-  { name: 'Priya Sharma', role: 'Software Engineer at Google', text: 'Applyce helped me identify the exact skill gaps holding me back. Within 3 months of following the roadmap, I landed my dream role.' },
-  { name: 'Marcus Chen', role: 'Data Scientist at Meta', text: 'The ATS analysis was eye-opening. My resume score jumped from 62 to 91 after following the improvement suggestions.' },
-  { name: 'Sarah Johnson', role: 'ML Engineer at Tesla', text: 'The career matching accuracy is incredible. It predicted my ideal role with 94% confidence, and it was spot on.' },
-];
-
-const stats = [
-  { value: 500, suffix: '+', label: 'Career Paths' },
-  { value: 100, suffix: '+', label: 'Skills Tracked' },
-  { value: 10000, suffix: '+', label: 'Users Helped' },
-  { value: 94, suffix: '%', label: 'Match Accuracy' },
 ];
 
 const stagger = {
@@ -276,61 +262,6 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ───── STATS ───── */}
-      <section className="rounded-3xl border border-border bg-white px-6 py-14 shadow-md md:px-12">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <AnimatedCounter
-                end={s.value}
-                suffix={s.suffix}
-                className="font-display text-4xl font-bold gradient-text md:text-5xl"
-              />
-              <p className="mt-2 text-sm font-medium text-muted">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ───── TESTIMONIALS ───── */}
-      <section>
-        <SectionHeading
-          align="center"
-          badge={<Badge tone="warning" dot>Testimonials</Badge>}
-          title="Loved by Thousands of Professionals"
-          subtitle="Hear from real users who transformed their career journey with Applyce."
-        />
-        <div className="grid gap-5 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.5 }}
-            >
-              <Card className="h-full">
-                <div className="mb-4 flex gap-1">
-                  {Array.from({ length: 5 }).map((_, idx) => (
-                    <Sparkles key={idx} size={14} className="text-amber-400" />
-                  ))}
-                </div>
-                <p className="text-sm leading-relaxed text-muted">"{t.text}"</p>
-                <div className="mt-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-mint to-purple text-sm font-bold text-white">
-                    {t.name.split(' ').map((n) => n[0]).join('')}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-text">{t.name}</p>
-                    <p className="text-xs text-muted">{t.role}</p>
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
         </div>
       </section>
 
