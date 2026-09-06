@@ -51,12 +51,12 @@ export default function ScorecardPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (loading) return <div className="flex min-h-[60vh] items-center justify-center"><Loader2 size={40} className="animate-spin text-mint" /></div>;
+    if (loading) return <div className="flex min-h-[60vh] items-center justify-center"><Loader2 size={40} className="animate-spin text-accent" /></div>;
     if (error) return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
-            <Trophy size={48} className="text-muted" />
-            <p className="text-lg font-semibold text-text">Scorecard Not Found</p>
-            <p className="text-sm text-muted">{error}</p>
+            <Trophy size={48} className="text-ink-sec" />
+            <p className="text-lg font-semibold text-ink">Scorecard Not Found</p>
+            <p className="text-sm text-ink-sec">{error}</p>
         </div>
     );
 
@@ -66,16 +66,16 @@ export default function ScorecardPage() {
             <div className="space-y-8">
                 <SectionHeading title="Shareable Score Card" subtitle="Generate a public link to share your resume score with employers or peers." />
                 <Card hover={false} className="flex flex-col items-center text-center py-12">
-                    <Share2 size={48} className="text-mint mb-4" />
-                    <h2 className="text-xl font-bold text-text">Create Your Score Card</h2>
-                    <p className="mt-2 max-w-md text-sm text-muted">Generate a shareable link for your latest resume analysis. Anyone with the link can view your score, skills, and career predictions.</p>
+                    <Share2 size={48} className="text-accent mb-4" />
+                    <h2 className="text-xl font-bold text-ink">Create Your Score Card</h2>
+                    <p className="mt-2 max-w-md text-sm text-ink-sec">Generate a shareable link for your latest resume analysis. Anyone with the link can view your score, skills, and career predictions.</p>
                     <Button onClick={generateShareLink} disabled={generating} className="mt-6">
                         {generating ? <><Loader2 size={16} className="animate-spin" /> Generating…</> : <><Award size={16} /> Generate Score Card</>}
                     </Button>
                     {shareUrl && (
                         <div className="mt-6 w-full max-w-lg">
-                            <div className="flex items-center gap-2 rounded-xl border border-mint/30 bg-mint/5 p-3">
-                                <input readOnly value={shareUrl} className="flex-1 bg-transparent text-sm text-text outline-none" />
+                            <div className="flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/5 p-3">
+                                <input readOnly value={shareUrl} className="flex-1 bg-transparent text-sm text-ink outline-none" />
                                 <Button size="sm" variant="secondary" onClick={copyLink}>
                                     <Copy size={14} /> {copied ? 'Copied!' : 'Copy'}
                                 </Button>
@@ -95,39 +95,39 @@ export default function ScorecardPage() {
 
             {/* Share URL */}
             {shareUrl && (
-                <div className="flex items-center gap-2 rounded-xl border border-mint/30 bg-mint/5 p-3">
-                    <Share2 size={16} className="text-mint shrink-0" />
-                    <input readOnly value={shareUrl} className="flex-1 bg-transparent text-sm text-text outline-none" />
+                <div className="flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/5 p-3">
+                    <Share2 size={16} className="text-accent shrink-0" />
+                    <input readOnly value={shareUrl} className="flex-1 bg-transparent text-sm text-ink outline-none" />
                     <Button size="sm" variant="secondary" onClick={copyLink}><Copy size={14} /> {copied ? 'Copied!' : 'Copy'}</Button>
                 </div>
             )}
 
             {/* Score */}
             <Card hover={false} className="flex flex-col items-center text-center">
-                <CircularProgress value={data.overall_score} size={160} strokeWidth={14} color="#34d399" label="Overall Score" />
-                <p className="mt-3 text-lg font-bold text-text">{data.predicted_career}</p>
-                <p className="text-sm text-muted">{data.career_confidence.toFixed(1)}% confidence</p>
+                <CircularProgress value={data.overall_score} size={160} strokeWidth={14} label="Overall Score" />
+                <p className="mt-3 text-lg font-bold text-ink">{data.predicted_career}</p>
+                <p className="text-sm text-ink-sec">{data.career_confidence.toFixed(1)}% confidence</p>
             </Card>
 
             {/* Sub-scores */}
             <Card>
-                <h3 className="mb-4 text-lg font-bold text-text">Score Breakdown</h3>
+                <h3 className="mb-4 text-lg font-bold text-ink">Score Breakdown</h3>
                 <div className="space-y-3">
-                    <ProgressBar label="ATS Score" value={data.ats_score} showValue animated colorClass="from-emerald-400 to-mint" />
-                    <ProgressBar label="Keyword Match" value={data.keyword_score} showValue animated colorClass="from-emerald-400 to-mint" />
-                    <ProgressBar label="Format" value={data.format_score} showValue animated colorClass="from-amber-400 to-mint" />
-                    <ProgressBar label="Sections" value={data.section_score} showValue animated colorClass="from-amber-400 to-mint" />
+                    <ProgressBar label="ATS Score" value={data.ats_score} showValue animated colorClass="from-accent-strong to-accent" />
+                    <ProgressBar label="Keyword Match" value={data.keyword_score} showValue animated colorClass="from-accent-strong to-accent" />
+                    <ProgressBar label="Format" value={data.format_score} showValue animated colorClass="from-accent-strong to-accent" />
+                    <ProgressBar label="Sections" value={data.section_score} showValue animated colorClass="from-accent-strong to-accent" />
                 </div>
             </Card>
 
             {/* Careers */}
             {data.top_careers.length > 0 && (
                 <Card>
-                    <h3 className="mb-3 text-lg font-bold text-text">Top Career Matches</h3>
+                    <h3 className="mb-3 text-lg font-bold text-ink">Top Career Matches</h3>
                     <div className="space-y-2">
                         {data.top_careers.map((c, i) => (
-                            <div key={i} className="flex items-center justify-between rounded-xl border border-border bg-slate-50/50 px-4 py-3">
-                                <span className="font-medium text-text">{typeof c === 'string' ? c : c.career}</span>
+                            <div key={i} className="flex items-center justify-between rounded-xl border border-border bg-elevated/60 px-4 py-3">
+                                <span className="font-medium text-ink">{typeof c === 'string' ? c : c.career}</span>
                                 {typeof c !== 'string' && <Badge tone="success" size="sm">{c.confidence.toFixed(1)}%</Badge>}
                             </div>
                         ))}
@@ -138,7 +138,7 @@ export default function ScorecardPage() {
             {/* Skills */}
             {data.skills_detected.length > 0 && (
                 <Card>
-                    <h3 className="mb-3 text-lg font-bold text-text">Skills ({data.skill_count})</h3>
+                    <h3 className="mb-3 text-lg font-bold text-ink">Skills ({data.skill_count})</h3>
                     <div className="flex flex-wrap gap-2">{data.skills_detected.map((s) => <Badge key={s} tone="info">{s}</Badge>)}</div>
                 </Card>
             )}
@@ -146,7 +146,7 @@ export default function ScorecardPage() {
             {/* Salary */}
             {data.predicted_salary_min > 0 && (
                 <Card hover={false} className="text-center">
-                    <p className="text-sm text-muted">Estimated Salary Range</p>
+                    <p className="text-sm text-ink-sec">Estimated Salary Range</p>
                     <p className="text-2xl font-bold text-emerald-600">₹{(data.predicted_salary_min / 100000).toFixed(1)}L – ₹{(data.predicted_salary_max / 100000).toFixed(1)}L</p>
                 </Card>
             )}

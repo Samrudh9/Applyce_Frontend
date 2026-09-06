@@ -1,5 +1,4 @@
-import { motion, useInView } from 'framer-motion';
-import { ReactNode, useRef } from 'react';
+import { ReactNode } from 'react';
 
 interface Props {
   title: string;
@@ -10,21 +9,36 @@ interface Props {
 }
 
 export function SectionHeading({ title, subtitle, badge, align = 'left', className = '' }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
   const centered = align === 'center' ? 'text-center mx-auto' : '';
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5 }}
-      className={`mb-8 max-w-2xl ${centered} ${className}`}
-    >
+    <div className={`mb-8 max-w-2xl ${centered} ${className}`}>
       {badge && <div className="mb-3">{badge}</div>}
-      <h2 className="font-display text-2xl font-bold text-text md:text-3xl">{title}</h2>
-      {subtitle && <p className="mt-2 text-muted md:text-lg">{subtitle}</p>}
-    </motion.div>
+      <h2 className="font-display text-display-md font-semibold tracking-tight text-ink">{title}</h2>
+      {subtitle && <p className="mt-2 text-base text-ink-sec">{subtitle}</p>}
+    </div>
+  );
+}
+
+/* App-page header: title + optional description + right-aligned actions */
+export function PageHeader({
+  title,
+  description,
+  actions,
+  className = '',
+}: {
+  title: string;
+  description?: string;
+  actions?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between ${className}`}>
+      <div>
+        <h1 className="font-display text-display-md font-semibold tracking-tight text-ink">{title}</h1>
+        {description && <p className="mt-1 max-w-2xl text-sm text-ink-sec">{description}</p>}
+      </div>
+      {actions && <div className="flex shrink-0 flex-wrap items-center gap-2.5">{actions}</div>}
+    </div>
   );
 }

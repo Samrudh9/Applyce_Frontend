@@ -78,7 +78,7 @@ export default function UploadPage() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
-            className="flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="flex items-center gap-3 rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger"
           >
             <AlertCircle size={16} className="shrink-0" />
             <p className="flex-1">{error}</p>
@@ -94,7 +94,7 @@ export default function UploadPage() {
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           onClick={() => { if (!uploading) document.getElementById('file-input')?.click(); }}
-          className={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-16 transition-all duration-300 ${dragging ? 'border-mint bg-mint/5' : file ? 'border-mint/30 bg-mint/[0.02]' : 'border-border-hover bg-slate-50/50 hover:border-mint/40 hover:bg-mint/[0.02]'
+          className={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-16 transition-all duration-300 ${dragging ? 'border-accent bg-accent/5' : file ? 'border-accent/30 bg-accent/[0.02]' : 'border-line-strong bg-canvas hover:border-accent/40 hover:bg-accent/[0.02]'
             }`}
         >
           <input
@@ -107,17 +107,17 @@ export default function UploadPage() {
 
           {file ? (
             <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center">
-              <FileText size={40} className="mx-auto text-mint" />
-              <p className="mt-3 font-semibold text-text">{file.name}</p>
-              <p className="text-sm text-muted">{(file.size / 1024).toFixed(0)} KB</p>
+              <FileText size={40} className="mx-auto text-accent" />
+              <p className="mt-3 font-semibold text-ink">{file.name}</p>
+              <p className="text-sm text-ink-sec">{(file.size / 1024).toFixed(0)} KB</p>
             </motion.div>
           ) : (
             <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-mint/8">
-                <Upload size={28} className="text-mint" />
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/8">
+                <Upload size={28} className="text-accent" />
               </div>
-              <p className="text-lg font-semibold text-text">Drop your resume here</p>
-              <p className="mt-1 text-sm text-muted">or click to browse · PDF, DOCX up to 5 MB</p>
+              <p className="text-lg font-semibold text-ink">Drop your resume here</p>
+              <p className="mt-1 text-sm text-ink-sec">or click to browse · PDF, DOCX up to 5 MB</p>
             </div>
           )}
         </div>
@@ -126,8 +126,8 @@ export default function UploadPage() {
       {/* Upload progress */}
       {uploading && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <ProgressBar value={progress} animated colorClass="from-mint to-emerald-400" />
-          <p className="mt-2 text-center text-sm text-muted">
+          <ProgressBar value={progress} animated />
+          <p className="mt-2 text-center text-sm text-ink-sec">
             {progress < 30 ? 'Uploading resume…' : progress < 70 ? 'Analyzing content with AI…' : progress < 100 ? 'Generating career insights…' : 'Done!'}
           </p>
         </motion.div>
@@ -144,7 +144,7 @@ export default function UploadPage() {
 
       {/* Success */}
       {progress === 100 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center gap-2 text-mint-dark">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center gap-2 text-accent-strong">
           <CheckCircle2 size={20} />
           <span className="font-semibold">Analysis complete — redirecting…</span>
         </motion.div>

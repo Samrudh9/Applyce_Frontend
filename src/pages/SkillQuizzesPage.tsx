@@ -81,7 +81,7 @@ export default function SkillQuizzesPage() {
 
             <div className="flex gap-2">
                 {(['select', 'history'] as View[]).map((v) => (
-                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v || (view === 'quiz' && v === 'select') || (view === 'results' && v === 'select') ? 'bg-mint text-white' : 'bg-white text-muted hover:text-text border border-border'}`}>
+                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v || (view === 'quiz' && v === 'select') || (view === 'results' && v === 'select') ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-border'}`}>
                         {v === 'select' ? 'Take Quiz' : 'History'}
                     </button>
                 ))}
@@ -94,15 +94,15 @@ export default function SkillQuizzesPage() {
                         <Card key={skill} hover className="cursor-pointer" onClick={() => startQuiz(skill)}>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <GraduationCap size={18} className="text-mint" />
-                                    <span className="font-semibold text-text">{skill}</span>
+                                    <GraduationCap size={18} className="text-accent" />
+                                    <span className="font-semibold text-ink">{skill}</span>
                                 </div>
                                 {bestScores[skill] !== undefined && <Badge tone="success" size="sm">Best: {bestScores[skill]}</Badge>}
                             </div>
-                            <div className="mt-2 flex items-center gap-1 text-xs text-muted"><Play size={12} /> Start Quiz</div>
+                            <div className="mt-2 flex items-center gap-1 text-xs text-ink-sec"><Play size={12} /> Start Quiz</div>
                         </Card>
                     ))}
-                    {loading && <div className="col-span-full flex justify-center py-8"><Loader2 size={32} className="animate-spin text-mint" /></div>}
+                    {loading && <div className="col-span-full flex justify-center py-8"><Loader2 size={32} className="animate-spin text-accent" /></div>}
                 </div>
             )}
 
@@ -111,18 +111,18 @@ export default function SkillQuizzesPage() {
                 <div className="space-y-4">
                     <Card hover={false}>
                         <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-bold text-text">{selectedSkill} Quiz</h2>
+                            <h2 className="text-lg font-bold text-ink">{selectedSkill} Quiz</h2>
                             <Badge tone="info">{Object.keys(answers).length}/{questions.length} answered</Badge>
                         </div>
                     </Card>
                     {questions.map((q) => (
                         <motion.div key={q.index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
                             <Card>
-                                <p className="mb-3 font-semibold text-text">Q{q.index + 1}. {q.question}</p>
+                                <p className="mb-3 font-semibold text-ink">Q{q.index + 1}. {q.question}</p>
                                 <div className="space-y-2">
                                     {q.options.map((opt, oi) => (
-                                        <button key={oi} onClick={() => selectAnswer(q.index, oi)} className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors ${answers[q.index] === oi ? 'border-mint bg-mint/10 font-medium text-text' : 'border-border bg-white text-muted hover:border-mint/40 hover:bg-mint/5'}`}>
-                                            <span className="mr-2 font-semibold text-muted">{String.fromCharCode(65 + oi)}.</span>{opt}
+                                        <button key={oi} onClick={() => selectAnswer(q.index, oi)} className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors ${answers[q.index] === oi ? 'border-accent bg-accent/10 font-medium text-ink' : 'border-border bg-surface text-ink-sec hover:border-accent/40 hover:bg-accent/5'}`}>
+                                            <span className="mr-2 font-semibold text-ink-sec">{String.fromCharCode(65 + oi)}.</span>{opt}
                                         </button>
                                     ))}
                                 </div>
@@ -141,8 +141,8 @@ export default function SkillQuizzesPage() {
             {view === 'results' && (
                 <div className="space-y-4">
                     <Card hover={false} className="flex flex-col items-center text-center">
-                        <CircularProgress value={score.percentage} size={120} strokeWidth={10} color={score.percentage >= 70 ? '#34d399' : '#f59e0b'} label="Score" />
-                        <p className="mt-3 text-xl font-bold text-text">{score.score} / {score.total}</p>
+                        <CircularProgress value={score.percentage} size={120} strokeWidth={10} label="Score" />
+                        <p className="mt-3 text-xl font-bold text-ink">{score.score} / {score.total}</p>
                         <Badge tone={score.percentage >= 80 ? 'success' : score.percentage >= 50 ? 'warning' : 'danger'} className="mt-2">
                             {score.percentage >= 80 ? 'Excellent!' : score.percentage >= 50 ? 'Good effort' : 'Keep practicing'}
                         </Badge>
@@ -154,10 +154,10 @@ export default function SkillQuizzesPage() {
                                     <div className="flex items-start gap-2">
                                         {r.is_correct ? <CheckCircle size={18} className="mt-0.5 shrink-0 text-emerald-500" /> : <XCircle size={18} className="mt-0.5 shrink-0 text-red-500" />}
                                         <div className="flex-1">
-                                            <p className="font-semibold text-text">{r.question}</p>
-                                            <p className="mt-1 text-sm text-muted">Your answer: <strong>{r.options[r.selected]}</strong></p>
+                                            <p className="font-semibold text-ink">{r.question}</p>
+                                            <p className="mt-1 text-sm text-ink-sec">Your answer: <strong>{r.options[r.selected]}</strong></p>
                                             {!r.is_correct && <p className="text-sm text-emerald-600">Correct: <strong>{r.options[r.correct]}</strong></p>}
-                                            <p className="mt-2 rounded-lg bg-slate-50 p-2 text-xs text-muted">{r.explanation}</p>
+                                            <p className="mt-2 rounded-lg bg-elevated p-2 text-xs text-ink-sec">{r.explanation}</p>
                                         </div>
                                     </div>
                                 </Card>
@@ -174,14 +174,14 @@ export default function SkillQuizzesPage() {
             {/* HISTORY */}
             {view === 'history' && (
                 <div className="space-y-3">
-                    {historyLoading && <div className="flex justify-center py-8"><Loader2 size={32} className="animate-spin text-mint" /></div>}
-                    {!historyLoading && history.length === 0 && <Card><p className="text-center text-muted py-8">No quiz history yet.</p></Card>}
+                    {historyLoading && <div className="flex justify-center py-8"><Loader2 size={32} className="animate-spin text-accent" /></div>}
+                    {!historyLoading && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No quiz history yet.</p></Card>}
                     {history.map((h) => (
                         <Card key={h.id} hover>
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <h3 className="font-semibold text-text flex items-center gap-2"><BookOpen size={16} className="text-mint" /> {h.skill}</h3>
-                                    <p className="text-xs text-muted flex items-center gap-1"><Clock size={12} />{new Date(h.completed_at).toLocaleDateString()}</p>
+                                    <h3 className="font-semibold text-ink flex items-center gap-2"><BookOpen size={16} className="text-accent" /> {h.skill}</h3>
+                                    <p className="text-xs text-ink-sec flex items-center gap-1"><Clock size={12} />{new Date(h.completed_at).toLocaleDateString()}</p>
                                 </div>
                                 <Badge tone={h.score / h.total >= 0.8 ? 'success' : h.score / h.total >= 0.5 ? 'warning' : 'danger'}>{h.score}/{h.total}</Badge>
                             </div>

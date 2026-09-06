@@ -1,25 +1,21 @@
-import { motion, HTMLMotionProps } from 'framer-motion';
-import { ReactNode } from 'react';
+import { HTMLAttributes, ReactNode } from 'react';
 
-type Props = HTMLMotionProps<'div'> & {
+type Props = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
   hover?: boolean;
-  glow?: boolean | 'mint' | 'purple' | 'success' | 'none';
+  glow?: boolean | string;
   noPad?: boolean;
 };
 
-export function Card({ children, className = '', hover = true, glow = 'mint', noPad, ...rest }: Props) {
+export function Card({ children, className = '', hover = true, glow, noPad, ...rest }: Props) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-30px' }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
-      whileHover={hover ? { y: -3, transition: { duration: 0.2 } } : undefined}
-      className={`rounded-2xl border border-border bg-white ${noPad ? '' : 'p-6'} shadow-card transition-all duration-300 ${hover ? 'hover:shadow-card-hover' : ''} ${className}`}
+    <div
+      className={`rounded-xl border border-line bg-surface shadow-card ${noPad ? '' : 'p-6'} transition-all duration-200 ${
+        hover ? 'hover:border-line-strong hover:shadow-card-hover' : ''
+      } ${className}`}
       {...rest}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

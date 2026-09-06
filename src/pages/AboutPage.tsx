@@ -8,9 +8,9 @@ import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { SectionHeading } from '../components/ui/SectionHeading';
 
 const stats = [
-  { label: 'Careers Mapped', value: 500, suffix: '+', color: 'text-cyan' },
-  { label: 'Skills Tracked', value: 100, suffix: '+', color: 'text-mint' },
-  { label: 'Active Users', value: 10000, suffix: '+', color: 'text-violet' },
+  { label: 'Careers Mapped', value: 500, suffix: '+', color: 'text-accent' },
+  { label: 'Skills Tracked', value: 100, suffix: '+', color: 'text-accent-strong' },
+  { label: 'Active Users', value: 10000, suffix: '+', color: 'text-burgundy' },
   { label: 'Industries', value: 6, suffix: '', color: 'text-success' },
 ];
 
@@ -33,9 +33,9 @@ const howItWorks = [
 ];
 
 const team = [
-  { name: 'Aisha Rao', role: 'CEO & Co-founder', gradient: 'from-cyan to-mint' },
-  { name: 'Karan Mehta', role: 'CTO & AI Lead', gradient: 'from-violet to-cyan' },
-  { name: 'Nina Patel', role: 'Head of Product', gradient: 'from-mint to-success' },
+  { name: 'Aisha Rao', role: 'CEO & Co-founder', gradient: 'from-accent to-accent-strong' },
+  { name: 'Karan Mehta', role: 'CTO & AI Lead', gradient: 'from-burgundy to-accent' },
+  { name: 'Nina Patel', role: 'Head of Product', gradient: 'from-accent to-success' },
 ];
 
 export default function AboutPage() {
@@ -45,7 +45,7 @@ export default function AboutPage() {
       <section className="text-center">
         <Badge tone="info" icon={<Rocket size={12} />} className="mb-4">Our Story</Badge>
         <h1 className="font-display text-4xl font-semibold md:text-5xl">About <span className="gradient-text">Applyce</span></h1>
-        <p className="mx-auto mt-3 max-w-2xl text-lg text-muted">Empowering job seekers with AI-driven career intelligence. We combine resume parsing, ATS analysis, and market data to map the best-fit career paths for every user.</p>
+        <p className="mx-auto mt-3 max-w-2xl text-lg text-ink-sec">Empowering job seekers with AI-driven career intelligence. We combine resume parsing, ATS analysis, and market data to map the best-fit career paths for every user.</p>
       </section>
 
       {/* Stats */}
@@ -54,7 +54,7 @@ export default function AboutPage() {
           <motion.div key={stat.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
             <Card className="text-center">
               <AnimatedCounter end={stat.value} suffix={stat.suffix} className={`font-display text-3xl font-semibold ${stat.color}`} />
-              <p className="mt-1 text-xs uppercase tracking-wider text-muted">{stat.label}</p>
+              <p className="mt-1 text-xs uppercase tracking-wider text-ink-sec">{stat.label}</p>
             </Card>
           </motion.div>
         ))}
@@ -63,21 +63,21 @@ export default function AboutPage() {
       {/* Mission + tech */}
       <section className="grid gap-6 md:grid-cols-2">
         <Card>
-          <h2 className="mb-3 font-display text-2xl font-semibold">Our Mission</h2>
-          <p className="text-muted leading-relaxed">We believe career decisions shouldn't be guesswork. Applyce (powered by the SkillFit engine) leverages machine learning to analyze resumes, predict career fits with 92%+ accuracy, and generate personalized learning roadmaps — all in real time.</p>
+          <h2 className="mb-3 font-display text-2xl font-semibold text-ink">Our Mission</h2>
+          <p className="text-ink-sec leading-relaxed">We believe career decisions shouldn't be guesswork. Applyce (powered by the SkillFit engine) leverages machine learning to analyze resumes, predict career fits with 92%+ accuracy, and generate personalized learning roadmaps — all in real time.</p>
           <div className="mt-4 flex gap-2">
             <Badge tone="success" icon={<Shield size={12} />}>Privacy First</Badge>
             <Badge tone="info" icon={<Zap size={12} />}>AI-Powered</Badge>
           </div>
         </Card>
         <Card>
-          <h2 className="mb-4 font-display text-2xl font-semibold">Technology Stack</h2>
+          <h2 className="mb-4 font-display text-2xl font-semibold text-ink">Technology Stack</h2>
           <div className="grid grid-cols-2 gap-3">
             {techStack.map((t) => {
               const Icon = t.icon;
               return (
-                <div key={t.name} className="flex items-center gap-2 rounded-lg border border-border bg-slate-50 px-3 py-2 text-sm">
-                  <Icon size={16} className="text-cyan" />
+                <div key={t.name} className="flex items-center gap-2 rounded-lg border border-line bg-elevated/60 px-3 py-2 text-sm text-ink">
+                  <Icon size={16} className="text-accent" />
                   <span>{t.name}</span>
                 </div>
               );
@@ -95,12 +95,12 @@ export default function AboutPage() {
             return (
               <motion.div key={item.title} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.1 }}>
                 <Card hover className="relative text-center">
-                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan/20 to-violet/10">
-                    <Icon size={22} className="text-cyan" />
+                  <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/10">
+                    <Icon size={22} className="text-accent-strong" />
                   </div>
-                  <p className="absolute right-3 top-3 text-xs font-bold text-muted">0{item.step}</p>
-                  <h3 className="font-bold">{item.title}</h3>
-                  <p className="mt-1 text-xs text-muted">{item.desc}</p>
+                  <p className="absolute right-3 top-3 text-xs font-bold text-ink-ter">0{item.step}</p>
+                  <h3 className="font-bold text-ink">{item.title}</h3>
+                  <p className="mt-1 text-xs text-ink-sec">{item.desc}</p>
                 </Card>
               </motion.div>
             );
@@ -112,9 +112,9 @@ export default function AboutPage() {
 
       {/* CTA */}
       <section className="text-center">
-        <Card glow className="mx-auto max-w-2xl">
-          <h2 className="font-display text-2xl font-semibold">Ready to discover your perfect career?</h2>
-          <p className="mt-2 text-muted">Join 10,000+ users and let AI map your career path.</p>
+        <Card className="mx-auto max-w-2xl bg-accent/5 ring-1 ring-accent/10">
+          <h2 className="font-display text-2xl font-semibold text-ink">Ready to discover your perfect career?</h2>
+          <p className="mt-2 text-ink-sec">Join 10,000+ users and let AI map your career path.</p>
           <Link to="/upload"><Button className="mt-5">Get Started Free</Button></Link>
         </Card>
       </section>

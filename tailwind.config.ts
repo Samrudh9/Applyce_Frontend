@@ -1,63 +1,49 @@
 import type { Config } from 'tailwindcss';
 
 export default {
+  darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
-        /* ── Surfaces ── */
-        ink: '#f5f7fa',           /* page background – light blue-gray */
-        surface: '#ffffff',       /* card/container background – white */
-        'surface-elevated': '#f0f2f5',
-
-        /* ── Brand accents ── */
-        mint: '#34d399',          /* primary accent – mint green */
-        'mint-dark': '#10b981',
-        purple: '#7c3aed',        /* CTA accent – vivid purple */
-        'purple-dark': '#6d28d9',
-
-        /* ── Text ── */
-        text: '#1e293b',          /* primary – near-black / charcoal */
-        muted: '#64748b',         /* secondary – muted gray */
-        stone: '#94a3b8',         /* tertiary / placeholder */
-
-        /* ── Borders ── */
-        border: '#e2e8f0',        /* soft cool gray */
-        'border-hover': '#cbd5e1',
-
-        /* ── Semantic ── */
-        success: '#22c55e',
-        warning: '#f59e0b',
-        danger: '#ef4444',
-
-        /* ── Legacy aliases (for gradual migration) ── */
-        amber: '#34d399',
-        ember: '#7c3aed',
-        parchment: '#1e293b',
-        cyan: '#34d399',
-        gold: '#10b981',
-        violet: '#7c3aed',
-        sage: '#22c55e',
-        card: '#ffffff',
-        'card-hover': '#f8fafc',
-        space: '#ffffff',
-        nebula: '#f5f7fa',
+        /* ── Semantic surface / text / accents (theme-aware via CSS vars) ── */
+        canvas: 'rgb(var(--canvas) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        elevated: 'rgb(var(--elevated) / <alpha-value>)',
+        line: 'rgb(var(--line) / <alpha-value>)',
+        'line-strong': 'rgb(var(--line-strong) / <alpha-value>)',
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        'ink-sec': 'rgb(var(--ink-sec) / <alpha-value>)',
+        'ink-ter': 'rgb(var(--ink-ter) / <alpha-value>)',
+        accent: 'rgb(var(--accent) / <alpha-value>)',
+        'accent-strong': 'rgb(var(--accent-strong) / <alpha-value>)',
+        'accent-soft': 'rgb(var(--accent-soft) / <alpha-value>)',
+        burgundy: 'rgb(var(--burgundy) / <alpha-value>)',
+        'burgundy-strong': 'rgb(var(--burgundy-strong) / <alpha-value>)',
+        'burgundy-soft': 'rgb(var(--burgundy-soft) / <alpha-value>)',
+        success: 'rgb(var(--success) / <alpha-value>)',
+        warning: 'rgb(var(--warning) / <alpha-value>)',
+        danger: 'rgb(var(--danger) / <alpha-value>)',
       },
       fontFamily: {
         display: ['"Inter"', 'system-ui', 'sans-serif'],
         sans: ['"Inter"', 'system-ui', 'sans-serif'],
       },
+      fontSize: {
+        'display-xl': ['3.5rem', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
+        'display-lg': ['2.5rem', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
+        'display-md': ['2rem', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+      },
       boxShadow: {
-        glow: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
-        'glow-lg': '0 4px 16px rgba(0, 0, 0, 0.08)',
-        card: '0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)',
-        'card-hover': '0 8px 30px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(52, 211, 153, 0.12)',
-        violet: '0 8px 30px rgba(124, 58, 237, 0.08)',
-        'violet-lg': '0 12px 40px rgba(124, 58, 237, 0.12)',
-        success: '0 4px 16px rgba(34, 197, 94, 0.1)',
-        soft: '0 1px 2px rgba(0, 0, 0, 0.04)',
-        md: '0 4px 12px rgba(0, 0, 0, 0.06)',
-        lg: '0 8px 30px rgba(0, 0, 0, 0.08)',
+        card: '0 1px 2px rgba(16, 16, 16, 0.04), 0 1px 3px rgba(16, 16, 16, 0.02)',
+        'card-hover': '0 10px 30px -12px rgba(16, 16, 16, 0.14), 0 0 0 1px rgba(16, 16, 16, 0.02)',
+        lift: '0 16px 40px -12px rgba(16, 16, 16, 0.18)',
+        glow: '0 1px 2px rgba(16, 16, 16, 0.04)',
+        'glow-lg': '0 8px 30px rgba(16, 16, 16, 0.08)',
+        violet: '0 8px 30px -12px rgba(92, 29, 36, 0.25)',
+        'violet-lg': '0 12px 40px -12px rgba(92, 29, 36, 0.3)',
+        success: '0 4px 16px rgba(22, 111, 60, 0.15)',
+        soft: '0 1px 2px rgba(16, 16, 16, 0.03)',
       },
       borderRadius: {
         '2xl': '1rem',
@@ -82,8 +68,8 @@ export default {
           '50%': { transform: 'translateY(-20px)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 12px rgba(52, 211, 153, 0.08)' },
-          '50%': { boxShadow: '0 0 24px rgba(52, 211, 153, 0.15)' },
+          '0%, 100%': { boxShadow: '0 0 12px rgba(0, 47, 167, 0.1)' },
+          '50%': { boxShadow: '0 0 24px rgba(0, 47, 167, 0.18)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },

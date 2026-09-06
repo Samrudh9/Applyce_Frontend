@@ -54,6 +54,53 @@ export interface AtsData {
     [key: string]: unknown;
 }
 
+// ── Red flags / deep analysis (resume evaluator + deep intelligence engine) ──
+export interface RedFlags {
+    flags: {
+        generic_phrases: string[];
+        outdated_skills: string[];
+        personal_info: string[];
+        other: string[];
+    };
+    count: number;
+    has_flags: boolean;
+    score: number;
+}
+
+export interface Weakness {
+    category: string;
+    severity: 'critical' | 'high' | 'medium' | 'low';
+    title: string;
+    description: string;
+    current_text: string;
+    suggested_fix: string;
+    impact: string;
+}
+
+export interface DeepAnalysisFix {
+    priority: string;
+    category: string;
+    [key: string]: unknown;
+}
+
+export interface DeepAnalysis {
+    target_role: string;
+    predicted_career: string;
+    is_mismatch: boolean;
+    weaknesses?: Weakness[];
+    fixes?: DeepAnalysisFix[];
+    explanation?: string;
+    improvement_potential?: number;
+    scores?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+export interface EvaluationData {
+    checklist?: unknown;
+    suggestions?: string[];
+    scores?: Record<string, unknown>;
+}
+
 export interface AnalyzeResumeResponse {
     success: true;
     name: string;
@@ -69,6 +116,9 @@ export interface AnalyzeResumeResponse {
     experience?: string[];
     projects?: string[];
     certifications?: string[];
+    red_flags?: RedFlags | null;
+    deep_analysis?: DeepAnalysis | null;
+    evaluation?: EvaluationData | null;
 }
 
 // ── 3. Skill Gap Analysis ────────────────────────────────────
@@ -203,13 +253,15 @@ export interface JobSearchResponse {
 export interface JobInsights {
     total_jobs: number;
     jobs_fetched: number;
-    avg_salary_min: number;
-    avg_salary_max: number;
+    avg_salary_min: number | null;
+    avg_salary_max: number | null;
     top_companies: string[];
     hot_skills: string[];
-    growth_rate: string;
-    demand_level: string;
-    remote_percentage: number;
+    growth_rate: string | null;
+    demand_level: string | null;
+    remote_percentage: number | null;
+    data_source: string;
+    degraded: boolean;
 }
 
 export interface JobInsightsResponse {
@@ -239,6 +291,126 @@ export interface JobMatchResponse {
     total_required_skills: number;
     total_preferred_skills: number;
     recommendation: string;
+}
+
+// ── 8. Job Alerts & Notifications ───────────────────────────
+export interface JobAlert {
+    id: number;
+    session_id: string | null;
+    career: string;
+    location: string;
+    keywords: string[];
+    min_match_score: number;
+    frequency: string;
+    email: string | null;
+    is_active: boolean;
+    created_at: string | null;
+    last_run_at: string | null;
+}
+
+export interface JobAlertListResponse {
+    success: true;
+    alerts: JobAlert[];
+}
+
+export interface JobAlertCreateRequest {
+    career: string;
+    location?: string;
+    keywords?: string[];
+    min_match_score?: number;
+    frequency?: string;
+    email?: string;
+}
+
+export interface JobAlertCreateResponse {
+    success: true;
+    alert: JobAlert;
+}
+
+export interface JobAlertActionResponse {
+    success: boolean;
+    deleted?: boolean;
+}
+
+export interface NotificationItem {
+    id: number;
+    session_id: string | null;
+    type: string;
+    title: string;
+    message: string | null;
+    link: string | null;
+    alert_id: number | null;
+    is_read: boolean;
+    created_at: string | null;
+}
+
+export interface NotificationListResponse {
+    success: true;
+    notifications: NotificationItem[];
+    unread_count: number;
+}
+
+export interface UnreadCountResponse {
+    success: true;
+    unread_count: number;
+}
+
+// ── 9. Apply Agent ──────────────────────────────────────────
+export interface ApplicationDraft {
+    id: number;
+    session_id: string;
+    job_title: string;
+    company: string;
+    location: string | null;
+    job_url: string | null;
+    salary_range: string | null;
+    match_score: number | null;
+    cover_letter: string | null;
+    application_message: string | null;
+    extra_fields: {
+        salary_expectation?: string;
+        availability?: string;
+        why_fit?: string;
+    };
+    status: 'prepared' | 'applied';
+    created_at: string | null;
+    updated_at: string | null;
+}
+
+export interface ApplyPrepareRequest {
+    job_title: string;
+    company: string;
+    location?: string;
+    url?: string;
+    job_url?: string;
+    description?: string;
+    required_skills?: string[] | string;
+    match_score?: number;
+    salary_min?: number;
+    salary_max?: number;
+    salary_currency?: string;
+}
+
+export interface ApplyDraftResponse {
+    success: true;
+    draft: ApplicationDraft;
+}
+
+export interface ApplyDraftsListResponse {
+    success: true;
+    drafts: ApplicationDraft[];
+}
+
+export interface ApplyDraftUpdateRequest {
+    cover_letter?: string;
+    application_message?: string;
+    extra_fields?: ApplicationDraft['extra_fields'];
+}
+
+export interface ApplyDraftApplyResponse {
+    success: true;
+    job_url: string | null;
+    draft: ApplicationDraft;
 }
 
 // ── 8. Resume Builder ────────────────────────────────────────

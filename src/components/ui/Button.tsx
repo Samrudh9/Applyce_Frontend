@@ -10,30 +10,33 @@ type Props = HTMLMotionProps<'button'> & {
   size?: Size;
 };
 
-const base = 'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-mint/30 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-lg font-medium tracking-tight transition-all duration-150 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none cursor-pointer select-none';
 
 const sizes: Record<Size, string> = {
-  sm: 'px-4 py-2 text-xs',
-  md: 'px-6 py-3 text-sm',
-  lg: 'px-8 py-4 text-base',
+  sm: 'px-3.5 py-1.5 text-xs',
+  md: 'px-4 py-2 text-sm',
+  lg: 'px-6 py-3 text-base',
 };
 
 const styles: Record<Variant, string> = {
   primary:
-    'bg-mint text-white font-bold shadow-[0_2px_12px_rgba(52,211,153,0.25)] hover:bg-mint-dark hover:shadow-[0_4px_20px_rgba(52,211,153,0.3)]',
+    'bg-ink text-canvas border border-transparent hover:bg-ink/85 dark:bg-white dark:text-black dark:hover:bg-white/85 shadow-sm',
+  secondary: 'bg-elevated text-ink border border-line hover:bg-line/50',
+  outline:
+    'bg-transparent text-ink border border-line-strong hover:border-ink hover:bg-elevated',
+  ghost: 'bg-transparent text-ink-sec hover:text-ink hover:bg-elevated',
+  danger:
+    'bg-red-50 text-danger border border-red-200 hover:bg-red-100 dark:bg-red-950/40 dark:border-red-900 dark:hover:bg-red-950/70',
   purple:
-    'bg-purple text-white font-bold shadow-[0_2px_12px_rgba(124,58,237,0.2)] hover:bg-purple-dark hover:shadow-[0_4px_20px_rgba(124,58,237,0.3)]',
-  secondary: 'border border-mint/30 bg-mint/5 text-mint-dark hover:bg-mint/10 hover:border-mint/50',
-  outline: 'border border-border bg-white text-text hover:border-mint/50 hover:text-mint-dark hover:bg-mint/[0.03]',
-  ghost: 'bg-transparent text-muted hover:text-text hover:bg-slate-50',
-  danger: 'bg-red-50 text-danger border border-red-200 hover:bg-red-100',
+    'bg-burgundy text-white border border-transparent hover:bg-burgundy-strong shadow-sm dark:bg-burgundy dark:text-white',
 };
 
 export function Button({ children, variant = 'primary', size = 'md', className = '', ...rest }: Props) {
   return (
     <motion.button
-      whileHover={{ y: -1, scale: 1.01 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.985 }}
+      transition={{ duration: 0.1 }}
       className={`${base} ${sizes[size]} ${styles[variant]} ${className}`}
       {...rest}
     >

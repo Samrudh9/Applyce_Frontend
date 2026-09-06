@@ -13,8 +13,8 @@ type Props = {
 
 export function ProgressBar({
   value,
-  colorClass = 'from-mint to-emerald-400',
-  height = 'h-2.5',
+  colorClass = 'from-accent to-accent-strong',
+  height = 'h-2',
   showValue,
   label,
   animated = true,
@@ -29,16 +29,19 @@ export function ProgressBar({
     <div ref={ref} className={className}>
       {(label || showValue) && (
         <div className="mb-1.5 flex items-center justify-between text-sm">
-          {label && <span className="text-text font-medium">{label}</span>}
-          {showValue && <span className="tabular-nums text-muted">{safe}%</span>}
+          {label && <span className="font-medium text-ink">{label}</span>}
+          {showValue && <span className="tabular-nums text-ink-sec">{safe}%</span>}
         </div>
       )}
-      <div className={`${heightClass} w-full overflow-hidden rounded-full bg-slate-100`} style={typeof height === 'number' ? { height: `${height}px` } : undefined}>
+      <div
+        className={`${heightClass} w-full overflow-hidden rounded-full bg-elevated border border-line/60`}
+        style={typeof height === 'number' ? { height: `${height}px` } : undefined}
+      >
         <motion.div
           className={`h-full rounded-full bg-gradient-to-r ${colorClass}`}
           initial={{ width: 0 }}
           animate={animated && isInView ? { width: `${safe}%` } : { width: `${safe}%` }}
-          transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
+          transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
         />
       </div>
     </div>

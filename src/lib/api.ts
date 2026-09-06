@@ -26,6 +26,17 @@ import type {
     JobMatchResponse,
     JobSearchParams,
     JobSearchResponse,
+    JobAlertCreateRequest,
+    JobAlertCreateResponse,
+    JobAlertListResponse,
+    JobAlertActionResponse,
+    NotificationListResponse,
+    UnreadCountResponse,
+    ApplyPrepareRequest,
+    ApplyDraftResponse,
+    ApplyDraftsListResponse,
+    ApplyDraftUpdateRequest,
+    ApplyDraftApplyResponse,
     PredictRequest,
     PredictResponse,
     ProgressResponse,
@@ -55,6 +66,33 @@ import type {
 const PRODUCTION_API_URL = 'https://skillfit.onrender.com';
 const BASE: string = import.meta.env.VITE_API_URL ?? (import.meta.env.PROD ? PRODUCTION_API_URL : '');
 
+// ── Auth token handling ──────────────────────────────────────
+const TOKEN_KEY = 'applyce_token';
+
+function authHeaders(extra: Record<string, string> = {}): HeadersInit {
+    // Auth endpoints exchange/get a token themselves; don't attach it there.
+    const path = globalThis.location?.pathname ?? '';
+    if (path.startsWith('/auth/callback') || path.startsWith('/login')) {
+        return { ...extra };
+    }
+    const token = globalThis.localStorage?.getItem(TOKEN_KEY);
+    if (!token) return { ...extra };
+    return { ...extra, Authorization: `Bearer ${token}` };
+}
+
+function handleUnauthorized(): void {
+    try {
+        globalThis.localStorage?.removeItem(TOKEN_KEY);
+        globalThis.localStorage?.removeItem('applyce_user');
+    } catch {
+        /* ignore */
+    }
+    // Avoid a redirect loop while already on the auth flow page.
+    const path = globalThis.location?.pathname ?? '';
+    if (path.startsWith('/auth/callback') || path.startsWith('/login')) return;
+    globalThis.location?.assign('/login');
+}
+
 // ── Helpers ──────────────────────────────────────────────────
 class ApiError extends Error {
     constructor(public status: number, message: string) {
@@ -65,6 +103,9 @@ class ApiError extends Error {
 
 async function handleResponse<T>(res: Response): Promise<T> {
     if (!res.ok) {
+        if (res.status === 401) {
+            handleUnauthorized();
+        }
         const body = await res.json().catch(() => ({ error: res.statusText }));
         throw new ApiError(res.status, body.error ?? res.statusText);
     }
@@ -86,14 +127,14 @@ const creds: RequestCredentials = 'include';
 // ── Generic verbs ────────────────────────────────────────────
 async function get<T>(path: string, params?: Record<string, string | number | boolean | undefined>): Promise<T> {
     const url = `${BASE}${path}${params ? buildQuery(params) : ''}`;
-    return handleResponse<T>(await fetch(url, { credentials: creds }));
+    return handleResponse<T>(await fetch(url, { headers: authHeaders(), credentials: creds }));
 }
 
 async function post<T>(path: string, body: unknown): Promise<T> {
     return handleResponse<T>(
         await fetch(`${BASE}${path}`, {
             method: 'POST',
-            headers,
+            headers: authHeaders(headers),
             credentials: creds,
             body: JSON.stringify(body),
         }),
@@ -104,7 +145,7 @@ async function put<T>(path: string, body: unknown): Promise<T> {
     return handleResponse<T>(
         await fetch(`${BASE}${path}`, {
             method: 'PUT',
-            headers,
+            headers: authHeaders(headers),
             credentials: creds,
             body: JSON.stringify(body),
         }),
@@ -115,6 +156,7 @@ async function postForm<T>(path: string, formData: FormData): Promise<T> {
     return handleResponse<T>(
         await fetch(`${BASE}${path}`, {
             method: 'POST',
+            headers: authHeaders(),
             credentials: creds,
             body: formData,
         }),
@@ -122,8 +164,13 @@ async function postForm<T>(path: string, formData: FormData): Promise<T> {
 }
 
 async function fetchBlob(path: string): Promise<Blob> {
-    const res = await fetch(`${BASE}${path}`, { method: 'POST', credentials: creds });
+    const res = await fetch(`${BASE}${path}`, {
+        method: 'POST',
+        headers: authHeaders(),
+        credentials: creds,
+    });
     if (!res.ok) {
+        if (res.status === 401) handleUnauthorized();
         const body = await res.json().catch(() => ({ error: res.statusText }));
         throw new ApiError(res.status, body.error ?? res.statusText);
     }
@@ -161,6 +208,24 @@ export const api = {
     jobInsights: (career: string, location?: string) =>
         get<JobInsightsResponse>('/api/jobs/insights', { career, location }),
     jobMatch: (data: JobMatchRequest) => post<JobMatchResponse>('/api/job-match', data),
+
+    // Job Alerts & Notifications
+    jobAlertsList: () => get<JobAlertListResponse>('/api/job-alerts'),
+    jobAlertCreate: (data: JobAlertCreateRequest) => post<JobAlertCreateResponse>('/api/job-alerts', data),
+    jobAlertDelete: (id: number) => post<JobAlertActionResponse>(`/api/job-alerts/${id}`, { action: 'delete' }),
+    jobAlertToggle: (id: number, active: boolean) =>
+        post<JobAlertActionResponse>(`/api/job-alerts/${id}`, { action: active ? 'activate' : 'deactivate' }),
+    notifications: () => get<NotificationListResponse>('/api/notifications'),
+    notificationsUnread: () => get<UnreadCountResponse>('/api/notifications/unread-count'),
+    notificationMarkRead: (id: number) => post<{ success: boolean }>(`/api/notifications/${id}/read`, {}),
+    notificationsMarkAllRead: () => post<{ success: true; updated: number }>('/api/notifications/read-all', {}),
+
+    // Apply Agent
+    applyPrepare: (data: ApplyPrepareRequest) => post<ApplyDraftResponse>('/api/apply-agent/prepare', data),
+    applyDrafts: () => get<ApplyDraftsListResponse>('/api/apply-agent/drafts'),
+    applyDraftGet: (id: number) => get<ApplyDraftResponse>(`/api/apply-agent/drafts/${id}`),
+    applyDraftUpdate: (id: number, data: ApplyDraftUpdateRequest) => put<ApplyDraftResponse>(`/api/apply-agent/drafts/${id}`, data),
+    applyDraftSubmit: (id: number) => post<ApplyDraftApplyResponse>(`/api/apply-agent/drafts/${id}/apply`, {}),
 
     // 8. Resume Builder
     resumeCreate: (data: ResumeBuilderCreateRequest) =>

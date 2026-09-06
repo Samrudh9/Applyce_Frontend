@@ -1,10 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode } from 'react';
 import { useLocation, Routes, Route } from 'react-router-dom';
-import { AppShell } from './components/layout/AppShell';
+import { AppLayout } from './components/layout/AppLayout';
+import { MarketingLayout } from './components/layout/MarketingLayout';
 import { AuthProvider } from './context/AuthContext';
 import AboutPage from './pages/AboutPage';
 import ApplicationTrackerPage from './pages/ApplicationTrackerPage';
+import ApplyAgentPage from './pages/ApplyAgentPage';
 import AtsReportPage from './pages/AtsReportPage';
 import CoverLetterPage from './pages/CoverLetterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -20,12 +22,27 @@ import ScorecardPage from './pages/ScorecardPage';
 import SkillQuizzesPage from './pages/SkillQuizzesPage';
 import UploadPage from './pages/UploadPage';
 
-
-
 const PageWrap = ({ children }: { children: ReactNode }) => (
-  <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -14 }} transition={{ duration: 0.3 }}>
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.15 }}
+  >
     {children}
   </motion.div>
+);
+
+const marketing = (node: ReactNode) => (
+  <MarketingLayout>
+    <PageWrap>{node}</PageWrap>
+  </MarketingLayout>
+);
+
+const app = (node: ReactNode) => (
+  <AppLayout>
+    <PageWrap>{node}</PageWrap>
+  </AppLayout>
 );
 
 function App() {
@@ -35,26 +52,30 @@ function App() {
     <AuthProvider>
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<AppShell><PageWrap><LandingPage /></PageWrap></AppShell>} />
-          <Route path="/dashboard" element={<AppShell><PageWrap><DashboardPage /></PageWrap></AppShell>} />
-          <Route path="/upload" element={<AppShell><PageWrap><UploadPage /></PageWrap></AppShell>} />
-          <Route path="/result" element={<AppShell><PageWrap><ResultPage /></PageWrap></AppShell>} />
-          <Route path="/jobs" element={<AppShell><PageWrap><JobsPage /></PageWrap></AppShell>} />
-          <Route path="/roadmap" element={<AppShell><PageWrap><RoadmapPage /></PageWrap></AppShell>} />
-          <Route path="/ats-report" element={<AppShell><PageWrap><AtsReportPage /></PageWrap></AppShell>} />
-          <Route path="/pricing" element={<AppShell><PageWrap><PricingPage /></PageWrap></AppShell>} />
-          <Route path="/about" element={<AppShell><PageWrap><AboutPage /></PageWrap></AppShell>} />
-          <Route path="/resume-builder" element={<AppShell><PageWrap><ResumeBuilderPage /></PageWrap></AppShell>} />
-          <Route path="/cover-letter" element={<AppShell><PageWrap><CoverLetterPage /></PageWrap></AppShell>} />
-          <Route path="/interview" element={<AppShell><PageWrap><InterviewPrepPage /></PageWrap></AppShell>} />
+          {/* Marketing */}
+          <Route path="/" element={marketing(<LandingPage />)} />
+          <Route path="/pricing" element={marketing(<PricingPage />)} />
+          <Route path="/about" element={marketing(<AboutPage />)} />
+          <Route path="/login" element={marketing(<LoginPage />)} />
+          <Route path="/auth/callback" element={marketing(<AuthCallbackPage />)} />
 
-          <Route path="/quizzes" element={<AppShell><PageWrap><SkillQuizzesPage /></PageWrap></AppShell>} />
-          <Route path="/tracker" element={<AppShell><PageWrap><ApplicationTrackerPage /></PageWrap></AppShell>} />
-          <Route path="/scorecard" element={<AppShell><PageWrap><ScorecardPage /></PageWrap></AppShell>} />
-          <Route path="/scorecard/:token" element={<AppShell><PageWrap><ScorecardPage /></PageWrap></AppShell>} />
-          <Route path="/login" element={<AppShell><PageWrap><LoginPage /></PageWrap></AppShell>} />
-          <Route path="/auth/callback" element={<AppShell><PageWrap><AuthCallbackPage /></PageWrap></AppShell>} />
-          <Route path="*" element={<AppShell><PageWrap><LandingPage /></PageWrap></AppShell>} />
+          {/* Product */}
+          <Route path="/dashboard" element={app(<DashboardPage />)} />
+          <Route path="/upload" element={app(<UploadPage />)} />
+          <Route path="/result" element={app(<ResultPage />)} />
+          <Route path="/jobs" element={app(<JobsPage />)} />
+          <Route path="/roadmap" element={app(<RoadmapPage />)} />
+          <Route path="/ats-report" element={app(<AtsReportPage />)} />
+          <Route path="/resume-builder" element={app(<ResumeBuilderPage />)} />
+          <Route path="/cover-letter" element={app(<CoverLetterPage />)} />
+          <Route path="/interview" element={app(<InterviewPrepPage />)} />
+          <Route path="/quizzes" element={app(<SkillQuizzesPage />)} />
+          <Route path="/tracker" element={app(<ApplicationTrackerPage />)} />
+          <Route path="/scorecard" element={app(<ScorecardPage />)} />
+          <Route path="/scorecard/:token" element={app(<ScorecardPage />)} />
+          <Route path="/apply-agent" element={app(<ApplyAgentPage />)} />
+
+          <Route path="*" element={marketing(<LandingPage />)} />
         </Routes>
       </AnimatePresence>
     </AuthProvider>

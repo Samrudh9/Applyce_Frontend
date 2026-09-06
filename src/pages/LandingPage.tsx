@@ -67,15 +67,15 @@ export default function LandingPage() {
   return (
     <div className="space-y-28">
       {/* ───── HERO ───── */}
-      <section className="relative -mx-4 -mt-10 overflow-hidden px-6 py-24 md:-mx-8 md:px-16 md:py-36" style={{ background: 'linear-gradient(180deg, #f0f4f8 0%, #f5f7fa 100%)' }}>
+      <section className="relative -mx-4 -mt-10 overflow-hidden border-b border-line px-6 py-24 md:-mx-8 md:px-16 md:py-36">
         {/* Subtle geometric accents */}
-        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-mint/[0.04] to-transparent" />
-        <div className="absolute bottom-0 left-12 h-2/3 w-px bg-gradient-to-t from-mint/15 to-transparent" />
-        <div className="absolute right-16 top-0 h-1/2 w-px bg-gradient-to-b from-purple/10 to-transparent hidden md:block" />
+        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-accent/[0.05] to-transparent" />
+        <div className="absolute bottom-0 left-12 h-2/3 w-px bg-gradient-to-t from-accent/20 to-transparent" />
+        <div className="absolute right-16 top-0 h-1/2 w-px bg-gradient-to-b from-burgundy/10 to-transparent hidden md:block" />
 
         <div className="relative z-10 mx-auto max-w-4xl">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Badge tone="violet" dot className="mb-6">
+            <Badge tone="info" dot className="mb-6">
               Powered by Advanced AI
             </Badge>
           </motion.div>
@@ -84,7 +84,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-text md:text-7xl lg:text-8xl"
+            className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-ink md:text-7xl lg:text-8xl"
           >
             Discover Your{' '}
             <em className="not-italic gradient-text">Ideal Career</em>{' '}
@@ -95,14 +95,14 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mt-4 h-[3px] w-16 rounded-full bg-gradient-to-r from-mint to-purple"
+            className="mt-4 h-[3px] w-16 rounded-full bg-gradient-to-r from-accent to-burgundy"
           />
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
-            className="mt-8 max-w-2xl text-lg leading-relaxed text-muted md:text-xl"
+            className="mt-8 max-w-2xl text-lg leading-relaxed text-ink-sec md:text-xl"
           >
             Applyce analyzes your resume, evaluates ATS compatibility, maps skill gaps, and delivers personalised career recommendations — all in seconds.
           </motion.p>
@@ -114,7 +114,7 @@ export default function LandingPage() {
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <Link to="/upload">
-              <Button variant="purple" size="lg">
+              <Button size="lg">
                 Upload Resume <ArrowRight size={18} />
               </Button>
             </Link>
@@ -125,32 +125,32 @@ export default function LandingPage() {
 
       {/* ───── LARGE ROUNDED CONTENT CONTAINER ───── */}
       <section className="mx-auto -mt-16 max-w-5xl">
-        <div className="rounded-3xl border border-border bg-white p-8 shadow-lg md:p-12">
+        <div className="rounded-3xl border border-line bg-surface p-8 shadow-card md:p-12">
           <SectionHeading
             align="center"
-            badge={<Badge tone="violet" dot>Try It Now</Badge>}
+            badge={<Badge tone="info" dot>Try It Now</Badge>}
             title="Quick Career Prediction"
             subtitle="Enter your skills and interests to instantly see AI-matched career paths."
           />
           <div className="mx-auto max-w-xl space-y-4">
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-text">Your Skills</label>
+              <label className="mb-1.5 block text-sm font-medium text-ink">Your Skills</label>
               <input
                 type="text"
                 value={skills}
                 onChange={(e) => setSkills(e.target.value)}
                 placeholder="e.g. python, machine learning, sql, react"
-                className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text placeholder-stone outline-none transition-colors focus:border-mint hover:border-border-hover"
+                className="input-glow w-full rounded-xl border border-line bg-canvas px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink-ter focus:border-accent hover:border-line-strong"
               />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm font-medium text-text">Your Interests</label>
+              <label className="mb-1.5 block text-sm font-medium text-ink">Your Interests</label>
               <input
                 type="text"
                 value={interests}
                 onChange={(e) => setInterests(e.target.value)}
                 placeholder="e.g. data analysis, AI, web development"
-                className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm text-text placeholder-stone outline-none transition-colors focus:border-mint hover:border-border-hover"
+                className="input-glow w-full rounded-xl border border-line bg-canvas px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-ink-ter focus:border-accent hover:border-line-strong"
               />
             </div>
             <Button onClick={handlePredict} disabled={predicting || !skills.trim()} className="w-full">
@@ -163,12 +163,12 @@ export default function LandingPage() {
 
           {predictions.length > 0 && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mx-auto mt-8 max-w-xl space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted">Top Matches</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-ink-sec">Top Matches</p>
               {predictions.map((p, i) => (
-                <div key={p.career} className="flex items-center justify-between rounded-xl border border-border bg-slate-50/50 px-5 py-3">
+                <div key={p.career} className="flex items-center justify-between rounded-xl border border-line bg-elevated/60 px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-mint/10 text-sm font-bold text-mint-dark">{i + 1}</span>
-                    <span className="font-semibold text-text">{p.career}</span>
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10 text-sm font-bold text-accent-strong">{i + 1}</span>
+                    <span className="font-semibold text-ink">{p.career}</span>
                   </div>
                   <Badge tone={p.confidence >= 80 ? 'success' : p.confidence >= 60 ? 'warning' : 'neutral'}>
                     {p.confidence.toFixed(1)}%
@@ -204,12 +204,12 @@ export default function LandingPage() {
             const Icon = f.icon;
             return (
               <motion.div key={f.label} variants={fadeUp}>
-                <Card className="group h-full">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-mint/8 text-mint-dark transition-colors group-hover:bg-mint/15">
+                <Card hover={false} className="group h-full">
+                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-accent/8 text-accent-strong transition-colors group-hover:bg-accent/15">
                     <Icon size={22} />
                   </div>
-                  <h3 className="font-display text-base font-bold text-text">{f.label}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{f.desc}</p>
+                  <h3 className="font-display text-base font-bold text-ink">{f.label}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-sec">{f.desc}</p>
                 </Card>
               </motion.div>
             );
@@ -226,7 +226,7 @@ export default function LandingPage() {
           subtitle="From upload to career clarity in under 5 minutes."
         />
         <div className="relative">
-          <div className="absolute left-1/2 top-8 hidden h-[calc(100%-4rem)] w-px -translate-x-1/2 bg-gradient-to-b from-mint/20 via-purple/10 to-transparent md:block lg:left-0 lg:right-0 lg:top-1/2 lg:mx-auto lg:h-px lg:w-[calc(100%-6rem)] lg:-translate-x-0 lg:-translate-y-1/2" />
+          <div className="absolute left-1/2 top-8 hidden h-[calc(100%-4rem)] w-px -translate-x-1/2 bg-gradient-to-b from-accent/20 via-burgundy/10 to-transparent md:block lg:left-0 lg:right-0 lg:top-1/2 lg:mx-auto lg:h-px lg:w-[calc(100%-6rem)] lg:-translate-x-0 lg:-translate-y-1/2" />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, i) => (
@@ -237,12 +237,12 @@ export default function LandingPage() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12, duration: 0.5 }}
               >
-                <Card className="relative text-center">
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-mint to-emerald-400 text-xl font-bold text-white shadow-[0_4px_20px_rgba(52,211,153,0.2)]">
+                <Card className="relative text-center" hover={false}>
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-accent text-xl font-bold text-white shadow-card">
                     {step.num}
                   </div>
-                  <h3 className="mt-2 font-display text-base font-bold text-text">{step.title}</h3>
-                  <p className="mt-1.5 text-sm text-muted">{step.desc}</p>
+                  <h3 className="mt-2 font-display text-base font-bold text-ink">{step.title}</h3>
+                  <p className="mt-1.5 text-sm text-ink-sec">{step.desc}</p>
                 </Card>
               </motion.div>
             ))}
@@ -251,19 +251,19 @@ export default function LandingPage() {
       </section>
 
       {/* ───── CTA ───── */}
-      <section className="relative overflow-hidden rounded-3xl border border-border bg-white px-8 py-20 text-center shadow-md">
-        <div className="absolute right-0 top-0 h-full w-1/4 bg-gradient-to-l from-mint/[0.04] to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-mint/20 to-transparent" />
+      <section className="relative overflow-hidden rounded-3xl border border-line bg-surface px-8 py-20 text-center shadow-card">
+        <div className="absolute right-0 top-0 h-full w-1/4 bg-gradient-to-l from-accent/[0.04] to-transparent" />
+        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
 
         <div className="relative z-10">
-          <Zap className="mx-auto mb-4 text-mint" size={36} />
-          <h3 className="font-display text-3xl font-bold text-text md:text-4xl">Ready to Find Your Dream Career?</h3>
-          <p className="mx-auto mt-3 max-w-lg text-muted md:text-lg">
+          <Zap className="mx-auto mb-4 text-accent" size={36} />
+          <h3 className="font-display text-3xl font-bold text-ink md:text-4xl">Ready to Find Your Dream Career?</h3>
+          <p className="mx-auto mt-3 max-w-lg text-ink-sec md:text-lg">
             Join 10,000+ professionals who accelerated their career growth with Applyce.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link to="/upload">
-              <Button variant="purple" size="lg">
+              <Button size="lg">
                 Upload Resume <ArrowRight size={18} />
               </Button>
             </Link>
@@ -271,8 +271,8 @@ export default function LandingPage() {
               <Button variant="outline" size="lg">Learn More</Button>
             </Link>
           </div>
-          <p className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
-            <CheckCircle2 size={14} className="text-mint" /> Free forever plan available
+          <p className="mt-4 flex items-center justify-center gap-2 text-xs text-ink-sec">
+            <CheckCircle2 size={14} className="text-accent" /> Free forever plan available
           </p>
         </div>
       </section>

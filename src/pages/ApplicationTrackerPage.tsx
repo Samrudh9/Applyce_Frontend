@@ -92,7 +92,7 @@ export default function ApplicationTrackerPage() {
                     { label: 'Rejected', value: stats.rejected, tone: 'danger' as const },
                 ].map((s) => (
                     <Card key={s.label} hover={false} className="text-center">
-                        <p className="text-2xl font-bold text-text">{s.value}</p>
+                        <p className="text-2xl font-bold text-ink">{s.value}</p>
                         <Badge tone={s.tone} size="sm">{s.label}</Badge>
                     </Card>
                 ))}
@@ -101,9 +101,9 @@ export default function ApplicationTrackerPage() {
             {/* Controls */}
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex flex-wrap gap-2">
-                    <button onClick={() => setFilter('all')} className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${filter === 'all' ? 'bg-mint text-white' : 'border border-border bg-white text-muted hover:text-text'}`}>All</button>
+                    <button onClick={() => setFilter('all')} className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${filter === 'all' ? 'bg-ink text-canvas' : 'border border-border bg-surface text-ink-sec hover:text-ink'}`}>All</button>
                     {STATUSES.map((s) => (
-                        <button key={s} onClick={() => setFilter(s)} className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition-colors ${filter === s ? 'bg-mint text-white' : 'border border-border bg-white text-muted hover:text-text'}`}>{s}</button>
+                        <button key={s} onClick={() => setFilter(s)} className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition-colors ${filter === s ? 'bg-ink text-canvas' : 'border border-border bg-surface text-ink-sec hover:text-ink'}`}>{s}</button>
                     ))}
                 </div>
                 <Button onClick={openAdd} size="sm"><Plus size={16} /> Add Application</Button>
@@ -111,9 +111,9 @@ export default function ApplicationTrackerPage() {
 
             {/* App list */}
             {loading ? (
-                <div className="flex justify-center py-12"><Loader2 size={32} className="animate-spin text-mint" /></div>
+                <div className="flex justify-center py-12"><Loader2 size={32} className="animate-spin text-accent" /></div>
             ) : filtered.length === 0 ? (
-                <Card><p className="text-center text-muted py-8">No applications {filter !== 'all' ? `with status "${filter}"` : 'yet'}. Click "Add Application" to get started.</p></Card>
+                <Card><p className="text-center text-ink-sec py-8">No applications {filter !== 'all' ? `with status "${filter}"` : 'yet'}. Click "Add Application" to get started.</p></Card>
             ) : (
                 <div className="space-y-3">
                     <AnimatePresence>
@@ -123,24 +123,24 @@ export default function ApplicationTrackerPage() {
                                     <div className="flex items-start justify-between gap-3">
                                         <div className="flex-1 cursor-pointer" onClick={() => openEdit(a)}>
                                             <div className="flex items-center gap-2">
-                                                <Briefcase size={16} className="text-mint" />
-                                                <h3 className="font-semibold text-text">{a.job_title}</h3>
+                                                <Briefcase size={16} className="text-accent" />
+                                                <h3 className="font-semibold text-ink">{a.job_title}</h3>
                                             </div>
-                                            <p className="mt-1 text-sm text-muted flex items-center gap-3 flex-wrap">
+                                            <p className="mt-1 text-sm text-ink-sec flex items-center gap-3 flex-wrap">
                                                 <span className="flex items-center gap-1"><Building2 size={12} />{a.company}</span>
                                                 {a.location && <span className="flex items-center gap-1"><MapPin size={12} />{a.location}</span>}
                                                 <span className="flex items-center gap-1"><Calendar size={12} />{new Date(a.updated_at).toLocaleDateString()}</span>
                                             </p>
                                             {a.salary_range && <p className="mt-1 text-xs text-emerald-600">{a.salary_range}</p>}
-                                            {a.notes && <p className="mt-1 text-xs text-muted line-clamp-1">{a.notes}</p>}
+                                            {a.notes && <p className="mt-1 text-xs text-ink-sec line-clamp-1">{a.notes}</p>}
                                         </div>
                                         <div className="flex flex-col items-end gap-2 shrink-0">
-                                            <select value={a.status} onChange={(e) => updateStatus(a.id, e.target.value as TrackerStatus)} className="rounded-lg border border-border bg-white px-2 py-1 text-xs font-medium text-text focus:border-mint focus:outline-none">
+                                            <select value={a.status} onChange={(e) => updateStatus(a.id, e.target.value as TrackerStatus)} className="rounded-lg border border-border bg-surface px-2 py-1 text-xs font-medium text-ink focus:border-accent focus:outline-none">
                                                 {STATUSES.map((s) => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
                                             </select>
                                             <div className="flex gap-1">
-                                                {a.job_url && <a href={a.job_url} target="_blank" rel="noopener noreferrer" className="text-muted hover:text-mint"><ExternalLink size={14} /></a>}
-                                                <button onClick={() => deleteApp(a.id)} className="text-muted hover:text-red-500"><Trash2 size={14} /></button>
+                                                {a.job_url && <a href={a.job_url} target="_blank" rel="noopener noreferrer" className="text-ink-sec hover:text-accent"><ExternalLink size={14} /></a>}
+                                                <button onClick={() => deleteApp(a.id)} className="text-ink-sec hover:text-red-500"><Trash2 size={14} /></button>
                                             </div>
                                         </div>
                                     </div>
@@ -154,43 +154,43 @@ export default function ApplicationTrackerPage() {
             {/* Add/Edit Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setShowModal(false)}>
-                    <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-md rounded-2xl border border-border bg-white p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                    <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-bold text-text">{editId ? 'Edit Application' : 'Add Application'}</h2>
-                            <button onClick={() => setShowModal(false)} className="text-muted hover:text-text"><X size={20} /></button>
+                            <h2 className="text-lg font-bold text-ink">{editId ? 'Edit Application' : 'Add Application'}</h2>
+                            <button onClick={() => setShowModal(false)} className="text-ink-sec hover:text-ink"><X size={20} /></button>
                         </div>
                         <div className="space-y-3">
                             <div>
-                                <label className="mb-1 block text-xs font-medium text-text">Job Title *</label>
+                                <label className="mb-1 block text-xs font-medium text-ink">Job Title *</label>
                                 <Input value={form.job_title} onChange={(e) => setForm({ ...form, job_title: e.target.value })} placeholder="e.g. Frontend Developer" />
                             </div>
                             <div>
-                                <label className="mb-1 block text-xs font-medium text-text">Company *</label>
+                                <label className="mb-1 block text-xs font-medium text-ink">Company *</label>
                                 <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="e.g. Google" />
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="mb-1 block text-xs font-medium text-text">Location</label>
+                                    <label className="mb-1 block text-xs font-medium text-ink">Location</label>
                                     <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="City" />
                                 </div>
                                 <div>
-                                    <label className="mb-1 block text-xs font-medium text-text">Salary Range</label>
+                                    <label className="mb-1 block text-xs font-medium text-ink">Salary Range</label>
                                     <Input value={form.salary_range} onChange={(e) => setForm({ ...form, salary_range: e.target.value })} placeholder="e.g. $80k-$100k" />
                                 </div>
                             </div>
                             <div>
-                                <label className="mb-1 block text-xs font-medium text-text">Job URL</label>
+                                <label className="mb-1 block text-xs font-medium text-ink">Job URL</label>
                                 <Input value={form.job_url} onChange={(e) => setForm({ ...form, job_url: e.target.value })} placeholder="https://..." />
                             </div>
                             <div>
-                                <label className="mb-1 block text-xs font-medium text-text">Status</label>
-                                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as TrackerStatus })} className="w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-text focus:border-mint focus:outline-none focus:ring-2 focus:ring-mint/30">
+                                <label className="mb-1 block text-xs font-medium text-ink">Status</label>
+                                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as TrackerStatus })} className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30">
                                     {STATUSES.map((s) => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
                                 </select>
                             </div>
                             <div>
-                                <label className="mb-1 block text-xs font-medium text-text">Notes</label>
-                                <textarea className="w-full rounded-xl border border-border bg-white p-3 text-sm text-text placeholder:text-muted focus:border-mint focus:outline-none focus:ring-2 focus:ring-mint/30" rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Any notes..." />
+                                <label className="mb-1 block text-xs font-medium text-ink">Notes</label>
+                                <textarea className="w-full rounded-xl border border-border bg-surface p-3 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Any notes..." />
                             </div>
                             <div className="flex justify-end gap-2 pt-2">
                                 <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>
