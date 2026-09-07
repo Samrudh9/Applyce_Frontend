@@ -14,7 +14,7 @@ type View = 'setup' | 'session' | 'results' | 'history';
 
 export default function InterviewPrepPage() {
     const [view, setView] = useState<View>('setup');
-    const [career, setCareer] = useState('Software Developer');
+    const [career, setCareer] = useState('');
     const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
     const [count, setCount] = useState(5);
     const [loading, setLoading] = useState(false);

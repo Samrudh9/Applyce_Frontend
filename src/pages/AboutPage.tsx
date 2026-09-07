@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Brain, Code2, Database, Globe, Linkedin, Rocket, Shield, Upload, Users, Zap } from 'lucide-react';
+import { Brain, Code2, Database, Globe, Rocket, Shield, Upload, Users, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -8,10 +8,10 @@ import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { SectionHeading } from '../components/ui/SectionHeading';
 
 const stats = [
-  { label: 'Careers Mapped', value: 500, suffix: '+', color: 'text-accent' },
+  { label: 'Careers Mapped', value: 60, suffix: '+', color: 'text-accent' },
   { label: 'Skills Tracked', value: 100, suffix: '+', color: 'text-accent-strong' },
-  { label: 'Active Users', value: 10000, suffix: '+', color: 'text-burgundy' },
-  { label: 'Industries', value: 6, suffix: '', color: 'text-success' },
+  { label: 'Industries Covered', value: 6, suffix: '', color: 'text-burgundy' },
+  { label: 'ATS Checks', value: 1000, suffix: '+', color: 'text-success' },
 ];
 
 const techStack = [
@@ -21,7 +21,7 @@ const techStack = [
   { name: 'React', icon: Zap },
   { name: 'TypeScript', icon: Code2 },
   { name: 'Tailwind CSS', icon: Zap },
-  { name: 'TensorFlow', icon: Brain },
+  { name: 'scikit-learn', icon: Brain },
   { name: 'Supabase', icon: Database },
 ];
 
@@ -30,12 +30,6 @@ const howItWorks = [
   { step: 2, icon: Upload, title: 'Upload Resume', desc: 'Upload PDF or DOCX — we parse it instantly.' },
   { step: 3, icon: Brain, title: 'AI Analyzes', desc: 'Our models score, match, and recommend.' },
   { step: 4, icon: Rocket, title: 'Grow', desc: 'Follow your roadmap and track progress.' },
-];
-
-const team = [
-  { name: 'Aisha Rao', role: 'CEO & Co-founder', gradient: 'from-accent to-accent-strong' },
-  { name: 'Karan Mehta', role: 'CTO & AI Lead', gradient: 'from-burgundy to-accent' },
-  { name: 'Nina Patel', role: 'Head of Product', gradient: 'from-accent to-success' },
 ];
 
 export default function AboutPage() {
@@ -64,7 +58,7 @@ export default function AboutPage() {
       <section className="grid gap-6 md:grid-cols-2">
         <Card>
           <h2 className="mb-3 font-display text-2xl font-semibold text-ink">Our Mission</h2>
-          <p className="text-ink-sec leading-relaxed">We believe career decisions shouldn't be guesswork. Applyce (powered by the SkillFit engine) leverages machine learning to analyze resumes, predict career fits with 92%+ accuracy, and generate personalized learning roadmaps — all in real time.</p>
+          <p className="text-ink-sec leading-relaxed">We believe career decisions shouldn't be guesswork. Applyce leverages machine learning to analyze resumes, evaluate ATS compatibility, predict career fits, and generate personalized learning roadmaps — all in real time.</p>
           <div className="mt-4 flex gap-2">
             <Badge tone="success" icon={<Shield size={12} />}>Privacy First</Badge>
             <Badge tone="info" icon={<Zap size={12} />}>AI-Powered</Badge>
@@ -108,13 +102,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-
-
       {/* CTA */}
       <section className="text-center">
         <Card className="mx-auto max-w-2xl bg-accent/5 ring-1 ring-accent/10">
           <h2 className="font-display text-2xl font-semibold text-ink">Ready to discover your perfect career?</h2>
-          <p className="mt-2 text-ink-sec">Join 10,000+ users and let AI map your career path.</p>
+          <p className="mt-2 text-ink-sec">Let AI map your career path and close your skill gaps.</p>
           <Link to="/upload"><Button className="mt-5">Get Started Free</Button></Link>
         </Card>
       </section>

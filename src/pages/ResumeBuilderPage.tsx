@@ -87,7 +87,7 @@ export default function ResumeBuilderPage() {
             },
         };
 
-        setTitle(`${r.name || 'My'}'s Resume`);
+        setTitle(r.name ? `${r.name}'s Resume` : 'My Resume');
         setData(prefillData);
         setShowEditor(true);
     }, [routeState, prefilled]);
@@ -141,7 +141,7 @@ export default function ResumeBuilderPage() {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <SectionHeading title="Resume Builder" subtitle="Build ATS-optimized resumes with AI assistance." badge={<Badge tone="info" icon={<FileText size={12} />}>Builder</Badge>} />
+                <SectionHeading title="Resume Builder" subtitle="Create and tailor ATS-friendly resumes with AI assistance." badge={<Badge tone="info" icon={<FileText size={12} />}>Builder</Badge>} />
                 <Button onClick={openNew}><Plus size={16} /> New Resume</Button>
             </div>
 
@@ -163,15 +163,15 @@ export default function ResumeBuilderPage() {
                                     <div>
                                         <h4 className="mb-3 font-semibold text-ink">Profile</h4>
                                         <div className="grid grid-cols-2 gap-3">
-                                            <div><label className={labelClass}>Full Name</label><input className={inputClass} value={data.profile.name} onChange={(e) => updateProfile('name', e.target.value)} placeholder="John Doe" /></div>
-                                            <div><label className={labelClass}>Email</label><input className={inputClass} value={data.profile.email} onChange={(e) => updateProfile('email', e.target.value)} placeholder="john@example.com" /></div>
-                                            <div><label className={labelClass}>Phone</label><input className={inputClass} value={data.profile.phone} onChange={(e) => updateProfile('phone', e.target.value)} placeholder="+91 9876543210" /></div>
-                                            <div><label className={labelClass}>Location</label><input className={inputClass} value={data.profile.location} onChange={(e) => updateProfile('location', e.target.value)} placeholder="Bangalore, India" /></div>
-                                            <div><label className={labelClass}>LinkedIn</label><input className={inputClass} value={data.profile.linkedin ?? ''} onChange={(e) => updateProfile('linkedin', e.target.value)} placeholder="https://linkedin.com/in/..." /></div>
-                                            <div><label className={labelClass}>GitHub</label><input className={inputClass} value={data.profile.github ?? ''} onChange={(e) => updateProfile('github', e.target.value)} placeholder="https://github.com/..." /></div>
+                                            <div><label className={labelClass}>Full Name</label><input className={inputClass} value={data.profile.name} onChange={(e) => updateProfile('name', e.target.value)} placeholder="Your full name" /></div>
+                                            <div><label className={labelClass}>Email</label><input className={inputClass} value={data.profile.email} onChange={(e) => updateProfile('email', e.target.value)} placeholder="you@example.com" /></div>
+                                            <div><label className={labelClass}>Phone</label><input className={inputClass} value={data.profile.phone} onChange={(e) => updateProfile('phone', e.target.value)} placeholder="+91 98765 43210" /></div>
+                                            <div><label className={labelClass}>Location</label><input className={inputClass} value={data.profile.location} onChange={(e) => updateProfile('location', e.target.value)} placeholder="Bengaluru, India" /></div>
+                                            <div><label className={labelClass}>LinkedIn</label><input className={inputClass} value={data.profile.linkedin ?? ''} onChange={(e) => updateProfile('linkedin', e.target.value)} placeholder="https://linkedin.com/in/you" /></div>
+                                            <div><label className={labelClass}>GitHub</label><input className={inputClass} value={data.profile.github ?? ''} onChange={(e) => updateProfile('github', e.target.value)} placeholder="https://github.com/you" /></div>
                                         </div>
                                     </div>
-                                    <div><label className={labelClass}>Professional Summary</label><textarea className={`${inputClass} min-h-[80px] resize-y`} value={data.summary} onChange={(e) => setData((d) => ({ ...d, summary: e.target.value }))} placeholder="Experienced software developer..." /></div>
+                                    <div><label className={labelClass}>Professional Summary</label><textarea className={`${inputClass} min-h-[80px] resize-y`} value={data.summary} onChange={(e) => setData((d) => ({ ...d, summary: e.target.value }))} placeholder="A short summary of your experience and strengths..." /></div>
                                     <div>
                                         <div className="mb-2 flex items-center justify-between"><h4 className="font-semibold text-ink">Experience</h4><button onClick={addExperience} className="text-xs font-medium text-accent-strong hover:text-accent">+ Add</button></div>
                                         {data.experience.map((exp, i) => (

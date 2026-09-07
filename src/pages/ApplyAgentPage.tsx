@@ -114,8 +114,8 @@ export default function ApplyAgentPage() {
     <div className="space-y-8">
       <SectionHeading
         title="Apply Agent"
-        subtitle="Paste a job, review a tailored cover letter and application message, then apply yourself — the agent never auto-submits."
-        badge={<Badge tone="violet" icon={<Bot size={12} />}>Semi-Auto</Badge>}
+        subtitle="Paste the job details, review the tailored cover letter and application message, then complete the application yourself — the agent never submits on your behalf."
+        badge={<Badge tone="violet" icon={<Bot size={12} />}>Draft-first</Badge>}
       />
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -123,10 +123,10 @@ export default function ApplyAgentPage() {
         <Card>
           <h2 className="mb-4 flex items-center gap-2 text-lg font-bold text-ink"><Briefcase size={18} className="text-accent-strong" /> Job details</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input label="Job title *" placeholder="Machine Learning Engineer" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
-            <Input label="Company *" placeholder="Acme Corp" icon={<Building2 size={15} />} value={company} onChange={(e) => setCompany(e.target.value)} />
-            <Input label="Location" placeholder="Bengaluru" icon={<MapPin size={15} />} value={location} onChange={(e) => setLocation(e.target.value)} />
-            <Input label="Job URL" placeholder="https://careers.acme.com/role" icon={<Link2 size={15} />} value={jobUrl} onChange={(e) => setJobUrl(e.target.value)} />
+            <Input label="Job title *" placeholder="e.g. Machine Learning Engineer" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
+            <Input label="Company *" placeholder="e.g. Acme Corp" icon={<Building2 size={15} />} value={company} onChange={(e) => setCompany(e.target.value)} />
+            <Input label="Location" placeholder="e.g. Bengaluru" icon={<MapPin size={15} />} value={location} onChange={(e) => setLocation(e.target.value)} />
+            <Input label="Job URL" placeholder="https://your-company.com/careers/role" icon={<Link2 size={15} />} value={jobUrl} onChange={(e) => setJobUrl(e.target.value)} />
           </div>
           <div className="mt-4">
             <label className="mb-1.5 block text-sm font-medium text-ink">Job description <span className="text-ink-sec">(optional, helps tailoring)</span></label>
@@ -185,7 +185,7 @@ export default function ApplyAgentPage() {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                <Input label="Salary expectation" placeholder="₹ …" value={salaryExpectation} onChange={(e) => setSalaryExpectation(e.target.value)} />
+                <Input label="Salary expectation" placeholder="e.g. ₹12L" value={salaryExpectation} onChange={(e) => setSalaryExpectation(e.target.value)} />
                 <Input label="Availability" value={availability} onChange={(e) => setAvailability(e.target.value)} />
               </div>
 
@@ -204,7 +204,7 @@ export default function ApplyAgentPage() {
                 )}
               </div>
               <p className="text-xs text-ink-sec">
-                Step 4 of “Apply” opens the job in a new tab where you complete the final submission — the agent never sends on your behalf.
+                When you’re ready, "I applied — open job" opens the listing in a new tab where you complete the final submission — the agent never sends on your behalf.
               </p>
             </div>
           )}

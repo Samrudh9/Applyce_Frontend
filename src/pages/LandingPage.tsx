@@ -15,7 +15,7 @@ import type { CareerPrediction } from '../types/api';
 
 /* ---------- data ---------- */
 const features = [
-  { icon: Brain, label: 'AI Career Matching', desc: 'Advanced ML models match your skills to 500+ career paths with confidence scores.' },
+  { icon: Brain, label: 'AI Career Matching', desc: 'Advanced ML models match your skills to career paths with confidence scores.' },
   { icon: BarChart3, label: 'ATS Score Analysis', desc: 'Detailed breakdown of how your resume performs against Applicant Tracking Systems.' },
   { icon: Briefcase, label: 'Real Job Search', desc: 'Live job listings from LinkedIn, Indeed, and more with personalized match percentages.' },
   { icon: Map, label: 'Career Roadmaps', desc: 'Step-by-step learning paths with resources, projects, and milestones.' },
@@ -104,7 +104,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="mt-8 max-w-2xl text-lg leading-relaxed text-ink-sec md:text-xl"
           >
-            Applyce analyzes your resume, evaluates ATS compatibility, maps skill gaps, and delivers personalised career recommendations — all in seconds.
+            Applyce analyzes your resume, evaluates ATS compatibility, maps skill gaps, and delivers personalized career recommendations — all in seconds.
           </motion.p>
 
           <motion.div
@@ -259,7 +259,7 @@ export default function LandingPage() {
           <Zap className="mx-auto mb-4 text-accent" size={36} />
           <h3 className="font-display text-3xl font-bold text-ink md:text-4xl">Ready to Find Your Dream Career?</h3>
           <p className="mx-auto mt-3 max-w-lg text-ink-sec md:text-lg">
-            Join 10,000+ professionals who accelerated their career growth with Applyce.
+            Join thousands of professionals who are using AI to accelerate their career growth with Applyce.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link to="/upload">

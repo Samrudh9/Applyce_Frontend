@@ -35,7 +35,7 @@ const groups: { label: string; items: NavItem[] }[] = [
     label: 'Resume',
     items: [
       { to: '/upload', label: 'Analyze Resume', icon: FileUp },
-      { to: '/ats-report', label: 'ATS Report', icon: ScanSearch },
+      { to: '/ats-report', label: 'ATS Compatibility Report', icon: ScanSearch },
       { to: '/resume-builder', label: 'Resume Builder', icon: PenLine },
       { to: '/cover-letter', label: 'Cover Letter', icon: Mail },
       { to: '/scorecard', label: 'Scorecard', icon: Award },
@@ -47,7 +47,7 @@ const groups: { label: string; items: NavItem[] }[] = [
       { to: '/jobs', label: 'Job Search', icon: Search },
       { to: '/apply-agent', label: 'Apply Agent', icon: Send },
       { to: '/roadmap', label: 'Roadmap', icon: Map },
-      { to: '/tracker', label: 'Tracker', icon: ListChecks },
+      { to: '/tracker', label: 'Application Tracker', icon: ListChecks },
     ],
   },
   {
@@ -122,7 +122,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-ink">{user.username}</p>
               <p className="truncate text-[11px] text-ink-ter">
-                {user.account_type || 'Free'} plan
+                {user.account_type ? `${user.account_type} plan` : 'Member'}
               </p>
             </div>
             <button

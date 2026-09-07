@@ -64,13 +64,13 @@ export default function ScorecardPage() {
     if (!token && !data) {
         return (
             <div className="space-y-8">
-                <SectionHeading title="Shareable Score Card" subtitle="Generate a public link to share your resume score with employers or peers." />
+                <SectionHeading title="Shareable Scorecard" subtitle="Generate a public link to share your resume score with employers or peers." />
                 <Card hover={false} className="flex flex-col items-center text-center py-12">
                     <Share2 size={48} className="text-accent mb-4" />
-                    <h2 className="text-xl font-bold text-ink">Create Your Score Card</h2>
+                    <h2 className="text-xl font-bold text-ink">Create Your Scorecard</h2>
                     <p className="mt-2 max-w-md text-sm text-ink-sec">Generate a shareable link for your latest resume analysis. Anyone with the link can view your score, skills, and career predictions.</p>
                     <Button onClick={generateShareLink} disabled={generating} className="mt-6">
-                        {generating ? <><Loader2 size={16} className="animate-spin" /> Generating…</> : <><Award size={16} /> Generate Score Card</>}
+                        {generating ? <><Loader2 size={16} className="animate-spin" /> Generating…</> : <><Award size={16} /> Generate Scorecard</>}
                     </Button>
                     {shareUrl && (
                         <div className="mt-6 w-full max-w-lg">
@@ -91,7 +91,7 @@ export default function ScorecardPage() {
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Resume Score Card" subtitle="Public resume performance overview" badge={<Badge tone="success" icon={<Trophy size={12} />}>Score {data.overall_score}</Badge>} />
+            <SectionHeading title="Resume Scorecard" subtitle="A shareable snapshot of your resume performance" badge={<Badge tone="success" icon={<Trophy size={12} />}>Score {data.overall_score}</Badge>} />
 
             {/* Share URL */}
             {shareUrl && (

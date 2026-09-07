@@ -131,7 +131,7 @@ export function NotificationsBell() {
                                 <p className="px-4 py-8 text-center text-sm text-ink-sec">Loading…</p>
                             ) : items.length === 0 ? (
                                 <p className="px-4 py-10 text-center text-sm text-ink-sec">
-                                    No notifications yet. Save a job alert and we will notify you of new matches.
+                                    No notifications yet. Notifications about job matches will appear here.
                                 </p>
                             ) : (
                                 items.map((n) => (

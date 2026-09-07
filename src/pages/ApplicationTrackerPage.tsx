@@ -113,7 +113,13 @@ export default function ApplicationTrackerPage() {
             {loading ? (
                 <div className="flex justify-center py-12"><Loader2 size={32} className="animate-spin text-accent" /></div>
             ) : filtered.length === 0 ? (
-                <Card><p className="text-center text-ink-sec py-8">No applications {filter !== 'all' ? `with status "${filter}"` : 'yet'}. Click "Add Application" to get started.</p></Card>
+                <Card>
+                    <p className="text-center text-ink-sec py-8">
+                        {filter !== 'all'
+                            ? <>No applications with status &ldquo;{filter}&rdquo; yet.</>
+                            : 'No applications yet. Click "Add Application" to get started.'}
+                    </p>
+                </Card>
             ) : (
                 <div className="space-y-3">
                     <AnimatePresence>
@@ -166,21 +172,21 @@ export default function ApplicationTrackerPage() {
                             </div>
                             <div>
                                 <label className="mb-1 block text-xs font-medium text-ink">Company *</label>
-                                <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="e.g. Google" />
+                                <Input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="e.g. Acme Corp" />
                             </div>
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
                                     <label className="mb-1 block text-xs font-medium text-ink">Location</label>
-                                    <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="City" />
+                                    <Input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Bengaluru" />
                                 </div>
                                 <div>
                                     <label className="mb-1 block text-xs font-medium text-ink">Salary Range</label>
-                                    <Input value={form.salary_range} onChange={(e) => setForm({ ...form, salary_range: e.target.value })} placeholder="e.g. $80k-$100k" />
+                                    <Input value={form.salary_range} onChange={(e) => setForm({ ...form, salary_range: e.target.value })} placeholder="e.g. ₹8L-₹10L" />
                                 </div>
                             </div>
                             <div>
                                 <label className="mb-1 block text-xs font-medium text-ink">Job URL</label>
-                                <Input value={form.job_url} onChange={(e) => setForm({ ...form, job_url: e.target.value })} placeholder="https://..." />
+                                <Input value={form.job_url} onChange={(e) => setForm({ ...form, job_url: e.target.value })} placeholder="https://example.com/job-listing" />
                             </div>
                             <div>
                                 <label className="mb-1 block text-xs font-medium text-ink">Status</label>
@@ -190,7 +196,7 @@ export default function ApplicationTrackerPage() {
                             </div>
                             <div>
                                 <label className="mb-1 block text-xs font-medium text-ink">Notes</label>
-                                <textarea className="w-full rounded-xl border border-border bg-surface p-3 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Any notes..." />
+                                <textarea className="w-full rounded-xl border border-border bg-surface p-3 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Interviews, follow-ups, or recruiter details..." />
                             </div>
                             <div className="flex justify-end gap-2 pt-2">
                                 <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>

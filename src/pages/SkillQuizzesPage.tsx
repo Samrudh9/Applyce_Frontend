@@ -9,7 +9,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { api } from '../lib/api';
 import type { QuizHistoryEntry, QuizQuestion, QuizResult } from '../types/api';
 
-// Available skills — matches backend dataset/skill_quizzes.py AVAILABLE_SKILLS
+// Available skills — matches the backend's quiz catalogue
 const SKILL_OPTIONS = [
     'Python', 'JavaScript', 'Java', 'SQL', 'React', 'Machine Learning',
     'Data Science', 'HTML/CSS', 'Git', 'Docker', 'AWS', 'Node.js',
