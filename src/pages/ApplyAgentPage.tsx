@@ -114,7 +114,7 @@ export default function ApplyAgentPage() {
     <div className="space-y-8">
       <SectionHeading
         title="Apply Agent"
-        subtitle="Paste the job details, review the tailored cover letter and application message, then complete the application yourself — the agent never submits on your behalf."
+        subtitle="Paste a job, get a tailored cover letter and application message, then apply with confidence."
         badge={<Badge tone="violet" icon={<Bot size={12} />}>Draft-first</Badge>}
       />
 
@@ -147,7 +147,7 @@ export default function ApplyAgentPage() {
           {!draft ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <FileText size={40} className="text-ink-sec" />
-              <p className="mt-3 text-sm text-ink-sec">Fill in the job details and prepare your application to see the draft here.</p>
+              <p className="mt-3 text-sm text-ink-sec">No draft yet — add the job details above and we'll prep your application.</p>
             </div>
           ) : (
             <div className="space-y-5">

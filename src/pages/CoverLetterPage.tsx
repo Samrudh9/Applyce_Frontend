@@ -60,7 +60,7 @@ export default function CoverLetterPage() {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <SectionHeading title="Cover Letters" subtitle="Generate AI-powered cover letters tailored to your target job." badge={<Badge tone="info" icon={<Mail size={12} />}>AI-Generated</Badge>} />
+                <SectionHeading title="Cover Letters" subtitle="Get a tailored cover letter draft for any role — ready to edit and send." badge={<Badge tone="info" icon={<Mail size={12} />}>AI-Generated</Badge>} />
                 <Button onClick={() => setShowForm(true)}><Plus size={16} /> New Cover Letter</Button>
             </div>
 
@@ -123,7 +123,7 @@ export default function CoverLetterPage() {
                 <Card hover={false} className="py-16 text-center">
                     <Mail size={48} className="mx-auto text-ink-sec" />
                     <p className="mt-4 text-lg font-semibold text-ink">No cover letters yet</p>
-                    <p className="mt-1 text-sm text-ink-sec">Generate your first AI cover letter to get started.</p>
+                    <p className="mt-1 text-sm text-ink-sec">Generate your first draft — it's ready to personalize in minutes.</p>
                     <Button onClick={() => setShowForm(true)} className="mt-6"><Plus size={16} /> Create One</Button>
                 </Card>
             )}

@@ -82,7 +82,7 @@ export default function ResultPage() {
       <div>
         <SectionHeading
           title="Your AI-powered career insights."
-          subtitle="Explore your scores, career predictions, and actionable improvements."
+          subtitle="Your score, career fits, and what to fix — all in one place."
           badge={
             <div className="flex gap-2">
               <Badge tone={grade.tone}>Grade {grade.letter}</Badge>
@@ -374,7 +374,7 @@ export default function ResultPage() {
                 <div className="flex items-start gap-2">
                   <Lightbulb size={16} className="mt-0.5 shrink-0 text-accent" />
                   <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-ink">Resume Enhancement</h4>
+                    <h4 className="text-sm font-semibold text-ink">Next step</h4>
                     <p className="mt-0.5 text-xs text-ink-sec">{item}</p>
                   </div>
                   <Badge tone="neutral" size="sm">Impact +{Math.floor(Math.random() * 8 + 5)}%</Badge>

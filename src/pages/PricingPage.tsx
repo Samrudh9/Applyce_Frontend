@@ -12,7 +12,7 @@ const tiers = [
     icon: Zap,
     price: '$0',
     period: '/month',
-    description: 'Perfect for getting started with career exploration.',
+    description: 'Everything you need to get a clear career read.',
     features: ['Basic career match', '1 resume analysis / month', 'Community support', 'Score overview'],
     cta: 'Get Started',
     popular: false,
@@ -22,7 +22,7 @@ const tiers = [
     icon: Sparkles,
     price: '$9.99',
     period: '/month',
-    description: 'For serious job seekers who want the competitive edge.',
+    description: 'For job seekers ready to stand out and move faster.',
     features: ['Unlimited analysis', 'Deep ATS report', 'Job fit scoring', 'Career roadmap', 'Priority support', 'Export PDF reports'],
     cta: 'Upgrade to Pro',
     popular: true,
@@ -51,7 +51,7 @@ export default function PricingPage() {
 
   return (
     <div className="space-y-14">
-      <SectionHeading title="Simple, Transparent Pricing" subtitle="Start free and scale as your career ambitions grow. No hidden fees." />
+      <SectionHeading title="Simple, Transparent Pricing" subtitle="Start free — upgrade only when you need more. No hidden fees." />
 
       {/* Tiers */}
       <section className="grid gap-6 md:grid-cols-3">
@@ -123,7 +123,7 @@ export default function PricingPage() {
       <section className="text-center">
         <Card className="mx-auto max-w-2xl bg-accent/5 ring-1 ring-accent/10">
           <h3 className="font-display text-2xl font-semibold text-ink">Ready to accelerate your career?</h3>
-          <p className="mt-2 text-ink-sec">Join thousands of professionals using Applyce to land their dream jobs.</p>
+          <p className="mt-2 text-ink-sec">Start free and see where your resume stands today.</p>
           <Button className="mt-5">Start Free Today</Button>
         </Card>
       </section>

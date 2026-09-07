@@ -73,7 +73,7 @@ export default function InterviewPrepPage() {
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Interview Prep" subtitle="Practice with AI-powered interview questions and get instant feedback." />
+            <SectionHeading title="Interview Prep" subtitle="Practice realistic interview questions and get instant feedback before the real thing." />
 
             {/* Tab bar */}
             <div className="flex gap-2">

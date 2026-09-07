@@ -80,7 +80,7 @@ export default function ApplicationTrackerPage() {
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Application Tracker" subtitle="Track and manage all your job applications in one place." />
+            <SectionHeading title="Application Tracker" subtitle="Keep every application organized — status, notes, and follow-ups in one place." />
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">

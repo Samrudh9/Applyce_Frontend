@@ -102,7 +102,7 @@ export default function JobsPage() {
 
   return (
     <div className="space-y-8">
-      <SectionHeading title="Job Explorer" subtitle="Find roles that match your skills and career goals." badge={<Badge tone="info" icon={<Briefcase size={12} />}>AI-Matched</Badge>} />
+      <SectionHeading title="Job Explorer" subtitle="Explore live roles that fit your skills — with match scores to help you shortlist." badge={<Badge tone="info" icon={<Briefcase size={12} />}>AI-Matched</Badge>} />
 
       <Card>
         <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="grid gap-4 md:grid-cols-4">
@@ -162,8 +162,8 @@ export default function JobsPage() {
       {!loading && searched && jobs.length === 0 && (
         <Card hover={false} className="py-12 text-center">
           <Briefcase size={40} className="mx-auto text-ink-sec" />
-          <p className="mt-3 text-lg font-semibold text-ink">No jobs found</p>
-          <p className="mt-1 text-sm text-ink-sec">Try adjusting your search terms or location.</p>
+          <p className="mt-3 text-lg font-semibold text-ink">No roles found for that search yet</p>
+          <p className="mt-1 text-sm text-ink-sec">Try a broader title or another city.</p>
         </Card>
       )}
 

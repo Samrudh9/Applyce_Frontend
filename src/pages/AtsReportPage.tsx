@@ -40,7 +40,7 @@ export default function AtsReportPage() {
     <div className="space-y-8">
       <SectionHeading
         title="ATS Compatibility Report"
-        subtitle="Detailed analysis of how your resume performs against Applicant Tracking Systems."
+        subtitle="Here's how hiring software reads your resume — and what's holding you back."
         badge={<Badge tone={overallScore >= 80 ? 'success' : overallScore >= 60 ? 'warning' : 'danger'} icon={<ShieldCheck size={12} />}>Score {overallScore}</Badge>}
       />
 
@@ -48,7 +48,7 @@ export default function AtsReportPage() {
       <Card hover={false} className="flex flex-col items-center text-center">
         <CircularProgress value={overallScore} size={170} strokeWidth={14} color={overallScore >= 80 ? '#22c55e' : overallScore >= 60 ? '#f59e0b' : '#ef4444'} label="ATS Score" />
         <p className="mt-3 max-w-md text-sm text-ink-sec">
-          {overallScore >= 80 ? 'Great! Your resume is well-optimized for ATS filters.' : overallScore >= 60 ? 'Your resume passes most ATS filters but has room for improvement.' : 'Your resume needs significant improvements to pass ATS filters.'}
+          {overallScore >= 80 ? "Nice work — your resume is well-prepared for ATS filters." : overallScore >= 60 ? "Good foundation — a few tweaks and you're there." : "Don't worry — these are the quick wins that will get you through."}
         </p>
       </Card>
 

@@ -141,7 +141,7 @@ export default function ResumeBuilderPage() {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <SectionHeading title="Resume Builder" subtitle="Create and tailor ATS-friendly resumes with AI assistance." badge={<Badge tone="info" icon={<FileText size={12} />}>Builder</Badge>} />
+                <SectionHeading title="Resume Builder" subtitle="Build a clean, ATS-friendly resume — start fresh or from your analysis." badge={<Badge tone="info" icon={<FileText size={12} />}>Builder</Badge>} />
                 <Button onClick={openNew}><Plus size={16} /> New Resume</Button>
             </div>
 
@@ -259,7 +259,7 @@ export default function ResumeBuilderPage() {
                 <Card hover={false} className="py-16 text-center">
                     <FileText size={48} className="mx-auto text-ink-sec" />
                     <p className="mt-4 text-lg font-semibold text-ink">No resumes yet</p>
-                    <p className="mt-1 text-sm text-ink-sec">Create your first ATS-optimized resume.</p>
+                    <p className="mt-1 text-sm text-ink-sec">Your first ATS-friendly resume is minutes away.</p>
                     <Button onClick={openNew} className="mt-6"><Plus size={16} /> Create Resume</Button>
                 </Card>
             )}

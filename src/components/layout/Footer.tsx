@@ -38,8 +38,8 @@ export function Footer() {
           <div>
             <p className="text-[15px] font-semibold tracking-tight text-ink">Applyce</p>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink-sec">
-              AI-assisted career intelligence — understand your resume, close skill
-              gaps, and land the roles you actually want.
+              Career guidance for every stage — analyze your resume, close skill
+              gaps, and land the role that fits you.
             </p>
           </div>
 
@@ -66,7 +66,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-xs text-ink-ter md:flex-row">
           <p>© {new Date().getFullYear()} Applyce. All rights reserved.</p>
-          <p>Built for ambitious professionals.</p>
+          <p>Built for every stage of your career.</p>
         </div>
       </div>
     </footer>

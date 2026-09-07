@@ -77,7 +77,7 @@ export default function SkillQuizzesPage() {
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Skill Quizzes" subtitle="Test your knowledge and validate your skills with interactive quizzes." />
+            <SectionHeading title="Skill Quizzes" subtitle="Quick quizzes to check your skills and see where to level up." />
 
             <div className="flex gap-2">
                 {(['select', 'history'] as View[]).map((v) => (

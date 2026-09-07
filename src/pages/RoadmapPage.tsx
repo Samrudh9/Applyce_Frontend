@@ -48,7 +48,7 @@ export default function RoadmapPage() {
 
   return (
     <div className="space-y-8">
-      <SectionHeading title={title || `${career} Roadmap`} subtitle={`Your personalized learning path for ${career}.`} badge={<Badge tone="info" icon={<Map size={12} />}>AI-Generated</Badge>} />
+      <SectionHeading title={title || `${career} Roadmap`} subtitle={`Your step-by-step plan to get there — skills, resources, and timelines.`} badge={<Badge tone="info" icon={<Map size={12} />}>AI-Generated</Badge>} />
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="relative space-y-0 lg:col-span-2">
           <div className="absolute left-6 top-0 hidden h-full w-px bg-gradient-to-b from-accent/30 via-burgundy/15 to-transparent lg:block" />

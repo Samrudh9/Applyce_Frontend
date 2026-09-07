@@ -67,7 +67,7 @@ export default function UploadPage() {
       <SectionHeading
         align="center"
         title="Upload Your Resume"
-        subtitle="Our AI will analyze your resume, identify your strengths, and recommend career paths."
+        subtitle="Upload your resume to get your scores, skill gaps, and career matches."
         badge={<Badge tone="info" icon={<Upload size={12} />}>Resume Analysis</Badge>}
       />
 
@@ -117,7 +117,7 @@ export default function UploadPage() {
                 <Upload size={28} className="text-accent" />
               </div>
               <p className="text-lg font-semibold text-ink">Drop your resume here</p>
-              <p className="mt-1 text-sm text-ink-sec">or click to browse · PDF, DOCX up to 5 MB</p>
+              <p className="mt-1 text-sm text-ink-sec">or click to browse · PDF or DOCX, up to 5 MB</p>
             </div>
           )}
         </div>

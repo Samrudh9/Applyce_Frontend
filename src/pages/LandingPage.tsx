@@ -15,21 +15,21 @@ import type { CareerPrediction } from '../types/api';
 
 /* ---------- data ---------- */
 const features = [
-  { icon: Brain, label: 'AI Career Matching', desc: 'Advanced ML models match your skills to career paths with confidence scores.' },
-  { icon: BarChart3, label: 'ATS Score Analysis', desc: 'Detailed breakdown of how your resume performs against Applicant Tracking Systems.' },
-  { icon: Briefcase, label: 'Real Job Search', desc: 'Live job listings from LinkedIn, Indeed, and more with personalized match percentages.' },
-  { icon: Map, label: 'Career Roadmaps', desc: 'Step-by-step learning paths with resources, projects, and milestones.' },
-  { icon: TrendingUp, label: 'Salary Estimation', desc: 'Market salary ranges based on location, experience, and industry data.' },
-  { icon: Search, label: 'Skill Gap Analysis', desc: 'Identify which skills you need and which already make you competitive.' },
-  { icon: Target, label: 'Progress Tracking', desc: 'Track resume scores, ATS improvements, and roadmap progress with rich charts.' },
-  { icon: LightbulbIcon, label: 'Improvement Tips', desc: 'AI-generated recommendations ranked by impact on your career readiness.' },
+  { icon: Brain, label: 'AI Career Matching', desc: 'Tell us what you know and what you enjoy — get career fits ranked by confidence.' },
+  { icon: BarChart3, label: 'ATS Score Analysis', desc: 'See how hiring software reads your resume — and exactly what to fix.' },
+  { icon: Briefcase, label: 'Real Job Search', desc: 'Browse live roles that match your skills, with fit scores up front.' },
+  { icon: Map, label: 'Career Roadmaps', desc: 'A step-by-step learning path for your goal role — skills, resources, and milestones.' },
+  { icon: TrendingUp, label: 'Salary Estimation', desc: 'Realistic salary ranges for your role, location, and experience level.' },
+  { icon: Search, label: 'Skill Gap Analysis', desc: 'Know exactly which skills to learn next — and which you already have.' },
+  { icon: Target, label: 'Progress Tracking', desc: 'Watch your resume and ATS scores improve each time you upload.' },
+  { icon: LightbulbIcon, label: 'Improvement Tips', desc: 'Simple, prioritized fixes ranked by how much they boost your score.' },
 ];
 
 const steps = [
-  { num: '01', title: 'Upload Resume', desc: 'Upload a PDF or DOCX and let our parser extract key data.' },
-  { num: '02', title: 'AI Analysis', desc: 'Our ML engine evaluates skills, ATS fit, and career alignment.' },
-  { num: '03', title: 'Get Results', desc: 'Receive career matches, scores, roadmaps, and job suggestions.' },
-  { num: '04', title: 'Take Action', desc: 'Search jobs, build your resume, and track your progress.' },
+  { num: '01', title: 'Upload Resume', desc: 'Add your resume — PDF or DOCX, we handle the rest.' },
+  { num: '02', title: 'AI Analysis', desc: 'We break down your skills, ATS fit, and career alignment.' },
+  { num: '03', title: 'Get Results', desc: 'See your scores, career fits, and a plan to improve.' },
+  { num: '04', title: 'Take Action', desc: 'Build your resume, prep for interviews, and track applications.' },
 ];
 
 const stagger = {
@@ -104,7 +104,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.25 }}
             className="mt-8 max-w-2xl text-lg leading-relaxed text-ink-sec md:text-xl"
           >
-            Applyce analyzes your resume, evaluates ATS compatibility, maps skill gaps, and delivers personalized career recommendations — all in seconds.
+            Upload your resume and get a clear read on your strengths, your gaps, and the careers that fit you — all in under a minute.
           </motion.p>
 
           <motion.div
@@ -130,7 +130,7 @@ export default function LandingPage() {
             align="center"
             badge={<Badge tone="info" dot>Try It Now</Badge>}
             title="Quick Career Prediction"
-            subtitle="Enter your skills and interests to instantly see AI-matched career paths."
+            subtitle="Not sure where to start? Type in what you know and like — get matched careers instantly."
           />
           <div className="mx-auto max-w-xl space-y-4">
             <div>
@@ -259,7 +259,7 @@ export default function LandingPage() {
           <Zap className="mx-auto mb-4 text-accent" size={36} />
           <h3 className="font-display text-3xl font-bold text-ink md:text-4xl">Ready to Find Your Dream Career?</h3>
           <p className="mx-auto mt-3 max-w-lg text-ink-sec md:text-lg">
-            Join thousands of professionals who are using AI to accelerate their career growth with Applyce.
+            Free to start — see what your resume says about your next step.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link to="/upload">

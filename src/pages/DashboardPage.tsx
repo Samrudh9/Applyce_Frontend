@@ -122,7 +122,7 @@ export default function DashboardPage() {
             <Upload size={48} className="text-accent" />
           </div>
           <h2 className="font-display text-2xl font-bold text-ink">No Data Yet</h2>
-          <p className="max-w-md text-ink-sec">Upload your first resume to see your dashboard come alive with scores, trends, and career insights.</p>
+          <p className="max-w-md text-ink-sec">Upload your first resume and we'll show your scores, trends, and next steps.</p>
           <Link to="/upload">
             <Button><Plus size={16} /> Upload Resume</Button>
           </Link>
