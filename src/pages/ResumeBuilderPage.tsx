@@ -6,6 +6,7 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { api, ApiError } from '../lib/api';
 import type { AnalyzeResumeResponse, ResumeRecord, ResumeData, TemplateName } from '../types/api';
 
@@ -135,7 +136,7 @@ export default function ResumeBuilderPage() {
     const updateProject = (index: number, key: string, value: string) => setData((d) => ({ ...d, projects: d.projects.map((p, i) => i === index ? { ...p, [key]: value } : p) }));
     const removeProject = (index: number) => setData((d) => ({ ...d, projects: d.projects.filter((_, i) => i !== index) }));
 
-    const inputClass = 'w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-ink-ter outline-none transition-colors focus:border-accent hover:border-line-strong';
+    const inputClass = 'w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-ink-ter outline-none transition-colors focus:border-accent hover:border-line-strong';
     const labelClass = 'mb-1 block text-xs font-medium uppercase tracking-wider text-ink-sec';
 
     return (
@@ -175,8 +176,8 @@ export default function ResumeBuilderPage() {
                                     <div>
                                         <div className="mb-2 flex items-center justify-between"><h4 className="font-semibold text-ink">Experience</h4><button onClick={addExperience} className="text-xs font-medium text-accent-strong hover:text-accent">+ Add</button></div>
                                         {data.experience.map((exp, i) => (
-                                            <div key={i} className="mb-3 rounded-xl border border-border p-3 space-y-2">
-                                                <div className="flex justify-between"><span className="text-xs text-ink-sec">Experience {i + 1}</span><button onClick={() => removeExperience(i)} className="text-red-400 hover:text-red-500"><Trash2 size={14} /></button></div>
+                                            <div key={i} className="mb-3 rounded-xl border border-line p-3 space-y-2">
+                                                <div className="flex justify-between"><span className="text-xs text-ink-sec">Experience {i + 1}</span><button onClick={() => removeExperience(i)} className="text-danger/70 hover:text-danger"><Trash2 size={14} /></button></div>
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <input className={inputClass} value={exp.company} onChange={(e) => updateExperience(i, 'company', e.target.value)} placeholder="Company" />
                                                     <input className={inputClass} value={exp.title} onChange={(e) => updateExperience(i, 'title', e.target.value)} placeholder="Job Title" />
@@ -190,8 +191,8 @@ export default function ResumeBuilderPage() {
                                     <div>
                                         <div className="mb-2 flex items-center justify-between"><h4 className="font-semibold text-ink">Education</h4><button onClick={addEducation} className="text-xs font-medium text-accent-strong hover:text-accent">+ Add</button></div>
                                         {data.education.map((edu, i) => (
-                                            <div key={i} className="mb-3 rounded-xl border border-border p-3 space-y-2">
-                                                <div className="flex justify-between"><span className="text-xs text-ink-sec">Education {i + 1}</span><button onClick={() => removeEducation(i)} className="text-red-400 hover:text-red-500"><Trash2 size={14} /></button></div>
+                                            <div key={i} className="mb-3 rounded-xl border border-line p-3 space-y-2">
+                                                <div className="flex justify-between"><span className="text-xs text-ink-sec">Education {i + 1}</span><button onClick={() => removeEducation(i)} className="text-danger/70 hover:text-danger"><Trash2 size={14} /></button></div>
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <input className={inputClass} value={edu.institution} onChange={(e) => updateEducation(i, 'institution', e.target.value)} placeholder="Institution" />
                                                     <input className={inputClass} value={edu.degree} onChange={(e) => updateEducation(i, 'degree', e.target.value)} placeholder="Degree" />
@@ -204,8 +205,8 @@ export default function ResumeBuilderPage() {
                                     <div>
                                         <div className="mb-2 flex items-center justify-between"><h4 className="font-semibold text-ink">Projects</h4><button onClick={addProject} className="text-xs font-medium text-accent-strong hover:text-accent">+ Add</button></div>
                                         {data.projects.map((proj, i) => (
-                                            <div key={i} className="mb-3 rounded-xl border border-border p-3 space-y-2">
-                                                <div className="flex justify-between"><span className="text-xs text-ink-sec">Project {i + 1}</span><button onClick={() => removeProject(i)} className="text-red-400 hover:text-red-500"><Trash2 size={14} /></button></div>
+                                            <div key={i} className="mb-3 rounded-xl border border-line p-3 space-y-2">
+                                                <div className="flex justify-between"><span className="text-xs text-ink-sec">Project {i + 1}</span><button onClick={() => removeProject(i)} className="text-danger/70 hover:text-danger"><Trash2 size={14} /></button></div>
                                                 <div className="grid grid-cols-2 gap-2">
                                                     <input className={inputClass} value={proj.name} onChange={(e) => updateProject(i, 'name', e.target.value)} placeholder="Project Name" />
                                                     <input className={inputClass} value={proj.link ?? ''} onChange={(e) => updateProject(i, 'link', e.target.value)} placeholder="Link (optional)" />
@@ -231,14 +232,14 @@ export default function ResumeBuilderPage() {
                                                 <div className="mt-2 flex flex-wrap gap-1">
                                                     {data.skills[key].map((s, idx) => (
                                                         <span key={idx} className="flex items-center gap-1 rounded-lg bg-elevated px-2 py-1 text-xs text-ink">
-                                                            {s}<button onClick={() => removeSkill(key, idx)} className="text-red-400 hover:text-red-500"><X size={10} /></button>
+                                                            {s}<button onClick={() => removeSkill(key, idx)} className="text-danger/70 hover:text-danger"><X size={10} /></button>
                                                         </span>
                                                     ))}
                                                 </div>
                                             </div>
                                         ))}
                                     </div>
-                                    {error && <p className="text-sm text-red-500">{error}</p>}
+                                    {error && <p className="text-sm text-danger">{error}</p>}
                                     <div className="flex justify-end gap-3">
                                         <Button variant="outline" onClick={() => setShowEditor(false)}>Cancel</Button>
                                         <Button onClick={handleSave} disabled={saving}>
@@ -253,7 +254,11 @@ export default function ResumeBuilderPage() {
                 )}
             </AnimatePresence>
 
-            {loading && <div className="flex items-center justify-center py-20"><Loader2 className="animate-spin text-accent" size={40} /></div>}
+            {loading && (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading resumes">
+                    {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={3} />)}
+                </div>
+            )}
 
             {!loading && resumes.length === 0 && (
                 <Card hover={false} className="py-16 text-center">

@@ -5,6 +5,7 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { api, ApiError } from '../lib/api';
 import type { CoverLetterRecord, CoverLetterTone, CoverLetterLength } from '../types/api';
 
@@ -55,7 +56,7 @@ export default function CoverLetterPage() {
 
     const copyToClipboard = (text: string) => navigator.clipboard.writeText(text);
 
-    const inputClass = 'w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-ter outline-none transition-colors focus:border-accent hover:border-line-strong';
+    const inputClass = 'w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-ter outline-none transition-colors focus:border-accent hover:border-line-strong';
 
     return (
         <div className="space-y-8">
@@ -83,7 +84,7 @@ export default function CoverLetterPage() {
                                         <div><label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-ink-sec">Tone</label><select className={inputClass} value={tone} onChange={(e) => setTone(e.target.value as CoverLetterTone)}>{tones.map((t) => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}</select></div>
                                         <div><label className="mb-1.5 block text-xs font-medium uppercase tracking-wider text-ink-sec">Length</label><select className={inputClass} value={length} onChange={(e) => setLength(e.target.value as CoverLetterLength)}>{lengths.map((l) => <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>)}</select></div>
                                     </div>
-                                    {error && <p className="text-sm text-red-500">{error}</p>}
+                                    {error && <p className="text-sm text-danger">{error}</p>}
                                     <Button onClick={handleGenerate} disabled={generating} className="w-full">
                                         {generating ? <Loader2 size={16} className="animate-spin" /> : <Mail size={16} />}
                                         {generating ? 'Generating…' : 'Generate Cover Letter'}
@@ -106,7 +107,7 @@ export default function CoverLetterPage() {
                                     <button onClick={() => setSelected(null)} className="rounded-full p-1 hover:bg-elevated"><X size={18} /></button>
                                 </div>
                                 <div className="flex gap-2 mb-4"><Badge tone="info">{selected.tone}</Badge><Badge tone="neutral">{selected.length}</Badge></div>
-                                <div className="rounded-xl border border-border bg-elevated p-5 text-sm leading-relaxed whitespace-pre-wrap text-ink">{selected.body_text}</div>
+                                <div className="rounded-xl border border-line bg-elevated p-5 text-sm leading-relaxed whitespace-pre-wrap text-ink">{selected.body_text}</div>
                                 <div className="mt-4 flex gap-3">
                                     <Button size="sm" onClick={() => copyToClipboard(selected.body_text)}><Copy size={14} /> Copy</Button>
                                     <Button size="sm" variant="outline" onClick={() => handleExportPdf(selected.id)}><Download size={14} /> PDF</Button>
@@ -117,7 +118,11 @@ export default function CoverLetterPage() {
                 )}
             </AnimatePresence>
 
-            {loading && <div className="flex items-center justify-center py-20"><Loader2 className="animate-spin text-accent" size={40} /></div>}
+            {loading && (
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" aria-busy="true" aria-label="Loading cover letters">
+                    {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={3} />)}
+                </div>
+            )}
 
             {!loading && letters.length === 0 && (
                 <Card hover={false} className="py-16 text-center">

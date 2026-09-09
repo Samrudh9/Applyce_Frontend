@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Brain, CheckCircle, ChevronRight, Clock, Loader2, MessageSquare, Play, Send, Trophy } from 'lucide-react';
+import { Award, Brain, CheckCircle, ChevronRight, Clock, Loader2, MessageSquare, Play, RotateCcw, Send, Trophy } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { CircularProgress } from '../components/ui/CircularProgress';
 import { Input } from '../components/ui/Input';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import type { InterviewEvaluation, InterviewQuestion, InterviewSession } from '../types/api';
 
@@ -25,9 +26,13 @@ export default function InterviewPrepPage() {
     const [lastEval, setLastEval] = useState<InterviewEvaluation | null>(null);
     const [history, setHistory] = useState<InterviewSession[]>([]);
     const [historyLoading, setHistoryLoading] = useState(false);
+    const [sessionError, setSessionError] = useState<string | null>(null);
+    const [answerError, setAnswerError] = useState<string | null>(null);
+    const [historyError, setHistoryError] = useState<string | null>(null);
 
     const startSession = async () => {
         setLoading(true);
+        setSessionError(null);
         try {
             const res = await api.interviewStart({ career, difficulty, count });
             setSession(res.session);
@@ -35,13 +40,16 @@ export default function InterviewPrepPage() {
             setAnswer('');
             setLastEval(null);
             setView('session');
-        } catch { /* ignore */ }
+        } catch {
+            setSessionError('Could not start the interview. Check your connection and try again.');
+        }
         setLoading(false);
     };
 
     const submitAnswer = async () => {
         if (!session || !answer.trim()) return;
         setEvaluating(true);
+        setAnswerError(null);
         try {
             const res = await api.interviewAnswer({ session_id: session.id, question_index: currentQ, answer });
             setLastEval(res.evaluation);
@@ -50,7 +58,9 @@ export default function InterviewPrepPage() {
                 setSession(updated.session);
                 setView('results');
             }
-        } catch { /* ignore */ }
+        } catch {
+            setAnswerError('We couldn\'t evaluate your answer. Please try again.');
+        }
         setEvaluating(false);
     };
 
@@ -58,11 +68,18 @@ export default function InterviewPrepPage() {
         setCurrentQ((p) => p + 1);
         setAnswer('');
         setLastEval(null);
+        setAnswerError(null);
     };
 
     const loadHistory = useCallback(async () => {
         setHistoryLoading(true);
-        try { const res = await api.interviewHistory(); setHistory(res.sessions); } catch { /* */ }
+        setHistoryError(null);
+        try {
+            const res = await api.interviewHistory();
+            setHistory(res.sessions);
+        } catch {
+            setHistoryError('Could not load interview history.');
+        }
         setHistoryLoading(false);
     }, []);
 
@@ -78,7 +95,7 @@ export default function InterviewPrepPage() {
             {/* Tab bar */}
             <div className="flex gap-2">
                 {(['setup', 'history'] as View[]).map((v) => (
-                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-border'}`}>
+                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-line'}`}>
                         {v === 'setup' ? 'New Session' : 'History'}
                     </button>
                 ))}
@@ -97,17 +114,21 @@ export default function InterviewPrepPage() {
                             <label className="mb-1 block text-sm font-medium text-ink">Difficulty</label>
                             <div className="flex gap-2">
                                 {(['easy', 'medium', 'hard'] as const).map((d) => (
-                                    <button key={d} onClick={() => setDifficulty(d)} className={`rounded-xl px-4 py-2 text-sm font-medium capitalize transition-colors ${difficulty === d ? 'bg-ink text-canvas' : 'border border-border bg-surface text-ink-sec hover:text-ink'}`}>{d}</button>
+                                    <button key={d} onClick={() => setDifficulty(d)} className={`rounded-xl px-4 py-2 text-sm font-medium capitalize transition-colors ${difficulty === d ? 'bg-ink text-canvas' : 'border border-line bg-surface text-ink-sec hover:text-ink'}`}>{d}</button>
                                 ))}
                             </div>
                         </div>
                         <div>
-                            <label className="mb-1 block text-sm font-medium text-ink">Number of Questions</label>
-                            <Input type="number" min={1} max={15} value={count} onChange={(e) => setCount(Number(e.target.value))} />
+                            <Input label="Number of Questions" type="number" min={1} max={15} value={count} onChange={(e) => setCount(Number(e.target.value))} />
                         </div>
                         <Button onClick={startSession} disabled={loading || !career.trim()}>
                             {loading ? <><Loader2 size={16} className="animate-spin" /> Starting…</> : <><Play size={16} /> Start Interview</>}
                         </Button>
+                        {sessionError && (
+                            <p className="rounded-xl border border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
+                                {sessionError}
+                            </p>
+                        )}
                     </div>
                 </Card>
             )}
@@ -126,12 +147,17 @@ export default function InterviewPrepPage() {
                     {!lastEval ? (
                         <Card>
                             <label className="mb-2 block text-sm font-medium text-ink">Your Answer</label>
-                            <textarea className="w-full rounded-xl border border-border bg-surface p-4 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={6} value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="Type your answer here..." />
+                            <textarea className="w-full rounded-xl border border-line bg-surface p-4 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={6} value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="Type your answer here..." />
                             <div className="mt-3 flex justify-end">
                                 <Button onClick={submitAnswer} disabled={evaluating || !answer.trim()}>
                                     {evaluating ? <><Loader2 size={16} className="animate-spin" /> Evaluating…</> : <><Send size={16} /> Submit Answer</>}
                                 </Button>
                             </div>
+                            {answerError && (
+                                <p className="mt-3 rounded-xl border border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
+                                    {answerError}
+                                </p>
+                            )}
                         </Card>
                     ) : (
                         <Card className="border-accent/30">
@@ -143,14 +169,14 @@ export default function InterviewPrepPage() {
                             <p className="text-sm text-ink-sec">{lastEval.feedback}</p>
                             {lastEval.strengths && lastEval.strengths.length > 0 && (
                                 <div className="mt-3">
-                                    <p className="text-xs font-semibold uppercase text-emerald-600">Strengths</p>
-                                    <ul className="mt-1 space-y-1">{lastEval.strengths.map((s, i) => <li key={i} className="flex items-start gap-1 text-sm text-ink-sec"><CheckCircle size={14} className="mt-0.5 shrink-0 text-emerald-500" />{s}</li>)}</ul>
+                                    <p className="text-xs font-semibold uppercase text-success">Strengths</p>
+                                    <ul className="mt-1 space-y-1">{lastEval.strengths.map((s, i) => <li key={i} className="flex items-start gap-1 text-sm text-ink-sec"><CheckCircle size={14} className="mt-0.5 shrink-0 text-success" />{s}</li>)}</ul>
                                 </div>
                             )}
                             {lastEval.improvements && lastEval.improvements.length > 0 && (
                                 <div className="mt-3">
-                                    <p className="text-xs font-semibold uppercase text-amber-600">Improvements</p>
-                                    <ul className="mt-1 space-y-1">{lastEval.improvements.map((s, i) => <li key={i} className="flex items-start gap-1 text-sm text-ink-sec"><ChevronRight size={14} className="mt-0.5 shrink-0 text-amber-500" />{s}</li>)}</ul>
+                                    <p className="text-xs font-semibold uppercase text-warning">Improvements</p>
+                                    <ul className="mt-1 space-y-1">{lastEval.improvements.map((s, i) => <li key={i} className="flex items-start gap-1 text-sm text-ink-sec"><ChevronRight size={14} className="mt-0.5 shrink-0 text-warning" />{s}</li>)}</ul>
                                 </div>
                             )}
                             {currentQ < questions.length - 1 && (
@@ -194,9 +220,23 @@ export default function InterviewPrepPage() {
             {/* HISTORY */}
             {view === 'history' && (
                 <div className="space-y-4">
-                    {historyLoading && <div className="flex justify-center py-8"><Loader2 size={32} className="animate-spin text-accent" /></div>}
-                    {!historyLoading && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No interview sessions yet. Start your first one!</p></Card>}
-                    {history.map((s) => (
+                    {historyLoading && (
+                        <div className="space-y-3" aria-busy="true" aria-label="Loading interview history">
+                            {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={2} />)}
+                        </div>
+                    )}
+                    {!historyLoading && historyError && (
+                        <Card hover={false}>
+                            <div className="flex flex-col items-center gap-3 py-8 text-center">
+                                <p className="text-sm text-danger">{historyError}</p>
+                                <Button variant="outline" size="sm" onClick={loadHistory}>
+                                    <RotateCcw size={14} /> Try again
+                                </Button>
+                            </div>
+                        </Card>
+                    )}
+                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No interview sessions yet. Start your first one!</p></Card>}
+                    {!historyLoading && !historyError && history.map((s) => (
                         <Card key={s.id} hover className="cursor-pointer" onClick={() => { setSession(s); setView('results'); }}>
                             <div className="flex items-center justify-between">
                                 <div>

@@ -6,10 +6,11 @@ import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import type { ApplicationDraft } from '../types/api';
 
-const inputCls = 'w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-ink-ter outline-none transition-all focus:border-accent';
+const inputCls = 'w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-ink placeholder:text-ink-ter outline-none transition-all focus:border-accent';
 
 export default function ApplyAgentPage() {
   const [jobTitle, setJobTitle] = useState('');
@@ -23,6 +24,9 @@ export default function ApplyAgentPage() {
 
   const [draft, setDraft] = useState<ApplicationDraft | null>(null);
   const [drafts, setDrafts] = useState<ApplicationDraft[]>([]);
+  const [draftsLoading, setDraftsLoading] = useState(true);
+  const [draftsError, setDraftsError] = useState<string | null>(null);
+  const [panelError, setPanelError] = useState<string | null>(null);
   const [coverLetter, setCoverLetter] = useState('');
   const [appMessage, setAppMessage] = useState('');
   const [salaryExpectation, setSalaryExpectation] = useState('');
@@ -32,7 +36,10 @@ export default function ApplyAgentPage() {
   const [copied, setCopied] = useState<'letter' | 'message' | null>(null);
 
   useEffect(() => {
-    api.applyDrafts().then((res) => setDrafts(res.drafts)).catch(() => null);
+    api.applyDrafts()
+      .then((res) => setDrafts(res.drafts))
+      .catch(() => setDraftsError('Could not load your prepared applications.'))
+      .finally(() => setDraftsLoading(false));
   }, []);
 
   const syncDraftToState = (d: ApplicationDraft) => {
@@ -50,6 +57,7 @@ export default function ApplyAgentPage() {
     }
     setPreparing(true);
     setPreparingErr(null);
+    setPanelError(null);
     try {
       const res = await api.applyPrepare({
         job_title: jobTitle.trim(),
@@ -72,6 +80,7 @@ export default function ApplyAgentPage() {
   const saveDraft = async () => {
     if (!draft) return;
     setSaving(true);
+    setPanelError(null);
     try {
       const res = await api.applyDraftUpdate(draft.id, {
         cover_letter: coverLetter,
@@ -80,7 +89,7 @@ export default function ApplyAgentPage() {
       });
       syncDraftToState(res.draft);
     } catch {
-      /* ignore */
+      setPanelError('Couldn\'t save your draft. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -89,11 +98,14 @@ export default function ApplyAgentPage() {
   const applyNow = async () => {
     if (!draft) return;
     setApplying(true);
+    setPanelError(null);
     try {
       const res = await api.applyDraftSubmit(draft.id);
       if (res.job_url) window.open(res.job_url, '_blank', 'noopener,noreferrer');
       setDraft(res.draft);
       setDrafts((prev) => prev.map((d) => (d.id === res.draft.id ? res.draft : d)));
+    } catch {
+      setPanelError('Couldn\'t mark the application as applied. Please try again.');
     } finally {
       setApplying(false);
     }
@@ -139,7 +151,7 @@ export default function ApplyAgentPage() {
             {preparing ? <Loader2 size={16} className="animate-spin" /> : <Bot size={16} />}
             {preparing ? 'Preparing your application…' : 'Prepare Application'}
           </Button>
-          {preparingErr && <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-center text-sm text-red-600">{preparingErr}</p>}
+          {preparingErr && <p className="mt-3 rounded-lg bg-danger/10 px-3 py-2 text-center text-sm text-danger">{preparingErr}</p>}
         </Card>
 
         {/* ── Draft panel ── */}
@@ -203,6 +215,11 @@ export default function ApplyAgentPage() {
                   </a>
                 )}
               </div>
+              {panelError && (
+                <p className="rounded-lg border border-danger/25 bg-danger/10 px-3 py-2 text-center text-sm text-danger">
+                  {panelError}
+                </p>
+              )}
               <p className="text-xs text-ink-sec">
                 When you’re ready, "I applied — open job" opens the listing in a new tab where you complete the final submission — the agent never sends on your behalf.
               </p>
@@ -212,7 +229,21 @@ export default function ApplyAgentPage() {
       </div>
 
       {/* ── Draft history ── */}
-      {drafts.length > 0 && (
+      {draftsLoading ? (
+        <Card>
+          <h2 className="mb-3 text-lg font-bold text-ink">Prepared applications</h2>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3" aria-busy="true" aria-label="Loading prepared applications">
+            {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={2} />)}
+          </div>
+        </Card>
+      ) : draftsError && drafts.length === 0 ? (
+        <Card hover={false}>
+          <div className="flex flex-col items-center gap-3 py-8 text-center">
+            <p className="text-sm text-danger">{draftsError}</p>
+            <p className="text-xs text-ink-sec">You can still prepare a new application above.</p>
+          </div>
+        </Card>
+      ) : drafts.length > 0 && (
         <Card>
           <h2 className="mb-3 text-lg font-bold text-ink">Prepared applications</h2>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -220,7 +251,7 @@ export default function ApplyAgentPage() {
               <motion.div key={d.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                 <button
                   onClick={() => syncDraftToState(d)}
-                  className="w-full rounded-xl border border-border bg-surface p-4 text-left transition-colors hover:border-accent"
+                  className="w-full rounded-xl border border-line bg-surface p-4 text-left transition-colors hover:border-accent"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <p className="text-sm font-semibold text-ink">{d.job_title}</p>

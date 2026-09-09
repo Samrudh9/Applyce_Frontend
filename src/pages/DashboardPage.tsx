@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Award, BarChart3, FileText, Github, Loader2, LogOut, Plus, Target, TrendingUp, Upload } from 'lucide-react';
+import { ArrowUpRight, Award, BarChart3, FileText, Github, LogOut, Plus, RotateCcw, Target, TrendingUp, Upload } from 'lucide-react';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Link } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { Skeleton, SkeletonCard } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import type { DashboardStatsResponse, ScoreTrendsResponse } from '../types/api';
@@ -17,15 +18,18 @@ export default function DashboardPage() {
   const [trends, setTrends] = useState<ScoreTrendsResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    Promise.all([
+  const loadAll = useCallback(async () => {
+    setLoading(true);
+    const [s, t] = await Promise.all([
       api.dashboardStats().catch(() => null),
       api.scoreTrends().catch(() => null),
-    ]).then(([s, t]) => {
-      if (s) setStats(s);
-      if (t) setTrends(t);
-    }).finally(() => setLoading(false));
+    ]);
+    if (s) setStats(s);
+    if (t) setTrends(t);
+    setLoading(false);
   }, []);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
 
   const chartData = trends?.has_data
     ? trends.trends.dates.map((d, i) => ({
@@ -37,6 +41,15 @@ export default function DashboardPage() {
 
   const summary = trends?.summary;
 
+  /* Career health — a single glance at where you stand (from existing score trends). */
+  const health = summary?.latest_score != null
+    ? summary.latest_score >= 80
+      ? { label: 'Strong', cls: 'bg-success/15 text-success' }
+      : summary.latest_score >= 60
+        ? { label: 'Progressing', cls: 'bg-warning/15 text-warning' }
+        : { label: 'Needs work', cls: 'bg-danger/15 text-danger' }
+    : null;
+
   const statCards = [
     { icon: FileText, label: 'Resume Score', value: summary?.latest_score?.toString() ?? '—', trend: summary ? `+${summary.total_improvement}` : '', color: 'text-accent-strong' },
     { icon: BarChart3, label: 'Total Scans', value: summary?.total_scans?.toString() ?? '0', trend: '', color: 'text-burgundy' },
@@ -46,13 +59,24 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="animate-spin text-accent" size={40} />
+      <div className="space-y-8" aria-busy="true" aria-label="Loading dashboard">
+        <div className="relative overflow-hidden rounded-2xl border border-line bg-ink p-6 md:p-8">
+          <Skeleton className="h-6 w-48 mb-3" />
+          <Skeleton className="h-4 w-72" />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {[0, 1, 2, 3].map((i) => (
+            <SkeletonCard key={i} lines={2} />
+          ))}
+        </div>
+        <SkeletonCard lines={5} />
+        <SkeletonCard lines={4} />
       </div>
     );
   }
 
   const hasData = (stats && stats.total_resumes > 0) || (trends && trends.has_data);
+  const loadError = !stats && !trends;
 
   return (
     <div className="space-y-8">
@@ -86,6 +110,13 @@ export default function DashboardPage() {
                   {user.account_type} Plan
                 </span>
               )}
+              {health && (
+                <span className={`mt-2 ml-2 inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-xs font-semibold ${health.cls}`}>
+                  <span className="h-1.5 w-1.5 rounded-full bg-current" />
+                  Career health: {health.label}
+                  {(summary?.total_improvement ?? 0) > 0 && <span className="font-bold">↑{summary?.total_improvement}</span>}
+                </span>
+              )}
             </div>
           </div>
 
@@ -115,8 +146,24 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      {/* ── Error state ── */}
+      {loadError && (
+        <div className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-danger/25 bg-danger/5 py-14 text-center">
+          <BarChart3 size={40} className="text-ink-ter" />
+          <div>
+            <h2 className="font-display text-xl font-bold text-ink">Couldn&apos;t load your dashboard</h2>
+            <p className="mt-1 max-w-md text-sm text-ink-sec">
+              We couldn&apos;t reach the score service. Check your connection and try again.
+            </p>
+          </div>
+          <Button variant="outline" onClick={loadAll}>
+            <RotateCcw size={16} /> Try again
+          </Button>
+        </div>
+      )}
+
       {/* ── Empty state ── */}
-      {!hasData && (
+      {!loadError && !hasData && (
         <div className="flex flex-col items-center justify-center gap-6 rounded-2xl border border-dashed border-line py-16 text-center">
           <div className="rounded-2xl bg-elevated p-6">
             <Upload size={48} className="text-accent" />

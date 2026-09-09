@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Award, BookOpen, CheckCircle, Clock, GraduationCap, Loader2, Play, X, XCircle } from 'lucide-react';
+import { Award, BookOpen, CheckCircle, Clock, GraduationCap, Loader2, Play, RotateCcw, X, XCircle } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { CircularProgress } from '../components/ui/CircularProgress';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import type { QuizHistoryEntry, QuizQuestion, QuizResult } from '../types/api';
 
@@ -29,17 +30,24 @@ export default function SkillQuizzesPage() {
     const [history, setHistory] = useState<QuizHistoryEntry[]>([]);
     const [historyLoading, setHistoryLoading] = useState(false);
     const [bestScores, setBestScores] = useState<Record<string, number>>({});
+    const [quizError, setQuizError] = useState<string | null>(null);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [historyError, setHistoryError] = useState<string | null>(null);
 
     const startQuiz = async (skill: string) => {
         setLoading(true);
+        setQuizError(null);
         setSelectedSkill(skill);
         try {
             const res = await api.quizStart(skill);
             setQuestions(res.questions);
             setAnswers({});
             setResults([]);
+            setSubmitError(null);
             setView('quiz');
-        } catch { /* */ }
+        } catch {
+            setQuizError('Could not load the quiz. Please try again.');
+        }
         setLoading(false);
     };
 
@@ -49,18 +57,22 @@ export default function SkillQuizzesPage() {
 
     const submitQuiz = async () => {
         setLoading(true);
+        setSubmitError(null);
         try {
             const answerList = Object.entries(answers).map(([idx, sel]) => ({ index: Number(idx), selected: sel }));
             const res = await api.quizSubmit(selectedSkill, answerList);
             setResults(res.results);
             setScore({ score: res.score, total: res.total, percentage: res.percentage });
             setView('results');
-        } catch { /* */ }
+        } catch {
+            setSubmitError('We couldn\'t grade your quiz. Check your connection and try again.');
+        }
         setLoading(false);
     };
 
     const loadHistory = useCallback(async () => {
         setHistoryLoading(true);
+        setHistoryError(null);
         try {
             const res = await api.quizHistory();
             setHistory(res.quizzes);
@@ -69,7 +81,9 @@ export default function SkillQuizzesPage() {
                 if (!bests[q.skill] || q.score > bests[q.skill]) bests[q.skill] = q.score;
             }
             setBestScores(bests);
-        } catch { /* */ }
+        } catch {
+            setHistoryError('Could not load quiz history.');
+        }
         setHistoryLoading(false);
     }, []);
 
@@ -81,7 +95,7 @@ export default function SkillQuizzesPage() {
 
             <div className="flex gap-2">
                 {(['select', 'history'] as View[]).map((v) => (
-                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v || (view === 'quiz' && v === 'select') || (view === 'results' && v === 'select') ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-border'}`}>
+                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v || (view === 'quiz' && v === 'select') || (view === 'results' && v === 'select') ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-line'}`}>
                         {v === 'select' ? 'Take Quiz' : 'History'}
                     </button>
                 ))}
@@ -89,20 +103,32 @@ export default function SkillQuizzesPage() {
 
             {/* SKILL SELECTION */}
             {view === 'select' && (
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    {SKILL_OPTIONS.map((skill) => (
-                        <Card key={skill} hover className="cursor-pointer" onClick={() => startQuiz(skill)}>
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                    <GraduationCap size={18} className="text-accent" />
-                                    <span className="font-semibold text-ink">{skill}</span>
-                                </div>
-                                {bestScores[skill] !== undefined && <Badge tone="success" size="sm">Best: {bestScores[skill]}</Badge>}
-                            </div>
-                            <div className="mt-2 flex items-center gap-1 text-xs text-ink-sec"><Play size={12} /> Start Quiz</div>
-                        </Card>
-                    ))}
-                    {loading && <div className="col-span-full flex justify-center py-8"><Loader2 size={32} className="animate-spin text-accent" /></div>}
+                <div className="space-y-4">
+                    {quizError && (
+                        <p className="flex items-center gap-2 rounded-xl border border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
+                            <XCircle size={14} className="shrink-0" /> {quizError}
+                        </p>
+                    )}
+                    {loading ? (
+                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-busy="true" aria-label="Loading quiz">
+                            {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} lines={2} />)}
+                        </div>
+                    ) : (
+                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                            {SKILL_OPTIONS.map((skill) => (
+                                <Card key={skill} hover className="cursor-pointer" onClick={() => startQuiz(skill)}>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                            <GraduationCap size={18} className="text-accent" />
+                                            <span className="font-semibold text-ink">{skill}</span>
+                                        </div>
+                                        {bestScores[skill] !== undefined && <Badge tone="success" size="sm">Best: {bestScores[skill]}</Badge>}
+                                    </div>
+                                    <div className="mt-2 flex items-center gap-1 text-xs text-ink-sec"><Play size={12} /> Start Quiz</div>
+                                </Card>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -121,7 +147,7 @@ export default function SkillQuizzesPage() {
                                 <p className="mb-3 font-semibold text-ink">Q{q.index + 1}. {q.question}</p>
                                 <div className="space-y-2">
                                     {q.options.map((opt, oi) => (
-                                        <button key={oi} onClick={() => selectAnswer(q.index, oi)} className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors ${answers[q.index] === oi ? 'border-accent bg-accent/10 font-medium text-ink' : 'border-border bg-surface text-ink-sec hover:border-accent/40 hover:bg-accent/5'}`}>
+                                        <button key={oi} onClick={() => selectAnswer(q.index, oi)} className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors ${answers[q.index] === oi ? 'border-accent bg-accent/10 font-medium text-ink' : 'border-line bg-surface text-ink-sec hover:border-accent/40 hover:bg-accent/5'}`}>
                                             <span className="mr-2 font-semibold text-ink-sec">{String.fromCharCode(65 + oi)}.</span>{opt}
                                         </button>
                                     ))}
@@ -130,6 +156,11 @@ export default function SkillQuizzesPage() {
                         </motion.div>
                     ))}
                     <div className="flex justify-end">
+                        {submitError && (
+                            <p className="mr-4 flex items-center gap-2 text-sm text-danger">
+                                <XCircle size={14} className="shrink-0" /> {submitError}
+                            </p>
+                        )}
                         <Button onClick={submitQuiz} disabled={loading || Object.keys(answers).length < questions.length}>
                             {loading ? <><Loader2 size={16} className="animate-spin" /> Submitting…</> : <><Award size={16} /> Submit Quiz</>}
                         </Button>
@@ -150,13 +181,13 @@ export default function SkillQuizzesPage() {
                     <AnimatePresence>
                         {results.map((r) => (
                             <motion.div key={r.index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                                <Card className={r.is_correct ? 'border-emerald-200' : 'border-red-200'}>
+                                <Card className={r.is_correct ? 'border-success/30' : 'border-danger/30'}>
                                     <div className="flex items-start gap-2">
-                                        {r.is_correct ? <CheckCircle size={18} className="mt-0.5 shrink-0 text-emerald-500" /> : <XCircle size={18} className="mt-0.5 shrink-0 text-red-500" />}
+                                        {r.is_correct ? <CheckCircle size={18} className="mt-0.5 shrink-0 text-success" /> : <XCircle size={18} className="mt-0.5 shrink-0 text-danger" />}
                                         <div className="flex-1">
                                             <p className="font-semibold text-ink">{r.question}</p>
                                             <p className="mt-1 text-sm text-ink-sec">Your answer: <strong>{r.options[r.selected]}</strong></p>
-                                            {!r.is_correct && <p className="text-sm text-emerald-600">Correct: <strong>{r.options[r.correct]}</strong></p>}
+                                            {!r.is_correct && <p className="text-sm text-success">Correct: <strong>{r.options[r.correct]}</strong></p>}
                                             <p className="mt-2 rounded-lg bg-elevated p-2 text-xs text-ink-sec">{r.explanation}</p>
                                         </div>
                                     </div>
@@ -174,9 +205,23 @@ export default function SkillQuizzesPage() {
             {/* HISTORY */}
             {view === 'history' && (
                 <div className="space-y-3">
-                    {historyLoading && <div className="flex justify-center py-8"><Loader2 size={32} className="animate-spin text-accent" /></div>}
-                    {!historyLoading && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No quiz history yet.</p></Card>}
-                    {history.map((h) => (
+                    {historyLoading && (
+                        <div className="space-y-3" aria-busy="true" aria-label="Loading quiz history">
+                            {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={1} />)}
+                        </div>
+                    )}
+                    {!historyLoading && historyError && (
+                        <Card hover={false}>
+                            <div className="flex flex-col items-center gap-3 py-8 text-center">
+                                <p className="text-sm text-danger">{historyError}</p>
+                                <Button variant="outline" size="sm" onClick={loadHistory}>
+                                    <RotateCcw size={14} /> Try again
+                                </Button>
+                            </div>
+                        </Card>
+                    )}
+                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No quiz history yet.</p></Card>}
+                    {!historyLoading && !historyError && history.map((h) => (
                         <Card key={h.id} hover>
                             <div className="flex items-center justify-between">
                                 <div>

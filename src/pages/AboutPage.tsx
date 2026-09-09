@@ -8,7 +8,7 @@ import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { SectionHeading } from '../components/ui/SectionHeading';
 
 const stats = [
-  { label: 'Careers Mapped', value: 60, suffix: '+', color: 'text-accent' },
+  { label: 'Careers Mapped', value: 84, suffix: '+', color: 'text-accent' },
   { label: 'Skills Tracked', value: 100, suffix: '+', color: 'text-accent-strong' },
   { label: 'Industries Covered', value: 6, suffix: '', color: 'text-burgundy' },
   { label: 'ATS Checks', value: 1000, suffix: '+', color: 'text-success' },

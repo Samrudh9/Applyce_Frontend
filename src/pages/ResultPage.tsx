@@ -12,6 +12,7 @@ import { Card } from '../components/ui/Card';
 import { CircularProgress } from '../components/ui/CircularProgress';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { Skeleton } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import type { AnalyzeResumeResponse, SkillGap } from '../types/api';
 
@@ -76,6 +77,43 @@ export default function ResultPage() {
     return `${currency === 'INR' ? '₹' : '$'}${val.toLocaleString()}`;
   };
 
+  /* Client-side report export — the payoff moment should end in your hands. */
+  const downloadReport = () => {
+    const lines: string[] = [
+      '# Applyce Resume Analysis',
+      `**Name:** ${result.name ?? '—'}`,
+      `**Overall Score:** ${overallScore}% (Grade ${grade.letter})`,
+      `**Estimated Salary:** ${salaryMin && salaryMax ? `${formatSalary(salaryMin)} – ${formatSalary(salaryMax)}` : '—'}`,
+      '',
+      '## Career Matches',
+      ...result.predictions.slice(0, 3).map((c) => `- ${c.career} (${c.confidence.toFixed(1)}% confidence)`),
+      '',
+      `## Skills Detected (${result.skills?.length ?? 0})`,
+      (result.skills ?? []).join(', ') || '—',
+      '',
+      `## Skills to Learn (${gap?.missing_skills?.length ?? 0})`,
+      gap?.missing_skills?.length ? gap.missing_skills.join(', ') : 'No skill gaps detected.',
+      '',
+      '## Score Breakdown',
+      `- Keywords: ${Math.round(keywordScore)}%`,
+      `- Format: ${Math.round(formatScore)}%`,
+      `- Sections: ${Math.round(sectionScore)}%`,
+      `- Content: ${Math.round(contentScore)}%`,
+      '',
+      '## Recommendations',
+      ...(improvements.length ? improvements.slice(0, 4) : ['No specific recommendations from analysis.']),
+    ];
+    const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `applyce-report-${(result.name || 'resume').toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'resume'}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-10">
       {/* ── Header ── */}
@@ -109,17 +147,17 @@ export default function ResultPage() {
 
           {/* Compact resume preview under score */}
           {state?.fileUrl && (
-            <div className="mt-5 w-full border-t border-border pt-4">
+            <div className="mt-5 w-full border-t border-line pt-4">
               <div className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-50">
-                  <FileText size={15} className="text-blue-500" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-soft">
+                  <FileText size={15} className="text-accent" />
                 </div>
                 <div className="min-w-0 flex-1 text-left">
                   <p className="truncate text-xs font-semibold text-ink">{state.fileName ?? 'resume.pdf'}</p>
                 </div>
                 <button
                   onClick={() => setShowPreview(!showPreview)}
-                  className="flex items-center gap-1 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs font-medium text-ink-sec transition-colors hover:bg-elevated hover:text-ink"
+                  className="flex items-center gap-1 rounded-lg border border-line bg-surface px-2.5 py-1.5 text-xs font-medium text-ink-sec transition-colors hover:bg-elevated hover:text-ink"
                 >
                   {showPreview ? <><EyeOff size={12} /> Hide</> : <><Eye size={12} /> Preview</>}
                 </button>
@@ -133,9 +171,9 @@ export default function ResultPage() {
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-ink-sec">Score Breakdown</h3>
           <div className="space-y-4">
             <ProgressBar label="Keywords" value={keywordScore} showValue animated colorClass="from-accent-strong to-accent" />
-            <ProgressBar label="Format" value={formatScore} showValue animated colorClass="from-amber-400 to-amber-300" />
-            <ProgressBar label="Sections" value={sectionScore} showValue animated colorClass="from-blue-400 to-blue-300" />
-            <ProgressBar label="Content" value={contentScore} showValue animated colorClass="from-burgundy/80 to-burgundy/50" />
+            <ProgressBar label="Format" value={formatScore} showValue animated colorClass="from-burgundy/80 to-burgundy/50" />
+            <ProgressBar label="Sections" value={sectionScore} showValue animated colorClass="from-warning/80 to-warning/50" />
+            <ProgressBar label="Content" value={contentScore} showValue animated colorClass="from-success/80 to-success/50" />
           </div>
         </Card>
 
@@ -153,9 +191,9 @@ export default function ResultPage() {
             {overallScore >= 80 ? 'Consistent structure with strong keyword alignment.' : overallScore >= 60 ? 'Good foundation — optimize keywords and formatting for better ATS pass rate.' : 'Needs improvement — focus on ATS keywords, formatting, and section structure.'}
           </p>
           {salaryMin && salaryMax && (
-            <div className="mt-3 rounded-xl bg-emerald-50 px-4 py-2 text-center">
+            <div className="mt-3 rounded-xl bg-success/10 px-4 py-2 text-center">
               <p className="text-xs text-ink-sec">Estimated Salary</p>
-              <p className="text-lg font-bold text-emerald-600">{formatSalary(salaryMin)} – {formatSalary(salaryMax)}</p>
+              <p className="text-lg font-bold text-success">{formatSalary(salaryMin)} – {formatSalary(salaryMax)}</p>
             </div>
           )}
         </Card>
@@ -173,11 +211,11 @@ export default function ResultPage() {
             <Card hover={false}>
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-ink flex items-center gap-2">
-                  <FileText size={16} className="text-blue-500" /> Resume Preview
+                  <FileText size={16} className="text-accent" /> Resume Preview
                 </h3>
                 <button
                   onClick={() => setShowPreview(false)}
-                  className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs font-medium text-ink-sec hover:bg-elevated"
+                  className="flex items-center gap-1 rounded-lg border border-line px-2.5 py-1 text-xs font-medium text-ink-sec hover:bg-elevated"
                 >
                   <EyeOff size={12} /> Close
                 </button>
@@ -186,11 +224,11 @@ export default function ResultPage() {
                 <iframe
                   src={state.fileUrl}
                   title="Resume Preview"
-                  className="w-full rounded-xl border border-border"
+                  className="w-full rounded-xl border border-line"
                   style={{ height: '500px' }}
                 />
               ) : (
-                <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-elevated/60 p-10">
+                <div className="flex flex-col items-center gap-3 rounded-xl border border-line bg-elevated/60 p-10">
                   <FileText size={48} className="text-ink-sec" />
                   <p className="text-sm text-ink-sec">DOCX preview not available in browser.</p>
                   <a href={state.fileUrl} download={state.fileName}>
@@ -241,11 +279,17 @@ export default function ResultPage() {
           <h2 className="mb-4 text-lg font-bold text-ink">
             Skills to Learn
             {loadingGap && <Loader2 size={14} className="ml-2 inline animate-spin text-ink-sec" />}
-            <span className="text-sm font-normal text-ink-sec"> ({gap?.missing_skills?.length ?? 0})</span>
+            <span className="text-sm font-normal text-ink-sec"> ({gap ? (gap.missing_skills?.length ?? 0) : '…'})</span>
           </h2>
-          <div className="flex flex-wrap gap-2">
-            {gap?.missing_skills?.length ? gap.missing_skills.map((s) => <Badge key={s} tone="warning">{s}</Badge>) : <p className="text-sm text-ink-sec">No skill gaps detected</p>}
-          </div>
+          {loadingGap && !gap ? (
+            <div className="flex flex-wrap gap-2" aria-busy="true" aria-label="Loading skill gaps">
+              {[0, 1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-6 w-20 rounded-full" />)}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {gap?.missing_skills?.length ? gap.missing_skills.map((s) => <Badge key={s} tone="warning">{s}</Badge>) : <p className="text-sm text-ink-sec">No skill gaps detected</p>}
+            </div>
+          )}
         </Card>
       </section>
 
@@ -255,13 +299,13 @@ export default function ResultPage() {
         const rf = result.red_flags;
         const hasWeaknesses = weaknesses.length > 0;
         const hasFlagList = rf?.count ? (rf.flags.generic_phrases.length + rf.flags.outdated_skills.length + rf.flags.personal_info.length + rf.flags.other.length) > 0 : false;
-        if (!hasWeaknesses && !hasFlagList) {
+          if (!hasWeaknesses && !hasFlagList) {
           return (
             <section>
               <h2 className="mb-4 text-xl font-bold text-ink flex items-center gap-2">
-                <ShieldCheck size={20} className="text-emerald-500" /> Red Flags
+                <ShieldCheck size={20} className="text-success" /> Red Flags
               </h2>
-              <Card hover={false} className="flex items-center gap-3 border-emerald-200 bg-emerald-50/60 py-6 text-emerald-700">
+              <Card hover={false} className="flex items-center gap-3 border-success/30 bg-success/10 py-6 text-success">
                 <CheckCircle2 size={22} />
                 <p className="text-sm font-medium">No critical red flags detected in your resume.</p>
               </Card>
@@ -272,7 +316,7 @@ export default function ResultPage() {
           <section>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-bold text-ink flex items-center gap-2">
-                <AlertTriangle size={20} className="text-red-500" /> Red Flags
+                <AlertTriangle size={20} className="text-danger" /> Red Flags
               </h2>
               <Badge tone="danger">{(rf?.count ?? 0) + weaknesses.length} flagged</Badge>
             </div>
@@ -282,7 +326,7 @@ export default function ResultPage() {
               <div className="space-y-3">
                 {weaknesses.map((w, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                    <Card className={`border ${w.severity === 'critical' ? 'border-red-200' : w.severity === 'high' ? 'border-orange-200' : w.severity === 'medium' ? 'border-amber-200' : 'border-slate-200'}`}>
+                    <Card className={`border ${w.severity === 'critical' ? 'border-danger/40' : w.severity === 'high' ? 'border-warning/40' : w.severity === 'medium' ? 'border-warning/30' : 'border-line-strong'}`}>
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <h3 className="font-semibold text-ink">{w.title}</h3>
                         <Badge tone={severityTone(w.severity)}>{w.severity}</Badge>
@@ -291,9 +335,9 @@ export default function ResultPage() {
                       {w.current_text && (
                         <p className="mt-2 rounded-lg bg-elevated px-3 py-2 text-xs italic text-ink-sec">"{w.current_text}"</p>
                       )}
-                      {w.impact && <p className="mt-2 text-xs text-red-500">{w.impact}</p>}
+                      {w.impact && <p className="mt-2 text-xs text-danger">{w.impact}</p>}
                       {w.suggested_fix && (
-                        <div className="mt-3 flex items-start gap-2 rounded-lg bg-accent/5 px-3 py-2 text-sm text-emerald-700">
+                        <div className="mt-3 flex items-start gap-2 rounded-lg bg-accent/5 px-3 py-2 text-sm text-success">
                           <Lightbulb size={14} className="mt-0.5 shrink-0" />
                           <span><span className="font-medium">Fix:</span> {w.suggested_fix}</span>
                         </div>
@@ -343,20 +387,20 @@ export default function ResultPage() {
         <Card>
           <h2 className="mb-2 text-lg font-bold text-ink">ATS Report Preview</h2>
           <p className="mb-4 text-sm text-ink-sec">Snapshot of your ATS readiness with critical issues flagged.</p>
-          <div className="space-y-3 rounded-xl border border-border bg-elevated/60 p-4">
+          <div className="space-y-3 rounded-xl border border-line bg-elevated/60 p-4">
             {gap?.skills_analysis?.missing_required?.length ? (
               <p className="flex items-start gap-2 text-sm text-ink-sec">
-                <TrendingUp size={16} className="mt-0.5 shrink-0 text-amber-500" />
+                <TrendingUp size={16} className="mt-0.5 shrink-0 text-warning" />
                 Missing {gap.skills_analysis.missing_required.length} role-specific keywords
               </p>
             ) : null}
             <p className="flex items-start gap-2 text-sm text-ink-sec">
-              <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-emerald-500" />
+              <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-success" />
               Clear section hierarchy
             </p>
             {qualityTips.filter((t) => t !== 'Resume analysis completed').slice(0, 2).map((tip, i) => (
               <p key={i} className="flex items-start gap-2 text-sm text-ink-sec">
-                <TrendingUp size={16} className="mt-0.5 shrink-0 text-amber-500" />{tip}
+                <TrendingUp size={16} className="mt-0.5 shrink-0 text-warning" />{tip}
               </p>
             ))}
           </div>
@@ -370,36 +414,36 @@ export default function ResultPage() {
           <h2 className="mb-4 text-lg font-bold text-ink">Recommendations</h2>
           <div className="space-y-3">
             {improvements.length > 0 ? improvements.slice(0, 4).map((item, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="rounded-xl border border-border bg-elevated/60 p-4">
+              <motion.div key={i} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="rounded-xl border border-line bg-elevated/60 p-4">
                 <div className="flex items-start gap-2">
                   <Lightbulb size={16} className="mt-0.5 shrink-0 text-accent" />
                   <div className="flex-1">
                     <h4 className="text-sm font-semibold text-ink">Next step</h4>
                     <p className="mt-0.5 text-xs text-ink-sec">{item}</p>
                   </div>
-                  <Badge tone="neutral" size="sm">Impact +{Math.floor(Math.random() * 8 + 5)}%</Badge>
+                  <Badge tone="neutral" size="sm">Recommended</Badge>
                 </div>
               </motion.div>
             )) : (
               <>
-                <div className="rounded-xl border border-border bg-elevated/60 p-4">
+                <div className="rounded-xl border border-line bg-elevated/60 p-4">
                   <div className="flex items-start gap-2">
                     <Lightbulb size={16} className="mt-0.5 shrink-0 text-accent" />
                     <div className="flex-1">
                       <h4 className="text-sm font-semibold text-ink">Highlight measurable impact</h4>
                       <p className="mt-0.5 text-xs text-ink-sec">Add metrics to showcase results for recent projects.</p>
                     </div>
-                    <Badge tone="neutral" size="sm">Impact +12%</Badge>
+                    <Badge tone="neutral" size="sm">Recommended</Badge>
                   </div>
                 </div>
-                <div className="rounded-xl border border-border bg-elevated/60 p-4">
+                <div className="rounded-xl border border-line bg-elevated/60 p-4">
                   <div className="flex items-start gap-2">
                     <Lightbulb size={16} className="mt-0.5 shrink-0 text-accent" />
                     <div className="flex-1">
                       <h4 className="text-sm font-semibold text-ink">Strengthen leadership signals</h4>
                       <p className="mt-0.5 text-xs text-ink-sec">Include cross-functional leadership achievements.</p>
                     </div>
-                    <Badge tone="neutral" size="sm">Impact +9%</Badge>
+                    <Badge tone="neutral" size="sm">Recommended</Badge>
                   </div>
                 </div>
               </>
@@ -425,7 +469,7 @@ export default function ResultPage() {
           )}
           {result.projects && result.projects.length > 0 && (
             <Card>
-              <h3 className="mb-3 text-lg font-bold text-ink flex items-center gap-2"><Star size={18} className="text-amber-500" /> Projects</h3>
+              <h3 className="mb-3 text-lg font-bold text-ink flex items-center gap-2"><Star size={18} className="text-warning" /> Projects</h3>
               <ul className="space-y-1">{result.projects.map((e, i) => <li key={i} className="text-sm text-ink-sec">{e}</li>)}</ul>
             </Card>
           )}
@@ -440,7 +484,7 @@ export default function ResultPage() {
             <p className="mt-1 text-sm text-ink-sec">Download your report or jump into curated job searches.</p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Button><Download size={16} /> Download Report</Button>
+            <Button onClick={downloadReport}><Download size={16} /> Download Report</Button>
             <Link to="/resume-builder" state={{ analysisResult: result }}>
               <Button variant="secondary"><Wrench size={16} /> Fix in Resume Builder</Button>
             </Link>
