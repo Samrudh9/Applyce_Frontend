@@ -7,6 +7,7 @@ import { Card } from '../components/ui/Card';
 import { CircularProgress } from '../components/ui/CircularProgress';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { Skeleton } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import type { ScorecardData } from '../types/api';
 
@@ -15,6 +16,7 @@ export default function ScorecardPage() {
     const [data, setData] = useState<ScorecardData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [genError, setGenError] = useState('');
     const [shareUrl, setShareUrl] = useState('');
     const [generating, setGenerating] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -33,6 +35,7 @@ export default function ScorecardPage() {
 
     const generateShareLink = async () => {
         setGenerating(true);
+        setGenError('');
         try {
             const res = await api.scorecardCreate();
             setShareUrl(res.share_url);
@@ -40,7 +43,10 @@ export default function ScorecardPage() {
             const sc = await api.scorecardGet(res.share_token);
             setData(sc.scorecard);
         } catch (err) {
-            setError((err as Error).message ?? 'Failed to generate scorecard');
+            const msg = (err as Error).message ?? 'Failed to generate scorecard';
+            setGenError(msg.includes('resume') || msg.includes('score')
+                ? 'No analyzed resume found. Upload a resume first, then create your scorecard.'
+                : msg);
         }
         setGenerating(false);
     };
@@ -51,7 +57,23 @@ export default function ScorecardPage() {
         setTimeout(() => setCopied(false), 2000);
     };
 
-    if (loading) return <div className="flex min-h-[60vh] items-center justify-center"><Loader2 size={40} className="animate-spin text-accent" /></div>;
+    if (loading) {
+        return (
+            <div className="space-y-6 p-2" aria-busy="true" aria-label="Loading scorecard">
+                <div className="space-y-2.5">
+                    <Skeleton className="h-8 w-56" />
+                    <Skeleton className="h-4 w-80 max-w-full" />
+                </div>
+                <div className="flex justify-center py-6">
+                    <Skeleton className="h-36 w-36 rounded-full" />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    {[0, 1, 2, 3].map((i) => <Skeleton key={i} className="h-20 rounded-xl" />)}
+                </div>
+                <Skeleton className="h-48 rounded-2xl" />
+            </div>
+        );
+    }
     if (error) return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
             <Trophy size={48} className="text-ink-sec" />
@@ -72,6 +94,11 @@ export default function ScorecardPage() {
                     <Button onClick={generateShareLink} disabled={generating} className="mt-6">
                         {generating ? <><Loader2 size={16} className="animate-spin" /> Generating…</> : <><Award size={16} /> Generate Scorecard</>}
                     </Button>
+                    {genError && (
+                        <p className="mt-4 max-w-md rounded-lg border border-danger/25 bg-danger/10 px-4 py-3 text-center text-sm text-danger">
+                            {genError}
+                        </p>
+                    )}
                     {shareUrl && (
                         <div className="mt-6 w-full max-w-lg">
                             <div className="flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/5 p-3">
@@ -126,7 +153,7 @@ export default function ScorecardPage() {
                     <h3 className="mb-3 text-lg font-bold text-ink">Top Career Matches</h3>
                     <div className="space-y-2">
                         {data.top_careers.map((c, i) => (
-                            <div key={i} className="flex items-center justify-between rounded-xl border border-border bg-elevated/60 px-4 py-3">
+                            <div key={i} className="flex items-center justify-between rounded-xl border border-line bg-elevated/60 px-4 py-3">
                                 <span className="font-medium text-ink">{typeof c === 'string' ? c : c.career}</span>
                                 {typeof c !== 'string' && <Badge tone="success" size="sm">{c.confidence.toFixed(1)}%</Badge>}
                             </div>
@@ -147,7 +174,7 @@ export default function ScorecardPage() {
             {data.predicted_salary_min > 0 && (
                 <Card hover={false} className="text-center">
                     <p className="text-sm text-ink-sec">Estimated Salary Range</p>
-                    <p className="text-2xl font-bold text-emerald-600">₹{(data.predicted_salary_min / 100000).toFixed(1)}L – ₹{(data.predicted_salary_max / 100000).toFixed(1)}L</p>
+                    <p className="text-2xl font-bold text-success">₹{(data.predicted_salary_min / 100000).toFixed(1)}L – ₹{(data.predicted_salary_max / 100000).toFixed(1)}L</p>
                 </Card>
             )}
         </div>

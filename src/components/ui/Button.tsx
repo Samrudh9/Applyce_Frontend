@@ -27,7 +27,7 @@ const styles: Record<Variant, string> = {
     'bg-transparent text-ink border border-line-strong hover:border-ink hover:bg-elevated',
   ghost: 'bg-transparent text-ink-sec hover:text-ink hover:bg-elevated',
   danger:
-    'bg-red-50 text-danger border border-red-200 hover:bg-red-100 dark:bg-red-950/40 dark:border-red-900 dark:hover:bg-red-950/70',
+    'bg-danger/10 text-danger border border-danger/25 hover:bg-danger/20',
   purple:
     'bg-burgundy text-white border border-transparent hover:bg-burgundy-strong shadow-sm dark:bg-burgundy dark:text-white',
 };

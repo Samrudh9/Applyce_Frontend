@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ChevronDown, Crown, Sparkles, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -88,7 +89,9 @@ export default function PricingPage() {
                   ))}
                 </ul>
 
-                <Button className="w-full" variant={tier.popular ? 'primary' : 'secondary'}>{tier.cta}</Button>
+                <Link to={tier.name === 'Enterprise' ? '/about' : '/login'} className="block w-full">
+                  <Button className="w-full" variant={tier.popular ? 'primary' : 'secondary'}>{tier.cta}</Button>
+                </Link>
               </Card>
             </motion.div>
           );
@@ -124,7 +127,7 @@ export default function PricingPage() {
         <Card className="mx-auto max-w-2xl bg-accent/5 ring-1 ring-accent/10">
           <h3 className="font-display text-2xl font-semibold text-ink">Ready to accelerate your career?</h3>
           <p className="mt-2 text-ink-sec">Start free and see where your resume stands today.</p>
-          <Button className="mt-5">Start Free Today</Button>
+          <Link to="/login" className="mt-5 inline-block"><Button>Start Free Today</Button></Link>
         </Card>
       </section>
     </div>

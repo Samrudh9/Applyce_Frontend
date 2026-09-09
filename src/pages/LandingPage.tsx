@@ -65,9 +65,9 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="space-y-28">
+    <div className="space-y-20 md:space-y-28">
       {/* ───── HERO ───── */}
-      <section className="relative -mx-4 -mt-10 overflow-hidden border-b border-line px-6 py-24 md:-mx-8 md:px-16 md:py-36">
+      <section className="relative -mx-4 -mt-10 overflow-hidden border-b border-line px-5 py-16 sm:px-6 md:-mx-8 md:px-16 md:py-32">
         {/* Subtle geometric accents */}
         <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-accent/[0.05] to-transparent" />
         <div className="absolute bottom-0 left-12 h-2/3 w-px bg-gradient-to-t from-accent/20 to-transparent" />
@@ -84,7 +84,7 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-display text-5xl font-extrabold leading-[1.05] tracking-tight text-ink md:text-7xl lg:text-8xl"
+            className="font-display text-[2.75rem] font-extrabold leading-[1.05] tracking-tight text-ink sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
           >
             Discover Your{' '}
             <em className="not-italic gradient-text">Ideal Career</em>{' '}

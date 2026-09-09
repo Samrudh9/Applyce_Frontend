@@ -4,6 +4,7 @@ import { Briefcase, Building2, Calendar, ExternalLink, Loader2, MapPin, Plus, Tr
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
+import { SkeletonCard } from '../components/ui/Skeleton';
 import { Input } from '../components/ui/Input';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { api } from '../lib/api';
@@ -101,9 +102,9 @@ export default function ApplicationTrackerPage() {
             {/* Controls */}
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex flex-wrap gap-2">
-                    <button onClick={() => setFilter('all')} className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${filter === 'all' ? 'bg-ink text-canvas' : 'border border-border bg-surface text-ink-sec hover:text-ink'}`}>All</button>
+                    <button onClick={() => setFilter('all')} className={`rounded-full px-4 py-1.5 text-xs font-medium transition-colors ${filter === 'all' ? 'bg-ink text-canvas' : 'border border-line bg-surface text-ink-sec hover:text-ink'}`}>All</button>
                     {STATUSES.map((s) => (
-                        <button key={s} onClick={() => setFilter(s)} className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition-colors ${filter === s ? 'bg-ink text-canvas' : 'border border-border bg-surface text-ink-sec hover:text-ink'}`}>{s}</button>
+                        <button key={s} onClick={() => setFilter(s)} className={`rounded-full px-4 py-1.5 text-xs font-medium capitalize transition-colors ${filter === s ? 'bg-ink text-canvas' : 'border border-line bg-surface text-ink-sec hover:text-ink'}`}>{s}</button>
                     ))}
                 </div>
                 <Button onClick={openAdd} size="sm"><Plus size={16} /> Add Application</Button>
@@ -111,7 +112,9 @@ export default function ApplicationTrackerPage() {
 
             {/* App list */}
             {loading ? (
-                <div className="flex justify-center py-12"><Loader2 size={32} className="animate-spin text-accent" /></div>
+                <div className="space-y-3" aria-busy="true" aria-label="Loading applications">
+                    {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={3} />)}
+                </div>
             ) : filtered.length === 0 ? (
                 <Card>
                     <p className="text-center text-ink-sec py-8">
@@ -137,16 +140,16 @@ export default function ApplicationTrackerPage() {
                                                 {a.location && <span className="flex items-center gap-1"><MapPin size={12} />{a.location}</span>}
                                                 <span className="flex items-center gap-1"><Calendar size={12} />{new Date(a.updated_at).toLocaleDateString()}</span>
                                             </p>
-                                            {a.salary_range && <p className="mt-1 text-xs text-emerald-600">{a.salary_range}</p>}
+                                            {a.salary_range && <p className="mt-1 text-xs text-success">{a.salary_range}</p>}
                                             {a.notes && <p className="mt-1 text-xs text-ink-sec line-clamp-1">{a.notes}</p>}
                                         </div>
                                         <div className="flex flex-col items-end gap-2 shrink-0">
-                                            <select value={a.status} onChange={(e) => updateStatus(a.id, e.target.value as TrackerStatus)} className="rounded-lg border border-border bg-surface px-2 py-1 text-xs font-medium text-ink focus:border-accent focus:outline-none">
+                                            <select value={a.status} onChange={(e) => updateStatus(a.id, e.target.value as TrackerStatus)} className="rounded-lg border border-line bg-surface px-2 py-1 text-xs font-medium text-ink focus:border-accent focus:outline-none">
                                                 {STATUSES.map((s) => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
                                             </select>
                                             <div className="flex gap-1">
                                                 {a.job_url && <a href={a.job_url} target="_blank" rel="noopener noreferrer" className="text-ink-sec hover:text-accent"><ExternalLink size={14} /></a>}
-                                                <button onClick={() => deleteApp(a.id)} className="text-ink-sec hover:text-red-500"><Trash2 size={14} /></button>
+                                                <button onClick={() => deleteApp(a.id)} className="text-ink-sec hover:text-danger"><Trash2 size={14} /></button>
                                             </div>
                                         </div>
                                     </div>
@@ -160,7 +163,7 @@ export default function ApplicationTrackerPage() {
             {/* Add/Edit Modal */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4" onClick={() => setShowModal(false)}>
-                    <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
+                    <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="w-full max-w-md rounded-2xl border border-line bg-surface p-6 shadow-xl" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-lg font-bold text-ink">{editId ? 'Edit Application' : 'Add Application'}</h2>
                             <button onClick={() => setShowModal(false)} className="text-ink-sec hover:text-ink"><X size={20} /></button>
@@ -190,13 +193,13 @@ export default function ApplicationTrackerPage() {
                             </div>
                             <div>
                                 <label className="mb-1 block text-xs font-medium text-ink">Status</label>
-                                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as TrackerStatus })} className="w-full rounded-xl border border-border bg-surface px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30">
+                                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as TrackerStatus })} className="w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30">
                                     {STATUSES.map((s) => <option key={s} value={s}>{STATUS_CONFIG[s].label}</option>)}
                                 </select>
                             </div>
                             <div>
                                 <label className="mb-1 block text-xs font-medium text-ink">Notes</label>
-                                <textarea className="w-full rounded-xl border border-border bg-surface p-3 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Interviews, follow-ups, or recruiter details..." />
+                                <textarea className="w-full rounded-xl border border-line bg-surface p-3 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={3} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Interviews, follow-ups, or recruiter details..." />
                             </div>
                             <div className="flex justify-end gap-2 pt-2">
                                 <Button variant="outline" onClick={() => setShowModal(false)}>Cancel</Button>

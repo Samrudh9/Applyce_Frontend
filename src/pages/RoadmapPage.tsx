@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { BookOpen, Calendar, CheckCircle2, Circle, ExternalLink, Loader2, Map } from 'lucide-react';
+import { BookOpen, Calendar, CheckCircle2, ExternalLink, Map, RotateCcw } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
+import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { CircularProgress } from '../components/ui/CircularProgress';
-import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { Skeleton, SkeletonCard } from '../components/ui/Skeleton';
 import { api } from '../lib/api';
 import type { RoadmapPhase } from '../types/api';
 
@@ -30,7 +30,25 @@ export default function RoadmapPage() {
       .finally(() => setLoading(false));
   }, [career]);
 
-  if (loading) return <div className="flex min-h-[60vh] items-center justify-center"><Loader2 className="animate-spin text-accent" size={40} /></div>;
+  if (loading) {
+    return (
+      <div className="space-y-8" aria-busy="true" aria-label="Loading roadmap">
+        <div className="space-y-2.5">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-4 w-96 max-w-full" />
+        </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="space-y-4 lg:col-span-2">
+            {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={4} />)}
+          </div>
+          <div className="space-y-4">
+            <SkeletonCard lines={3} />
+            <SkeletonCard lines={2} />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -38,13 +56,14 @@ export default function RoadmapPage() {
         <Map size={48} className="text-ink-sec" />
         <p className="text-lg font-semibold text-ink">Couldn't load roadmap</p>
         <p className="text-sm text-ink-sec">{error}</p>
+        <Button variant="outline" onClick={() => window.location.reload()} className="mt-2">
+          <RotateCcw size={16} /> Try again
+        </Button>
       </div>
     );
   }
 
   const total = phases.length;
-  const phasesWithProgress = phases.map((phase) => ({ ...phase, progress: 0 }));
-  const overall = 0;
 
   return (
     <div className="space-y-8">
@@ -52,10 +71,10 @@ export default function RoadmapPage() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="relative space-y-0 lg:col-span-2">
           <div className="absolute left-6 top-0 hidden h-full w-px bg-gradient-to-b from-accent/30 via-burgundy/15 to-transparent lg:block" />
-          {phasesWithProgress.map((phase, i) => (
+          {phases.map((phase, i) => (
             <motion.div key={phase.name} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.12 }} className="relative pb-6">
               <div className="absolute left-[18px] top-6 z-10 hidden lg:block">
-                {phase.progress >= 80 ? <CheckCircle2 size={16} className="text-emerald-500" /> : <Circle size={16} className="text-ink-ter" />}
+                <CheckCircle2 size={16} className="text-accent" />
               </div>
               <Card hover className="lg:ml-14">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -63,10 +82,7 @@ export default function RoadmapPage() {
                     <h3 className="text-lg font-bold text-ink">{phase.name}</h3>
                     <p className="flex items-center gap-1 text-xs text-ink-sec"><Calendar size={12} /> {phase.duration}</p>
                   </div>
-                  <Badge tone={phase.progress >= 80 ? 'success' : phase.progress >= 50 ? 'warning' : 'neutral'}>{phase.progress}%</Badge>
-                </div>
-                <div className="mt-3">
-                  <ProgressBar value={phase.progress} height={6} animated colorClass={phase.progress >= 80 ? 'from-accent-strong to-accent' : phase.progress >= 50 ? 'from-accent to-accent-strong' : 'from-burgundy/60 to-accent/60'} />
+                  <Badge tone="neutral">Phase {i + 1} of {total}</Badge>
                 </div>
                 <div className="mt-4 space-y-3 text-sm">
                   <div>
@@ -105,8 +121,12 @@ export default function RoadmapPage() {
         </div>
         <div className="space-y-4">
           <Card hover={false} className="flex flex-col items-center text-center">
-            <CircularProgress value={overall} size={120} strokeWidth={10} label="Overall" />
-            <p className="mt-3 text-sm text-ink-sec">Keep going! You're on track.</p>
+            <div className="mb-3 flex h-20 w-20 items-center justify-center rounded-2xl bg-accent/10">
+              <Map size={36} className="text-accent-strong" />
+            </div>
+            <h3 className="font-display text-2xl font-bold text-ink">{total}</h3>
+            <p className="text-sm text-ink-sec">Learning phases to get there</p>
+            <p className="mt-4 text-sm text-ink-sec">Work through each phase top-to-bottom, and you'll be ready for the role.</p>
           </Card>
           <Card>
             <h3 className="mb-3 flex items-center gap-2 font-bold text-ink"><BookOpen size={16} className="text-accent" /> Career</h3>

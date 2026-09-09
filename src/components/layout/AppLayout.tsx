@@ -235,6 +235,21 @@ export function AppLayout({ children }: { children: ReactNode }) {
     setMobileOpen(false);
   }, [location.pathname]);
 
+  // Mobile drawer: lock body scroll while open + close on Escape.
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [mobileOpen]);
+
   return (
     <div className="min-h-screen bg-canvas text-ink">
       {/* Desktop sidebar */}
@@ -254,6 +269,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
               className="fixed inset-0 z-40 bg-black/40 md:hidden"
             />
             <motion.aside
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation menu"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}

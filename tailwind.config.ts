@@ -12,6 +12,8 @@ export default {
         elevated: 'rgb(var(--elevated) / <alpha-value>)',
         line: 'rgb(var(--line) / <alpha-value>)',
         'line-strong': 'rgb(var(--line-strong) / <alpha-value>)',
+        // Common shorthand aliases used across pages (kept for backward-compat)
+        border: 'rgb(var(--line) / <alpha-value>)',
         ink: 'rgb(var(--ink) / <alpha-value>)',
         'ink-sec': 'rgb(var(--ink-sec) / <alpha-value>)',
         'ink-ter': 'rgb(var(--ink-ter) / <alpha-value>)',

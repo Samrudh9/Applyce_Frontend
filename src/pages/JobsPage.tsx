@@ -9,6 +9,7 @@ import { Input } from '../components/ui/Input';
 import { AnimatedCounter } from '../components/ui/AnimatedCounter';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
+import { Skeleton, SkeletonCard } from '../components/ui/Skeleton';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import type { Job, JobInsights, JobMatchResponse } from '../types/api';
@@ -123,9 +124,9 @@ export default function JobsPage() {
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {[
             { label: 'Open Positions', value: insights.total_jobs, color: 'text-accent-strong' },
-            { label: 'Growth Rate', value: (insights.growth_rate ? (parseInt(insights.growth_rate) || 0) : null), suffix: '%', prefix: '+', color: 'text-emerald-600' },
+            { label: 'Growth Rate', value: (insights.growth_rate ? (parseInt(insights.growth_rate) || 0) : null), suffix: '%', prefix: '+', color: 'text-success' },
             { label: 'Remote Friendly', value: insights.remote_percentage, suffix: '%', color: 'text-burgundy' },
-            { label: 'Demand Level', value: 0, color: 'text-amber-600', textOverride: insights.demand_level },
+            { label: 'Demand Level', value: 0, color: 'text-warning', textOverride: insights.demand_level },
           ].map((item, i) => (
             <motion.div key={item.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
               <Card className="text-center">
@@ -154,8 +155,8 @@ export default function JobsPage() {
       )}
 
       {loading && (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="animate-spin text-accent" size={40} />
+        <div className="grid gap-4" aria-busy="true" aria-label="Loading jobs">
+          {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={4} />)}
         </div>
       )}
 
@@ -187,8 +188,8 @@ export default function JobsPage() {
                   </div>
                 </div>
                 <div className="mt-3 grid gap-1 text-sm">
-                  {job.matching_skills.length > 0 && <p className="text-emerald-600">✓ Matching: {job.matching_skills.join(', ')}</p>}
-                  {job.missing_skills.length > 0 && <p className="text-red-500">✗ Missing: {job.missing_skills.join(', ')}</p>}
+                  {job.matching_skills.length > 0 && <p className="text-success">✓ Matching: {job.matching_skills.join(', ')}</p>}
+                  {job.missing_skills.length > 0 && <p className="text-danger">✗ Missing: {job.missing_skills.join(', ')}</p>}
                 </div>
                 <div className="mt-3">
                   <ProgressBar value={job.match_score} height={4} colorClass={job.match_score >= 85 ? 'from-accent-strong to-accent' : 'from-accent-strong to-accent'} />
@@ -230,11 +231,11 @@ export default function JobsPage() {
                 )}
                 <div className="space-y-3 text-sm">
                   <div>
-                    <p className="mb-1 font-medium text-emerald-600">Matching Skills</p>
+                    <p className="mb-1 font-medium text-success">Matching Skills</p>
                     <div className="flex flex-wrap gap-1">{selectedJob.matching_skills.map((s) => <Badge key={s} tone="success" size="sm">{s}</Badge>)}</div>
                   </div>
                   <div>
-                    <p className="mb-1 font-medium text-red-500">Missing Skills</p>
+                    <p className="mb-1 font-medium text-danger">Missing Skills</p>
                     <div className="flex flex-wrap gap-1">{selectedJob.missing_skills.map((s) => <Badge key={s} tone="danger" size="sm">{s}</Badge>)}</div>
                   </div>
                 </div>
@@ -246,7 +247,7 @@ export default function JobsPage() {
                   </Button>
 
                   {fitError && (
-                    <p className="mt-3 rounded-lg bg-red-50 p-3 text-center text-sm text-red-600">
+                    <p className="mt-3 rounded-lg bg-danger/10 p-3 text-center text-sm text-danger">
                       {fitError.includes('resume') || fitError.includes('authenticated') ? (
                         <>
                           No resume found for this session.{' '}
@@ -319,7 +320,7 @@ export default function JobsPage() {
                   )}
                 </div>
                 {alertMsg && (
-                  <p className={`mt-3 rounded-lg px-3 py-2 text-center text-sm ${alertMsg.startsWith('Could not') ? 'bg-red-50 text-red-600' : 'bg-accent/10 text-emerald-700'}`}>
+                  <p className={`mt-3 rounded-lg px-3 py-2 text-center text-sm ${alertMsg.startsWith('Could not') ? 'bg-danger/10 text-danger' : 'bg-accent/10 text-success'}`}>
                     {alertMsg}
                   </p>
                 )}
