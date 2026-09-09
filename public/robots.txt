@@ -1,0 +1,7 @@
+# Applyce — robots.txt
+# Allow all crawlers to index the public site.
+User-agent: *
+Allow: /
+
+# Public sitemap
+Sitemap: https://applyce.tech/sitemap.xml

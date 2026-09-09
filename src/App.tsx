@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ReactNode } from 'react';
 import { useLocation, Routes, Route } from 'react-router-dom';
+import { useRouteMeta } from './hooks/useRouteMeta';
 import { AppLayout } from './components/layout/AppLayout';
 import { MarketingLayout } from './components/layout/MarketingLayout';
 import { AuthProvider } from './context/AuthContext';
@@ -47,6 +48,7 @@ const app = (node: ReactNode) => (
 
 function App() {
   const location = useLocation();
+  useRouteMeta();
 
   return (
     <AuthProvider>
