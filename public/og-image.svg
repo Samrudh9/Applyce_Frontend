@@ -1,30 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Inter, Helvetica, Arial, sans-serif">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b1020"/>
-      <stop offset="1" stop-color="#1a1f2e"/>
-    </linearGradient>
-    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+    <radialGradient id="blueGlow" cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0" stop-color="#002fa7" stop-opacity="0.5"/>
+      <stop offset="0.6" stop-color="#002fa7" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="burgundyGlow" cx="0.12" cy="0.92" r="0.55">
+      <stop offset="0" stop-color="#5c1d24" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#0a0a0a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tileFace" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#002fa7"/>
-      <stop offset="1" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#002684"/>
     </linearGradient>
   </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
 
-  <!-- subtle radial glow -->
-  <circle cx="960" cy="150" r="380" fill="#002fa7" opacity="0.25"/>
-  <circle cx="120" cy="560" r="320" fill="#34d399" opacity="0.12"/>
+  <!-- dark canvas + brand-accent glows -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <rect width="1200" height="630" fill="url(#blueGlow)"/>
+  <rect width="1200" height="630" fill="url(#burgundyGlow)"/>
 
-  <!-- brand mark tile -->
-  <g transform="translate(100, 190)">
-    <rect width="88" height="88" rx="22" fill="#34d399"/>
-    <path d="M44 22 L18 70 L32 70 L39 55 L49 55 L56 70 L70 70 Z" fill="#0b1020"/>
-    <line x1="47" y1="28" x2="38" y2="70" stroke="#0b1020" stroke-width="4" stroke-linecap="round"/>
+  <!-- mark tile (176x176, centered) -->
+  <g transform="translate(512,104)">
+    <rect width="176" height="176" rx="44" fill="url(#tileFace)"/>
+    <g transform="translate(0,16.5) scale(2.75)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="butt">
+      <path d="M12 50 L29 14"/>
+      <path d="M52 50 L35 14"/>
+      <path d="M15.5 33.5 L48.5 33.5"/>
+    </g>
+    <path transform="translate(0,16.5) scale(2.75)" d="M32 2 L38 10.5 L32 16 L26 10.5 Z" fill="#ffffff"/>
   </g>
 
   <!-- wordmark -->
-  <text x="100" y="400" font-family="Inter, Helvetica, Arial, sans-serif" font-size="76" font-weight="700" fill="#ffffff" letter-spacing="-1">Applyce</text>
+  <text x="600" y="452" text-anchor="middle" font-size="92" font-weight="800" fill="#f5f5f5" letter-spacing="-2">Applyce</text>
 
   <!-- tagline -->
-  <text x="100" y="460" font-family="Inter, Helvetica, Arial, sans-serif" font-size="30" font-weight="400" fill="#c8cedd" letter-spacing="0">AI career recommendation, ATS scoring &amp; skill-gap analytics</text>
+  <text x="600" y="520" text-anchor="middle" font-size="32" font-weight="400" fill="#a1a1aa" letter-spacing="0">AI career guidance — find your path</text>
 </svg>
