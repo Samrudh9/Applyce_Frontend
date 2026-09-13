@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Monochrome Applyce mark for Safari pinned-tab mask-icon (browser tints it). Glyph only — no tile. -->
+  <g transform="translate(0,6)" fill="none" stroke="#000000" stroke-width="9" stroke-linecap="butt">
+    <path d="M12 50 L29 14"/>
+    <path d="M52 50 L35 14"/>
+    <path d="M15.5 33.5 L48.5 33.5"/>
+  </g>
+  <path transform="translate(0,6)" d="M32 2 L38 10.5 L32 16 L26 10.5 Z" fill="#000000"/>
+</svg>

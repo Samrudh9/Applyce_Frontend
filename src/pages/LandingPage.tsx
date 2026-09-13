@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
+import { LogoMark } from '../components/brand/LogoMark';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { CircularProgress } from '../components/ui/CircularProgress';
@@ -161,9 +162,10 @@ export default function LandingPage() {
           {/* Copy column */}
           <div>
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <Badge tone="info" dot className="mb-6">
-                Powered by Advanced AI
-              </Badge>
+              <span className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-line bg-surface/80 py-1.5 pl-2 pr-4 shadow-glow backdrop-blur-sm">
+                <LogoMark size={22} className="shrink-0" />
+                <span className="text-xs font-semibold tracking-wide text-ink-sec">AI Career Guidance</span>
+              </span>
             </motion.div>
 
             <motion.h1
@@ -177,18 +179,11 @@ export default function LandingPage() {
               Path with AI
             </motion.h1>
 
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mt-4 h-[3px] w-16 rounded-full bg-gradient-to-r from-accent to-burgundy"
-            />
-
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.25 }}
-              className="mt-8 max-w-2xl text-lg leading-relaxed text-ink-sec md:text-xl"
+              className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-sec md:text-xl"
             >
               Upload your resume and get a clear read on your strengths, your gaps, and the careers that fit you — all in under a minute.
             </motion.p>
