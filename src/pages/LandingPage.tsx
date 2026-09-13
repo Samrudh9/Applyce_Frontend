@@ -31,14 +31,14 @@ const predictExamples = [
 ];
 
 const features = [
-  { icon: Brain, label: 'AI Career Matching', desc: 'Tell us what you know and what you enjoy — get career fits ranked by confidence.' },
+  { icon: Brain, label: 'Career Matching', desc: 'Tell us what you know and what you enjoy — get career matches ranked by confidence.' },
   { icon: BarChart3, label: 'ATS Score Analysis', desc: 'See how hiring software reads your resume — and exactly what to fix.' },
-  { icon: Briefcase, label: 'Real Job Search', desc: 'Browse live roles that match your skills, with fit scores up front.' },
-  { icon: Map, label: 'Career Roadmaps', desc: 'A step-by-step learning path for your goal role — skills, resources, and milestones.' },
-  { icon: TrendingUp, label: 'Salary Estimation', desc: 'Realistic salary ranges for your role, location, and experience level.' },
+  { icon: Briefcase, label: 'Job Search', desc: 'Browse live roles that match your skills, with fit scores up front.' },
+  { icon: Map, label: 'Career Roadmaps', desc: 'A step-by-step plan for your goal role — skills, resources, and milestones.' },
+  { icon: TrendingUp, label: 'Salary Estimates', desc: 'Realistic salary ranges for your role, location, and experience level.' },
   { icon: Search, label: 'Skill Gap Analysis', desc: 'Know exactly which skills to learn next — and which you already have.' },
   { icon: Target, label: 'Progress Tracking', desc: 'Watch your resume and ATS scores improve each time you upload.' },
-  { icon: LightbulbIcon, label: 'Improvement Tips', desc: 'Simple, prioritized fixes ranked by how much they boost your score.' },
+  { icon: LightbulbIcon, label: 'Improvement Tips', desc: 'Prioritized fixes ranked by how much they boost your score.' },
 ];
 
 const whyApplyce = [
@@ -48,10 +48,10 @@ const whyApplyce = [
 ];
 
 const steps = [
-  { num: '01', title: 'Upload Resume', desc: 'Add your resume — PDF or DOCX, we handle the rest.' },
-  { num: '02', title: 'AI Analysis', desc: 'We break down your skills, ATS fit, and career alignment.' },
-  { num: '03', title: 'Get Results', desc: 'See your scores, career fits, and a plan to improve.' },
-  { num: '04', title: 'Take Action', desc: 'Build your resume, prep for interviews, and track applications.' },
+  { num: '01', title: 'Upload Resume', desc: 'Drop your resume — PDF or DOCX, up to 5 MB.' },
+  { num: '02', title: 'AI Analysis', desc: 'We score your ATS fit and match you to careers.' },
+  { num: '03', title: 'Get Results', desc: 'See your scores, career matches, and what to fix next.' },
+  { num: '04', title: 'Take Action', desc: 'Build a sharper resume, prep for interviews, track applications.' },
 ];
 
 const stagger = {
@@ -139,7 +139,7 @@ export default function LandingPage() {
       const res = await api.predict({ skills: skills.trim(), interests: interests.trim() });
       setPredictions(res.predictions);
     } catch {
-      setPredError('Could not get predictions. Check your connection and try again.');
+      setPredError('We couldn\'t reach the matching engine. Check your connection and try again.');
     } finally {
       setPredicting(false);
     }
@@ -235,8 +235,8 @@ export default function LandingPage() {
           <SectionHeading
             align="center"
             badge={<Badge tone="info" dot>Try It Now</Badge>}
-            title="Quick Career Prediction"
-            subtitle="Not sure where to start? Type in what you know and like — get matched careers instantly."
+            title="Find Your Career Match"
+            subtitle="Type in what you know and what you enjoy — get matched careers in seconds."
           />
 
           <div className="mx-auto max-w-xl space-y-4" aria-busy={predicting}>
@@ -276,7 +276,7 @@ export default function LandingPage() {
 
             <Button onClick={handlePredict} disabled={predicting || !skills.trim()} className="w-full">
               {predicting ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-              {predicting ? 'Predicting…' : 'Get Career Predictions'}
+              {predicting ? 'Predicting…' : 'Get My Matches'}
             </Button>
           </div>
 
@@ -300,7 +300,7 @@ export default function LandingPage() {
               aria-label="Analyzing your profile"
               className="mx-auto mt-8 max-w-xl space-y-2.5"
             >
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-sec">Analyzing your profile…</p>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-ink-sec">Matching your skills to careers…</p>
               {[0, 1, 2].map((i) => (
                 <SkeletonCard key={i} lines={2} className="!p-4" />
               ))}
@@ -357,8 +357,8 @@ export default function LandingPage() {
         <SectionHeading
           align="center"
           badge={<Badge tone="info" dot>Features</Badge>}
-          title="Everything You Need to Accelerate Your Career"
-          subtitle="From resume analysis to job search — Applyce covers every step of your professional journey."
+          title="Career Tools That Work Together"
+          subtitle="Resume analysis, ATS scores, salary estimates, and job search — no re-entering your details, no dead ends."
         />
         <motion.div
           variants={stagger}
@@ -457,9 +457,9 @@ export default function LandingPage() {
 
         <div className="relative z-10">
           <Zap className="mx-auto mb-4 text-accent" size={36} />
-          <h3 className="font-display text-3xl font-bold text-ink md:text-4xl">Ready to Find Your Dream Career?</h3>
+          <h3 className="font-display text-3xl font-bold text-ink md:text-4xl">Ready to find your path?</h3>
           <p className="mx-auto mt-3 max-w-lg text-ink-sec md:text-lg">
-            Free to start — see what your resume says about your next step.
+            Free to start. Upload once — see your career match, ATS score, and salary range.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link to="/upload">

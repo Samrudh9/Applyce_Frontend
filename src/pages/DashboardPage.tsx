@@ -168,8 +168,8 @@ export default function DashboardPage() {
           <div className="rounded-2xl bg-elevated p-6">
             <Upload size={48} className="text-accent" />
           </div>
-          <h2 className="font-display text-2xl font-bold text-ink">No Data Yet</h2>
-          <p className="max-w-md text-ink-sec">Upload your first resume and we'll show your scores, trends, and next steps.</p>
+          <h2 className="font-display text-2xl font-bold text-ink">Ready for your first analysis?</h2>
+          <p className="max-w-md text-ink-sec">Upload a resume and we'll show your scores, trends, and the next steps that move them.</p>
           <Link to="/upload">
             <Button><Plus size={16} /> Upload Resume</Button>
           </Link>
@@ -268,7 +268,7 @@ export default function DashboardPage() {
           {/* ── Skills Growth ── */}
           {stats && stats.skills_over_time.length > 0 && (
             <Card>
-              <SectionHeading title="Skills Growth" subtitle="Number of detected skills over time." className="mb-4" />
+              <SectionHeading title="Skills Growth" subtitle="Detected skills per resume analysis." className="mb-4" />
               <div className="flex items-end gap-2">
                 {stats.skills_over_time.map((entry) => (
                   <div key={entry.date} className="flex flex-col items-center gap-1">

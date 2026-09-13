@@ -16,7 +16,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [error] = useState(
-    searchParams.get('oauth') === 'error' ? 'OAuth sign in is not configured yet.' : '',
+    searchParams.get('oauth') === 'error' ? 'That sign-in option isn\'t available yet. Try another one.' : '',
   );
   const [pendingProvider, setPendingProvider] = useState<string | null>(null);
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
 
         <h1 className="text-center font-display text-2xl font-semibold text-ink">Welcome back</h1>
         <p className="mt-1 text-center text-sm text-ink-sec">
-          Sign in to continue to your dashboard.
+          Pick a sign-in — your dashboard is waiting.
         </p>
 
         {error && (
@@ -104,8 +104,8 @@ export function AuthCallbackPage() {
     if (queryError) {
       setError(
         queryError === 'access_denied'
-          ? 'You denied access. You can try again or sign in with another provider.'
-          : 'OAuth sign in failed.',
+          ? 'Looks like you canceled the sign-in. Try again or choose another provider.'
+          : 'Sign-in didn\'t complete. Try again or choose another provider.',
       );
       return;
     }
@@ -117,7 +117,7 @@ export function AuthCallbackPage() {
     sessionStorage.removeItem(OAUTH_PROVIDER_KEY);
 
     if (!code) {
-      setError('No authorization code received.');
+      setError('We didn\'t receive a sign-in code. Head back and try again.');
       return;
     }
 
@@ -133,11 +133,11 @@ export function AuthCallbackPage() {
           localStorage.setItem(USER_KEY, JSON.stringify(data.user));
           window.location.href = '/dashboard';
         } else {
-          setError(data.error || 'Authentication failed');
+          setError(data.error || 'Sign-in didn\'t complete');
         }
       })
       .catch(() => {
-        setError('Network error during authentication');
+        setError('Couldn\'t reach the sign-in service. Check your connection and try again.');
       });
   }, [searchParams]);
 
@@ -145,7 +145,7 @@ export function AuthCallbackPage() {
     return (
       <div className="flex min-h-[60vh] items-center justify-center px-4">
         <Card hover={false} className="w-full max-w-sm text-center">
-          <p className="text-lg font-semibold text-ink">Authentication failed</p>
+          <p className="text-lg font-semibold text-ink">Sign-in didn't complete</p>
           <p className="mt-2 text-sm text-ink-sec">{error}</p>
           <div className="mt-6 flex justify-center">
             <Button variant="outline" onClick={() => navigate('/login')}>
@@ -161,7 +161,7 @@ export function AuthCallbackPage() {
     <div className="flex min-h-[60vh] items-center justify-center">
       <div className="text-center">
         <Loader2 className="mx-auto animate-spin text-accent" size={40} />
-        <p className="mt-4 text-sm text-ink-sec">Authenticating…</p>
+        <p className="mt-4 text-sm text-ink-sec">Signing you in…</p>
       </div>
     </div>
   );

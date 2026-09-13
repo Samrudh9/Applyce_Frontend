@@ -39,8 +39,8 @@ export function Footer() {
           <div>
             <Logo size="sm" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-sec">
-              Career guidance for every stage — analyze your resume, close skill
-              gaps, and land the role that fits you.
+              AI career guidance — analyze your resume, close skill gaps, and find
+              the career path that fits you.
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-line pt-6 text-xs text-ink-ter md:flex-row">
           <p>© {new Date().getFullYear()} Applyce. All rights reserved.</p>
-          <p>Built for every stage of your career.</p>
+          <p>AI career guidance — find your path.</p>
         </div>
       </div>
     </footer>

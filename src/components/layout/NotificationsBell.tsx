@@ -128,10 +128,10 @@ export function NotificationsBell() {
 
                         <div className="max-h-80 overflow-y-auto">
                             {loading && items.length === 0 ? (
-                                <p className="px-4 py-8 text-center text-sm text-ink-sec">Loading…</p>
+                                <p className="px-4 py-8 text-center text-sm text-ink-sec">Checking for updates…</p>
                             ) : items.length === 0 ? (
                                 <p className="px-4 py-10 text-center text-sm text-ink-sec">
-                                    No notifications yet. Notifications about job matches will appear here.
+                                    Nothing yet — new job match alerts will land here.
                                 </p>
                             ) : (
                                 items.map((n) => (

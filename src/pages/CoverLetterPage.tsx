@@ -25,6 +25,7 @@ export default function CoverLetterPage() {
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState('');
     const [selected, setSelected] = useState<CoverLetterRecord | null>(null);
+    const [exportError, setExportError] = useState('');
 
     useEffect(() => { loadLetters(); }, []);
 
@@ -35,23 +36,24 @@ export default function CoverLetterPage() {
     };
 
     const handleGenerate = async () => {
-        if (!jobTitle.trim() || !company.trim() || !jobDesc.trim()) { setError('Please fill in Job Title, Company, and Job Description.'); return; }
+        if (!jobTitle.trim() || !company.trim() || !jobDesc.trim()) { setError('Add the job title, company, and description to get a draft.'); return; }
         setGenerating(true); setError('');
         try {
             const res = await api.coverLetterGenerate({ job_title: jobTitle.trim(), company: company.trim(), job_url: jobUrl.trim(), job_description: jobDesc.trim(), tone, length });
             setLetters((prev) => [res.cover_letter, ...prev]);
             setShowForm(false); setSelected(res.cover_letter);
             setJobTitle(''); setCompany(''); setJobUrl(''); setJobDesc('');
-        } catch (err) { setError(err instanceof ApiError ? err.message : 'Failed to generate cover letter.'); }
+        } catch (err) { setError(err instanceof ApiError ? err.message : 'We couldn\'t write that draft. Try again in a minute.'); }
         finally { setGenerating(false); }
     };
 
     const handleExportPdf = async (id: number) => {
+        setExportError('');
         try {
             const blob = await api.coverLetterExportPdf(id);
             const url = URL.createObjectURL(blob); const a = document.createElement('a');
             a.href = url; a.download = `cover_letter_${id}.pdf`; a.click(); URL.revokeObjectURL(url);
-        } catch { }
+        } catch { setExportError('We couldn\'t build that PDF just now. Try again in a minute.'); }
     };
 
     const copyToClipboard = (text: string) => navigator.clipboard.writeText(text);
@@ -61,7 +63,7 @@ export default function CoverLetterPage() {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <SectionHeading title="Cover Letters" subtitle="Get a tailored cover letter draft for any role — ready to edit and send." badge={<Badge tone="info" icon={<Mail size={12} />}>AI-Generated</Badge>} />
+                <SectionHeading title="Cover Letters" subtitle="Drafts that sound like you — tailored to each role, ready to edit and send." badge={<Badge tone="info" icon={<Mail size={12} />}>AI-Written</Badge>} />
                 <Button onClick={() => setShowForm(true)}><Plus size={16} /> New Cover Letter</Button>
             </div>
 
@@ -87,7 +89,7 @@ export default function CoverLetterPage() {
                                     {error && <p className="text-sm text-danger">{error}</p>}
                                     <Button onClick={handleGenerate} disabled={generating} className="w-full">
                                         {generating ? <Loader2 size={16} className="animate-spin" /> : <Mail size={16} />}
-                                        {generating ? 'Generating…' : 'Generate Cover Letter'}
+                                        {generating ? 'Writing your draft…' : 'Create Draft'}
                                     </Button>
                                 </div>
                             </Card>
@@ -128,26 +130,32 @@ export default function CoverLetterPage() {
                 <Card hover={false} className="py-16 text-center">
                     <Mail size={48} className="mx-auto text-ink-sec" />
                     <p className="mt-4 text-lg font-semibold text-ink">No cover letters yet</p>
-                    <p className="mt-1 text-sm text-ink-sec">Generate your first draft — it's ready to personalize in minutes.</p>
-                    <Button onClick={() => setShowForm(true)} className="mt-6"><Plus size={16} /> Create One</Button>
+                    <p className="mt-1 text-sm text-ink-sec">Generate your first draft in under a minute.</p>
+                    {exportError && <p className="mx-auto mt-4 max-w-md text-sm text-danger">{exportError}</p>}
+                    <Button onClick={() => setShowForm(true)} className="mt-6"><Plus size={16} /> Start a Draft</Button>
                 </Card>
             )}
 
             {!loading && letters.length > 0 && (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {letters.map((letter, i) => (
-                        <motion.div key={letter.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                            <Card className="cursor-pointer" onClick={() => setSelected(letter)}>
-                                <div className="mb-3 flex items-center gap-2">
-                                    <FileText size={18} className="text-accent" />
-                                    <h3 className="font-semibold text-ink">{letter.job_title}</h3>
-                                </div>
-                                <p className="text-sm text-ink-sec">{letter.company}</p>
-                                <div className="mt-3 flex gap-2"><Badge tone="info" size="sm">{letter.tone}</Badge><Badge tone="neutral" size="sm">{letter.length}</Badge></div>
-                                <p className="mt-3 text-xs text-ink-sec">{new Date(letter.created_at).toLocaleDateString()}</p>
-                            </Card>
-                        </motion.div>
-                    ))}
+                <div className="space-y-4">
+                    {exportError && (
+                        <p className="rounded-xl border border-danger/25 bg-danger/5 px-4 py-3 text-sm text-danger">{exportError}</p>
+                    )}
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {letters.map((letter, i) => (
+                            <motion.div key={letter.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                                <Card className="cursor-pointer" onClick={() => setSelected(letter)}>
+                                    <div className="mb-3 flex items-center gap-2">
+                                        <FileText size={18} className="text-accent" />
+                                        <h3 className="font-semibold text-ink">{letter.job_title}</h3>
+                                    </div>
+                                    <p className="text-sm text-ink-sec">{letter.company}</p>
+                                    <div className="mt-3 flex gap-2"><Badge tone="info" size="sm">{letter.tone}</Badge><Badge tone="neutral" size="sm">{letter.length}</Badge></div>
+                                    <p className="mt-3 text-xs text-ink-sec">{new Date(letter.created_at).toLocaleDateString()}</p>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>

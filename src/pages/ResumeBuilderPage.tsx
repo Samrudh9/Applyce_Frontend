@@ -43,6 +43,7 @@ export default function ResumeBuilderPage() {
     const [toolInput, setToolInput] = useState('');
     const [langInput, setLangInput] = useState('');
     const [prefilled, setPrefilled] = useState(false);
+    const [exportError, setExportError] = useState('');
 
     useEffect(() => { loadResumes(); }, []);
 
@@ -103,18 +104,20 @@ export default function ResumeBuilderPage() {
     const openEdit = (r: ResumeRecord) => { setEditingId(r.id); setTitle(r.title); setTemplateName(r.template_name); setData(r.data_json); setError(''); setShowEditor(true); };
 
     const handleSave = async () => {
-        if (!title.trim()) { setError('Please enter a title.'); return; }
+        if (!title.trim()) { setError('Give your resume a title first.'); return; }
         setSaving(true); setError('');
         try {
             if (editingId) { const res = await api.resumeUpdate(editingId, { title, template_name: templateName, data }); setResumes((prev) => prev.map((r) => r.id === editingId ? res.resume : r)); }
             else { const res = await api.resumeCreate({ title, template_name: templateName, data }); setResumes((prev) => [res.resume, ...prev]); }
             setShowEditor(false);
-        } catch (err) { setError(err instanceof ApiError ? err.message : 'Failed to save.'); }
+        } catch (err) { setError(err instanceof ApiError ? err.message : 'We couldn\'t save that just now. Try again.'); }
         finally { setSaving(false); }
     };
 
     const handleExport = async (id: number) => {
-        try { const blob = await api.resumeExportPdf(id); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `resume_${id}.pdf`; a.click(); URL.revokeObjectURL(url); } catch { }
+        setExportError('');
+        try { const blob = await api.resumeExportPdf(id); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `resume_${id}.pdf`; a.click(); URL.revokeObjectURL(url); }
+        catch { setExportError('We couldn\'t build that PDF just now. Try again in a minute.'); }
     };
 
     const updateProfile = (key: string, value: string) => setData((d) => ({ ...d, profile: { ...d.profile, [key]: value } }));
@@ -142,7 +145,7 @@ export default function ResumeBuilderPage() {
     return (
         <div className="space-y-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <SectionHeading title="Resume Builder" subtitle="Build a clean, ATS-friendly resume — start fresh or from your analysis." badge={<Badge tone="info" icon={<FileText size={12} />}>Builder</Badge>} />
+                <SectionHeading title="Resume Builder" subtitle="Build a resume that clears ATS filters — start fresh or from your analysis." badge={<Badge tone="info" icon={<FileText size={12} />}>Builder</Badge>} />
                 <Button onClick={openNew}><Plus size={16} /> New Resume</Button>
             </div>
 
@@ -172,7 +175,7 @@ export default function ResumeBuilderPage() {
                                             <div><label className={labelClass}>GitHub</label><input className={inputClass} value={data.profile.github ?? ''} onChange={(e) => updateProfile('github', e.target.value)} placeholder="https://github.com/you" /></div>
                                         </div>
                                     </div>
-                                    <div><label className={labelClass}>Professional Summary</label><textarea className={`${inputClass} min-h-[80px] resize-y`} value={data.summary} onChange={(e) => setData((d) => ({ ...d, summary: e.target.value }))} placeholder="A short summary of your experience and strengths..." /></div>
+                                    <div><label className={labelClass}>Professional Summary</label><textarea className={`${inputClass} min-h-[80px] resize-y`} value={data.summary} onChange={(e) => setData((d) => ({ ...d, summary: e.target.value }))} placeholder="Two or three lines on what you do best — recruiters read this first." /></div>
                                     <div>
                                         <div className="mb-2 flex items-center justify-between"><h4 className="font-semibold text-ink">Experience</h4><button onClick={addExperience} className="text-xs font-medium text-accent-strong hover:text-accent">+ Add</button></div>
                                         {data.experience.map((exp, i) => (
@@ -264,26 +267,31 @@ export default function ResumeBuilderPage() {
                 <Card hover={false} className="py-16 text-center">
                     <FileText size={48} className="mx-auto text-ink-sec" />
                     <p className="mt-4 text-lg font-semibold text-ink">No resumes yet</p>
-                    <p className="mt-1 text-sm text-ink-sec">Your first ATS-friendly resume is minutes away.</p>
+                    <p className="mt-1 text-sm text-ink-sec">Your first ATS-ready resume is minutes away.</p>
                     <Button onClick={openNew} className="mt-6"><Plus size={16} /> Create Resume</Button>
                 </Card>
             )}
 
             {!loading && resumes.length > 0 && (
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {resumes.map((r, i) => (
-                        <motion.div key={r.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                            <Card>
-                                <div className="mb-3 flex items-center gap-2"><FileText size={18} className="text-accent" /><h3 className="font-semibold text-ink">{r.title}</h3></div>
-                                <Badge tone="info" size="sm">{r.template_name.replace(/_/g, ' ')}</Badge>
-                                <p className="mt-2 text-xs text-ink-sec">Created: {new Date(r.created_at).toLocaleDateString()}{r.updated_at !== r.created_at && ` · Updated: ${new Date(r.updated_at).toLocaleDateString()}`}</p>
-                                <div className="mt-4 flex gap-2">
-                                    <Button size="sm" variant="secondary" onClick={() => openEdit(r)}>Edit</Button>
-                                    <Button size="sm" variant="outline" onClick={() => handleExport(r.id)}><Download size={14} /> PDF</Button>
-                                </div>
-                            </Card>
-                        </motion.div>
-                    ))}
+                <div className="space-y-4">
+                    {exportError && (
+                        <p className="rounded-xl border border-danger/25 bg-danger/5 px-4 py-3 text-sm text-danger">{exportError}</p>
+                    )}
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                        {resumes.map((r, i) => (
+                            <motion.div key={r.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                                <Card>
+                                    <div className="mb-3 flex items-center gap-2"><FileText size={18} className="text-accent" /><h3 className="font-semibold text-ink">{r.title}</h3></div>
+                                    <Badge tone="info" size="sm">{r.template_name.replace(/_/g, ' ')}</Badge>
+                                    <p className="mt-2 text-xs text-ink-sec">Created: {new Date(r.created_at).toLocaleDateString()}{r.updated_at !== r.created_at && ` · Updated: ${new Date(r.updated_at).toLocaleDateString()}`}</p>
+                                    <div className="mt-4 flex gap-2">
+                                        <Button size="sm" variant="secondary" onClick={() => openEdit(r)}>Edit</Button>
+                                        <Button size="sm" variant="outline" onClick={() => handleExport(r.id)}><Download size={14} /> PDF</Button>
+                                    </div>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             )}
         </div>

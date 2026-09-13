@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Award, Copy, Loader2, Share2, Trophy } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -20,6 +20,7 @@ export default function ScorecardPage() {
     const [shareUrl, setShareUrl] = useState('');
     const [generating, setGenerating] = useState(false);
     const [copied, setCopied] = useState(false);
+    const navigate = useNavigate();
 
     // If viewing a shared scorecard
     useEffect(() => {
@@ -43,7 +44,7 @@ export default function ScorecardPage() {
             const sc = await api.scorecardGet(res.share_token);
             setData(sc.scorecard);
         } catch (err) {
-            const msg = (err as Error).message ?? 'Failed to generate scorecard';
+            const msg = (err as Error).message ?? 'We couldn\'t create that scorecard. Try again.';
             setGenError(msg.includes('resume') || msg.includes('score')
                 ? 'No analyzed resume found. Upload a resume first, then create your scorecard.'
                 : msg);
@@ -79,6 +80,9 @@ export default function ScorecardPage() {
             <Trophy size={48} className="text-ink-sec" />
             <p className="text-lg font-semibold text-ink">Scorecard Not Found</p>
             <p className="text-sm text-ink-sec">{error}</p>
+            <Button variant="outline" onClick={() => navigate('/dashboard')} className="mt-2">
+                Back to dashboard
+            </Button>
         </div>
     );
 
@@ -86,18 +90,19 @@ export default function ScorecardPage() {
     if (!token && !data) {
         return (
             <div className="space-y-8">
-                <SectionHeading title="Shareable Scorecard" subtitle="Share your resume score with anyone — recruiters, mentors, or friends." />
+                <SectionHeading title="Shareable Scorecard" subtitle="One link to your resume score — share it with recruiters, mentors, or friends." />
                 <Card hover={false} className="flex flex-col items-center text-center py-12">
                     <Share2 size={48} className="text-accent mb-4" />
                     <h2 className="text-xl font-bold text-ink">Create Your Scorecard</h2>
-                    <p className="mt-2 max-w-md text-sm text-ink-sec">Create a link to your latest analysis — anyone with it can see your score, skills, and career matches.</p>
+                    <p className="mt-2 max-w-md text-sm text-ink-sec">A link to your latest analysis — anyone with it can see your score, skills, and career matches.</p>
                     <Button onClick={generateShareLink} disabled={generating} className="mt-6">
-                        {generating ? <><Loader2 size={16} className="animate-spin" /> Generating…</> : <><Award size={16} /> Generate Scorecard</>}
+                        {generating ? <><Loader2 size={16} className="animate-spin" /> Creating…</> : <><Award size={16} /> Generate Scorecard</>}
                     </Button>
                     {genError && (
-                        <p className="mt-4 max-w-md rounded-lg border border-danger/25 bg-danger/10 px-4 py-3 text-center text-sm text-danger">
-                            {genError}
-                        </p>
+                        <div className="mt-4 flex max-w-md flex-col items-center gap-2 rounded-lg border border-danger/25 bg-danger/10 px-4 py-3 text-center text-sm text-danger">
+                            <p>{genError}</p>
+                            <Link to="/upload" className="font-semibold underline">Upload a resume</Link>
+                        </div>
                     )}
                     {shareUrl && (
                         <div className="mt-6 w-full max-w-lg">

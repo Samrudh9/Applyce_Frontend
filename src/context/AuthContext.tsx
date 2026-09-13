@@ -126,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /* Email/password login */
   const loginWithPassword = useCallback(async (identifier: string, password: string): Promise<AuthResult> => {
-    if (!identifier || !password) return { success: false, error: 'Email and password are required.' };
+    if (!identifier || !password) return { success: false, error: 'Enter your email and password to sign in.' };
     try {
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
@@ -136,20 +136,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       const data = await res.json();
       if (!data.success || !data.token) {
-        return { success: false, error: data.error || 'Invalid credentials.' };
+        return { success: false, error: data.error || 'That email or password didn\'t work. Try again.' };
       }
       storeAuth(data.token, data.user);
       setUser(data.user);
       return { success: true };
     } catch {
-      return { success: false, error: 'Could not reach the server. Please try again.' };
+      return { success: false, error: 'Couldn\'t reach the server. Check your connection and try again.' };
     }
   }, []);
 
   /* Create an account */
   const register = useCallback(async (payload: RegisterPayload): Promise<AuthResult> => {
     if (!payload.username || !payload.email || !payload.password) {
-      return { success: false, error: 'Username, email, and password are required.' };
+      return { success: false, error: 'Enter a username, email, and password to create your account.' };
     }
     try {
       const res = await fetch(`${API_BASE}/api/auth/register`, {
@@ -160,13 +160,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       const data = await res.json();
       if (!data.success || !data.token) {
-        return { success: false, error: data.error || 'Registration failed.' };
+        return { success: false, error: data.error || 'We couldn\'t create that account. Try again.' };
       }
       storeAuth(data.token, data.user);
       setUser(data.user);
       return { success: true };
     } catch {
-      return { success: false, error: 'Could not reach the server. Please try again.' };
+      return { success: false, error: 'Couldn\'t reach the server. Check your connection and try again.' };
     }
   }, []);
 
@@ -181,13 +181,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await res.json();
       return { success: true, error: data.error };
     } catch {
-      return { success: false, error: 'Could not reach the server. Please try again.' };
+      return { success: false, error: 'Couldn\'t reach the server. Check your connection and try again.' };
     }
   }, []);
 
   /* Complete password reset */
   const resetPassword = useCallback(async (token: string, password: string): Promise<AuthResult> => {
-    if (!token || !password) return { success: false, error: 'Token and new password are required.' };
+    if (!token || !password) return { success: false, error: 'Enter the reset code and a new password.' };
     try {
       const res = await fetch(`${API_BASE}/api/auth/reset-password`, {
         method: 'POST',
@@ -195,10 +195,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         body: JSON.stringify({ token, password }),
       });
       const data = await res.json();
-      if (!data.success) return { success: false, error: data.error || 'Password reset failed.' };
+      if (!data.success) return { success: false, error: data.error || 'We couldn\'t reset that password. Try again.' };
       return { success: true };
     } catch {
-      return { success: false, error: 'Could not reach the server. Please try again.' };
+      return { success: false, error: 'Couldn\'t reach the server. Check your connection and try again.' };
     }
   }, []);
 
