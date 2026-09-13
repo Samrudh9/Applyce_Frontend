@@ -41,7 +41,7 @@ export default function InterviewPrepPage() {
             setLastEval(null);
             setView('session');
         } catch {
-            setSessionError('Could not start the interview. Check your connection and try again.');
+            setSessionError('We couldn\'t start that session. Check your connection and try again.');
         }
         setLoading(false);
     };
@@ -59,7 +59,7 @@ export default function InterviewPrepPage() {
                 setView('results');
             }
         } catch {
-            setAnswerError('We couldn\'t evaluate your answer. Please try again.');
+            setAnswerError('We couldn\'t score that answer. Try again.');
         }
         setEvaluating(false);
     };
@@ -78,7 +78,7 @@ export default function InterviewPrepPage() {
             const res = await api.interviewHistory();
             setHistory(res.sessions);
         } catch {
-            setHistoryError('Could not load interview history.');
+            setHistoryError('We couldn\'t load your interview history.');
         }
         setHistoryLoading(false);
     }, []);
@@ -90,7 +90,7 @@ export default function InterviewPrepPage() {
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Interview Prep" subtitle="Practice realistic interview questions and get instant feedback before the real thing." />
+            <SectionHeading title="Interview Prep" subtitle="Practice with realistic questions and get instant feedback — before the real interview." />
 
             {/* Tab bar */}
             <div className="flex gap-2">
@@ -104,7 +104,7 @@ export default function InterviewPrepPage() {
             {/* SETUP */}
             {view === 'setup' && (
                 <Card>
-                    <h2 className="mb-4 text-lg font-bold text-ink flex items-center gap-2"><Brain size={20} className="text-accent" /> Configure Interview</h2>
+                    <h2 className="mb-4 text-lg font-bold text-ink flex items-center gap-2"><Brain size={20} className="text-accent" /> Set up your practice session</h2>
                     <div className="space-y-4 max-w-lg">
                         <div>
                             <label className="mb-1 block text-sm font-medium text-ink">Target Career</label>
@@ -147,7 +147,7 @@ export default function InterviewPrepPage() {
                     {!lastEval ? (
                         <Card>
                             <label className="mb-2 block text-sm font-medium text-ink">Your Answer</label>
-                            <textarea className="w-full rounded-xl border border-line bg-surface p-4 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={6} value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="Type your answer here..." />
+                            <textarea className="w-full rounded-xl border border-line bg-surface p-4 text-sm text-ink placeholder:text-ink-sec focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30" rows={6} value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="Type your answer here — a few sentences is fine." />
                             <div className="mt-3 flex justify-end">
                                 <Button onClick={submitAnswer} disabled={evaluating || !answer.trim()}>
                                     {evaluating ? <><Loader2 size={16} className="animate-spin" /> Evaluating…</> : <><Send size={16} /> Submit Answer</>}
@@ -235,7 +235,7 @@ export default function InterviewPrepPage() {
                             </div>
                         </Card>
                     )}
-                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No interview sessions yet. Start your first one!</p></Card>}
+                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No sessions yet — start a practice interview above.</p></Card>}
                     {!historyLoading && !historyError && history.map((s) => (
                         <Card key={s.id} hover className="cursor-pointer" onClick={() => { setSession(s); setView('results'); }}>
                             <div className="flex items-center justify-between">

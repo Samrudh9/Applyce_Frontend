@@ -21,8 +21,8 @@ export default function UploadPage() {
   const [error, setError] = useState<string | null>(null);
 
   const validate = (f: File): string | null => {
-    if (!ACCEPTED_TYPES.includes(f.type)) return 'Only PDF and DOCX files are supported.';
-    if (f.size > MAX_FILE_SIZE) return 'File size exceeds 5 MB limit.';
+    if (!ACCEPTED_TYPES.includes(f.type)) return 'We accept PDF or DOCX files.';
+    if (f.size > MAX_FILE_SIZE) return 'That file is over 5 MB. Try a smaller one.';
     return null;
   };
 
@@ -57,7 +57,7 @@ export default function UploadPage() {
     } catch (err) {
       clearInterval(timer);
       setProgress(0);
-      setError(err instanceof ApiError ? err.message : 'Upload failed. Please try again.');
+      setError(err instanceof ApiError ? err.message : 'We hit a snag uploading that. Retry, or come back in a minute.');
       setUploading(false);
     }
   };
@@ -66,8 +66,8 @@ export default function UploadPage() {
     <div className="mx-auto max-w-2xl space-y-8">
       <SectionHeading
         align="center"
-        title="Upload Your Resume"
-        subtitle="Upload your resume to get your scores, skill gaps, and career matches."
+        title="Drop Your Resume"
+        subtitle="Get your career match, ATS score, skill gaps, and salary range — from one upload."
         badge={<Badge tone="info" icon={<Upload size={12} />}>Resume Analysis</Badge>}
       />
 
@@ -118,6 +118,7 @@ export default function UploadPage() {
               </div>
               <p className="text-lg font-semibold text-ink">Drop your resume here</p>
               <p className="mt-1 text-sm text-ink-sec">or click to browse · PDF or DOCX, up to 5 MB</p>
+              <p className="mt-2 text-xs text-ink-ter">Your file stays private — we never share it.</p>
             </div>
           )}
         </div>
@@ -128,7 +129,7 @@ export default function UploadPage() {
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <ProgressBar value={progress} animated />
           <p className="mt-2 text-center text-sm text-ink-sec">
-            {progress < 30 ? 'Uploading resume…' : progress < 70 ? 'Analyzing content with AI…' : progress < 100 ? 'Generating career insights…' : 'Done!'}
+            {progress < 30 ? 'Uploading your resume…' : progress < 70 ? 'Scoring your ATS fit…' : progress < 100 ? 'Matching you to careers…' : 'Done!'}
           </p>
         </motion.div>
       )}
@@ -137,7 +138,7 @@ export default function UploadPage() {
       {file && !uploading && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <Button onClick={handleUpload} className="w-full" size="lg">
-            <Upload size={18} /> Analyze Resume
+            <Upload size={18} /> Get My Results
           </Button>
         </motion.div>
       )}
@@ -146,7 +147,7 @@ export default function UploadPage() {
       {progress === 100 && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center gap-2 text-accent-strong">
           <CheckCircle2 size={20} />
-          <span className="font-semibold">Analysis complete — redirecting…</span>
+          <span className="font-semibold">Report ready — taking you there…</span>
         </motion.div>
       )}
     </div>

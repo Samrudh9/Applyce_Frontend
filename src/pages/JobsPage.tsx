@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Briefcase, BellRing, CheckCircle2, ExternalLink, Gauge, Loader2, MapPin, Search, TrendingUp, X, XCircle, Zap } from 'lucide-react';
+import { Briefcase, BellRing, CheckCircle2, ExternalLink, Gauge, Loader2, MapPin, RotateCcw, Search, TrendingUp, X, XCircle, Zap } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -25,6 +25,7 @@ export default function JobsPage() {
   const [insights, setInsights] = useState<JobInsights | null>(null);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [fitResult, setFitResult] = useState<JobMatchResponse | null>(null);
@@ -51,7 +52,7 @@ export default function JobsPage() {
       const career = selectedJob.title.toLowerCase();
       const loc = (selectedJob.location || 'India').toLowerCase();
       if (existing?.alerts.some((a) => a.career.toLowerCase() === career && a.location.toLowerCase() === loc)) {
-        setAlertMsg('An alert for this role & location is already saved.');
+        setAlertMsg('You already have an alert for this role and location.');
         return;
       }
       await api.jobAlertCreate({
@@ -60,9 +61,9 @@ export default function JobsPage() {
         min_match_score: 60,
         email: user?.email,
       });
-      setAlertMsg('Alert saved — we will email you about new matches.');
+      setAlertMsg('Alert saved — we\'ll email you when new matches appear.');
     } catch (e) {
-      setAlertMsg(e instanceof Error ? `Could not save alert: ${e.message}` : 'Could not save alert.');
+      setAlertMsg(e instanceof Error ? `We couldn't save that alert: ${e.message}` : 'We couldn\'t save that alert. Try again in a minute.');
     } finally {
       setSavingAlert(false);
     }
@@ -80,7 +81,7 @@ export default function JobsPage() {
       });
       setFitResult(res);
     } catch (e) {
-      setFitError(e instanceof Error ? e.message : 'Failed to check fit. Please try again.');
+      setFitError(e instanceof Error ? e.message : 'We couldn\'t score that fit. Try again.');
     } finally {
       setFitLoading(false);
     }
@@ -90,7 +91,7 @@ export default function JobsPage() {
 
   const handleSearch = async () => {
     if (!career.trim()) return;
-    setLoading(true); setSearched(true);
+    setLoading(true); setSearched(true); setSearchError(null);
     try {
       const [jobRes, insightRes] = await Promise.all([
         api.jobSearch({ career: career.trim(), location: location.trim() || 'India', skills: userSkills, limit: 20, remote: remoteOnly ? 'true' : 'false' }).catch(() => null),
@@ -98,12 +99,13 @@ export default function JobsPage() {
       ]);
       if (jobRes) setJobs(jobRes.jobs);
       if (insightRes) setInsights(insightRes.insights);
+      if (!jobRes) setSearchError('We couldn\'t reach the job search. Check your connection and try again.');
     } finally { setLoading(false); }
   };
 
   return (
     <div className="space-y-8">
-      <SectionHeading title="Job Explorer" subtitle="Explore live roles that fit your skills — with match scores to help you shortlist." badge={<Badge tone="info" icon={<Briefcase size={12} />}>AI-Matched</Badge>} />
+      <SectionHeading title="Job Explorer" subtitle="Live jobs scored against your skills — shortlist in seconds." badge={<Badge tone="info" icon={<Briefcase size={12} />}>Fit-scored</Badge>} />
 
       <Card>
         <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }} className="grid gap-4 md:grid-cols-4">
@@ -114,7 +116,7 @@ export default function JobsPage() {
           </label>
           <div className="flex items-end">
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />} Search
+              {loading ? <Loader2 size={16} className="animate-spin" /> : <Search size={16} />} Search Jobs
             </Button>
           </div>
         </form>
@@ -160,11 +162,23 @@ export default function JobsPage() {
         </div>
       )}
 
-      {!loading && searched && jobs.length === 0 && (
+      {searchError && (
+        <Card hover={false} className="flex flex-wrap items-center justify-center gap-4 py-10 text-center">
+          <div>
+            <p className="font-semibold text-ink">Search didn't go through</p>
+            <p className="mt-1 text-sm text-ink-sec">{searchError}</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={handleSearch}>
+            <RotateCcw size={14} /> Retry
+          </Button>
+        </Card>
+      )}
+
+      {!loading && searched && !searchError && jobs.length === 0 && (
         <Card hover={false} className="py-12 text-center">
           <Briefcase size={40} className="mx-auto text-ink-sec" />
-          <p className="mt-3 text-lg font-semibold text-ink">No roles found for that search yet</p>
-          <p className="mt-1 text-sm text-ink-sec">Try a broader title or another city.</p>
+          <p className="mt-3 text-lg font-semibold text-ink">No roles match that search yet</p>
+          <p className="mt-1 text-sm text-ink-sec">Try a broader title, another city, or turn off Remote only.</p>
         </Card>
       )}
 
@@ -243,7 +257,7 @@ export default function JobsPage() {
                 <div className="mt-5 border-t border-line pt-5">
                   <Button className="w-full" variant="secondary" onClick={checkJobFit} disabled={fitLoading}>
                     {fitLoading ? <Loader2 size={16} className="animate-spin" /> : <Gauge size={16} />}
-                    {fitLoading ? 'Analyzing fit…' : 'Check Job Fit vs Your Resume'}
+                    {fitLoading ? 'Scoring your fit…' : 'Check My Fit'}
                   </Button>
 
                   {fitError && (

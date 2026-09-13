@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Building2, Calendar, ExternalLink, Loader2, MapPin, Plus, Trash2, X } from 'lucide-react';
+import { Briefcase, Building2, Calendar, ExternalLink, Loader2, MapPin, Plus, RotateCcw, Trash2, X } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -29,14 +29,16 @@ export default function ApplicationTrackerPage() {
     const [form, setForm] = useState({ job_title: '', company: '', location: '', job_url: '', salary_range: '', notes: '', status: 'applied' as TrackerStatus });
     const [saving, setSaving] = useState(false);
     const [filter, setFilter] = useState<TrackerStatus | 'all'>('all');
+    const [error, setError] = useState<string | null>(null);
 
     const load = useCallback(async () => {
         setLoading(true);
+        setError(null);
         try {
             const res = await api.trackerList();
             setApps(res.applications);
             setStats(res.stats);
-        } catch { /* */ }
+        } catch { setError('We couldn\'t load your applications right now.'); }
         setLoading(false);
     }, []);
 
@@ -56,6 +58,7 @@ export default function ApplicationTrackerPage() {
 
     const save = async () => {
         setSaving(true);
+        setError(null);
         try {
             if (editId) {
                 await api.trackerEdit(editId, form);
@@ -64,24 +67,24 @@ export default function ApplicationTrackerPage() {
             }
             setShowModal(false);
             await load();
-        } catch { /* */ }
+        } catch { setError('We couldn\'t save that application. Try again.'); }
         setSaving(false);
     };
 
     const updateStatus = async (id: number, status: TrackerStatus) => {
-        try { await api.trackerUpdateStatus(id, status); await load(); } catch { /* */ }
+        try { await api.trackerUpdateStatus(id, status); await load(); } catch { setError('We couldn\'t update that status. Try again.'); }
     };
 
     const deleteApp = async (id: number) => {
-        if (!confirm('Delete this application?')) return;
-        try { await api.trackerDelete(id); await load(); } catch { /* */ }
+        if (!confirm('Delete this application? This can\'t be undone.')) return;
+        try { await api.trackerDelete(id); await load(); } catch { setError('We couldn\'t delete that application. Try again.'); }
     };
 
     const filtered = filter === 'all' ? apps : apps.filter((a) => a.status === filter);
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Application Tracker" subtitle="Keep every application organized — status, notes, and follow-ups in one place." />
+            <SectionHeading title="Application Tracker" subtitle="Every application, one place — status, notes, and follow-ups." />
 
             {/* Stats */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
@@ -110,20 +113,28 @@ export default function ApplicationTrackerPage() {
                 <Button onClick={openAdd} size="sm"><Plus size={16} /> Add Application</Button>
             </div>
 
+            {/* Error banner */}
+            {error && (
+                <Card hover={false} className="flex flex-wrap items-center justify-center gap-4 py-6 text-center">
+                    <p className="text-sm text-danger">{error}</p>
+                    <Button variant="outline" size="sm" onClick={load}><RotateCcw size={14} /> Retry</Button>
+                </Card>
+            )}
+
             {/* App list */}
             {loading ? (
                 <div className="space-y-3" aria-busy="true" aria-label="Loading applications">
                     {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={3} />)}
                 </div>
-            ) : filtered.length === 0 ? (
+            ) : !error && filtered.length === 0 ? (
                 <Card>
                     <p className="text-center text-ink-sec py-8">
                         {filter !== 'all'
-                            ? <>No applications with status &ldquo;{filter}&rdquo; yet.</>
-                            : 'No applications yet. Click "Add Application" to get started.'}
+                            ? <>No {filter} applications right now — try another filter.</>
+                            : 'Nothing tracked yet — add your first application and never lose a follow-up.'}
                     </p>
                 </Card>
-            ) : (
+            ) : !error && (
                 <div className="space-y-3">
                     <AnimatePresence>
                         {filtered.map((a) => (

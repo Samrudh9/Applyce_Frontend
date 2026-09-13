@@ -38,7 +38,7 @@ export default function ApplyAgentPage() {
   useEffect(() => {
     api.applyDrafts()
       .then((res) => setDrafts(res.drafts))
-      .catch(() => setDraftsError('Could not load your prepared applications.'))
+      .catch(() => setDraftsError('We couldn\'t load your prepared applications.'))
       .finally(() => setDraftsLoading(false));
   }, []);
 
@@ -52,7 +52,7 @@ export default function ApplyAgentPage() {
 
   const prepare = async () => {
     if (!jobTitle.trim() || !company.trim()) {
-      setPreparingErr('Job title and company are required.');
+      setPreparingErr('Add the job title and company to start.');
       return;
     }
     setPreparing(true);
@@ -70,8 +70,8 @@ export default function ApplyAgentPage() {
       syncDraftToState(res.draft);
       setDrafts((prev) => [res.draft, ...prev.filter((d) => d.id !== res.draft.id)]);
     } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Failed to prepare the application draft.';
-      setPreparingErr(msg.includes('resume') ? 'No resume found. Upload your resume first so the agent can tailor your application.' : msg);
+      const msg = e instanceof Error ? e.message : 'We couldn\'t prepare that draft. Try again in a minute.';
+      setPreparingErr(msg.includes('resume') ? 'No resume found. Upload one first so the agent can tailor your application.' : msg);
     } finally {
       setPreparing(false);
     }
@@ -89,7 +89,7 @@ export default function ApplyAgentPage() {
       });
       syncDraftToState(res.draft);
     } catch {
-      setPanelError('Couldn\'t save your draft. Please try again.');
+      setPanelError('We couldn\'t save that draft. Try again.');
     } finally {
       setSaving(false);
     }
@@ -105,7 +105,7 @@ export default function ApplyAgentPage() {
       setDraft(res.draft);
       setDrafts((prev) => prev.map((d) => (d.id === res.draft.id ? res.draft : d)));
     } catch {
-      setPanelError('Couldn\'t mark the application as applied. Please try again.');
+      setPanelError('We couldn\'t mark that as applied. Try again.');
     } finally {
       setApplying(false);
     }
@@ -126,7 +126,7 @@ export default function ApplyAgentPage() {
     <div className="space-y-8">
       <SectionHeading
         title="Apply Agent"
-        subtitle="Paste a job, get a tailored cover letter and application message, then apply with confidence."
+        subtitle="Paste a job, get a tailored cover letter and application message — ready to send."
         badge={<Badge tone="violet" icon={<Bot size={12} />}>Draft-first</Badge>}
       />
 

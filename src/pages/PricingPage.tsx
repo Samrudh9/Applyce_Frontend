@@ -13,8 +13,8 @@ const tiers = [
     icon: Zap,
     price: '$0',
     period: '/month',
-    description: 'Everything you need to get a clear career read.',
-    features: ['Basic career match', '1 resume analysis / month', 'Community support', 'Score overview'],
+    description: 'Everything you need for your first career read.',
+    features: ['Career match', '1 resume analysis / month', 'ATS score overview', 'Community support'],
     cta: 'Get Started',
     popular: false,
   },
@@ -23,8 +23,8 @@ const tiers = [
     icon: Sparkles,
     price: '$9.99',
     period: '/month',
-    description: 'For job seekers ready to stand out and move faster.',
-    features: ['Unlimited analysis', 'Deep ATS report', 'Job fit scoring', 'Career roadmap', 'Priority support', 'Export PDF reports'],
+    description: 'For job seekers moving faster and applying smarter.',
+    features: ['Unlimited resume analysis', 'Deep ATS report', 'Fit score on every job', 'Career roadmap', 'Priority support', 'Export PDF reports'],
     cta: 'Upgrade to Pro',
     popular: true,
   },
@@ -33,7 +33,7 @@ const tiers = [
     icon: Crown,
     price: 'Custom',
     period: '',
-    description: 'For teams and organizations with advanced needs.',
+    description: 'For teams hiring at scale with advanced needs.',
     features: ['All Pro features', 'API access', 'Team analytics dashboard', 'Dedicated success manager', 'Custom integrations', 'SLA guarantee'],
     cta: 'Contact Us',
     popular: false,
@@ -41,10 +41,10 @@ const tiers = [
 ];
 
 const faqs = [
-  { q: 'Can I cancel anytime?', a: 'Yes, you can cancel your subscription at any time. No questions asked. Your access continues until the end of the billing period.' },
-  { q: 'Do you offer student discounts?', a: 'Absolutely! Students with a valid .edu email get 50% off Pro. Contact support with your student ID to claim.' },
-  { q: 'Is my data secure?', a: 'Your data is encrypted at rest and in transit. We never share your resume data with third parties. See our Privacy Policy for details.' },
-  { q: 'What payment methods do you accept?', a: 'We accept all major credit cards, PayPal, and UPI (India). Enterprise customers can pay via invoice.' },
+  { q: 'Can I cancel anytime?', a: 'Yes — cancel whenever you like. Your access continues until the end of the billing period.' },
+  { q: 'Do you offer student discounts?', a: 'Students with a valid .edu email get 50% off Pro. Email support with your student ID to claim it.' },
+  { q: 'Is my data secure?', a: 'Your data is encrypted in transit and at rest. We never share or sell your resume data. See the Privacy Policy for details.' },
+  { q: 'What payment methods do you accept?', a: 'All major credit cards, PayPal, and UPI (India). Enterprise customers can pay by invoice.' },
 ];
 
 export default function PricingPage() {
@@ -52,7 +52,7 @@ export default function PricingPage() {
 
   return (
     <div className="space-y-14">
-      <SectionHeading title="Simple, Transparent Pricing" subtitle="Start free — upgrade only when you need more. No hidden fees." />
+      <SectionHeading title="Pricing That Grows With You" subtitle="Start free — upgrade only when you need more. No hidden fees." />
 
       {/* Tiers */}
       <section className="grid gap-6 md:grid-cols-3">
@@ -100,7 +100,7 @@ export default function PricingPage() {
 
       {/* FAQ */}
       <section>
-        <SectionHeading title="Frequently Asked Questions" subtitle="Everything you need to know about our plans." />
+        <SectionHeading title="Frequently Asked Questions" subtitle="The answers most people look for — in plain words." />
         <div className="mx-auto mt-8 max-w-3xl space-y-3">
           {faqs.map((faq, i) => (
             <Card key={faq.q} className="cursor-pointer" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
@@ -125,9 +125,9 @@ export default function PricingPage() {
       {/* CTA */}
       <section className="text-center">
         <Card className="mx-auto max-w-2xl bg-accent/5 ring-1 ring-accent/10">
-          <h3 className="font-display text-2xl font-semibold text-ink">Ready to accelerate your career?</h3>
-          <p className="mt-2 text-ink-sec">Start free and see where your resume stands today.</p>
-          <Link to="/login" className="mt-5 inline-block"><Button>Start Free Today</Button></Link>
+          <h3 className="font-display text-2xl font-semibold text-ink">Start free, find your path</h3>
+          <p className="mt-2 text-ink-sec">Upload your resume and see where you stand today.</p>
+          <Link to="/login" className="mt-5 inline-block"><Button>Start Free</Button></Link>
         </Card>
       </section>
     </div>

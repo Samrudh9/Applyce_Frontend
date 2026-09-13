@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle, ArrowRight, Award, BookOpen, Briefcase, CheckCircle2, Download,
-  Eye, EyeOff, ExternalLink, FileText, GraduationCap, Lightbulb, Loader2, Map, Search,
+  Eye, EyeOff, ExternalLink, FileText, GraduationCap, Lightbulb, Loader2, Map, RotateCcw, Search,
   ShieldCheck, Star, Target, TrendingUp, Wrench,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -39,6 +39,7 @@ export default function ResultPage() {
   const state = location.state as { analysisResult?: AnalyzeResumeResponse; fileName?: string; fileUrl?: string; fileType?: string } | null;
   const [skillGapData, setSkillGapData] = useState<SkillGap | null>(null);
   const [loadingGap, setLoadingGap] = useState(false);
+  const [gapError, setGapError] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => { if (!state?.analysisResult) navigate('/upload', { replace: true }); }, [state, navigate]);
@@ -47,11 +48,14 @@ export default function ResultPage() {
 
   useEffect(() => {
     if (!result || !result.predictions.length || !result.skills.length) return;
+    let cancelled = false;
     setLoadingGap(true);
+    setGapError(false);
     api.skillGap({ skills: result.skills, career: result.predictions[0].career })
-      .then((res) => setSkillGapData(res.analysis))
-      .catch(() => { })
-      .finally(() => setLoadingGap(false));
+      .then((res) => { if (!cancelled) setSkillGapData(res.analysis); })
+      .catch(() => { if (!cancelled) setGapError(true); })
+      .finally(() => { if (!cancelled) setLoadingGap(false); });
+    return () => { cancelled = true; };
   }, [result]);
 
   if (!result) return null;
@@ -92,7 +96,7 @@ export default function ResultPage() {
       (result.skills ?? []).join(', ') || '—',
       '',
       `## Skills to Learn (${gap?.missing_skills?.length ?? 0})`,
-      gap?.missing_skills?.length ? gap.missing_skills.join(', ') : 'No skill gaps detected.',
+      gap?.missing_skills?.length ? gap.missing_skills.join(', ') : 'Nothing missing for your top match.',
       '',
       '## Score Breakdown',
       `- Keywords: ${Math.round(keywordScore)}%`,
@@ -119,12 +123,12 @@ export default function ResultPage() {
       {/* ── Header ── */}
       <div>
         <SectionHeading
-          title="Your AI-powered career insights."
-          subtitle="Your score, career fits, and what to fix — all in one place."
+          title="Your Resume, Decoded."
+          subtitle="Your score, career matches, salary range, and what to fix next."
           badge={
             <div className="flex gap-2">
               <Badge tone={grade.tone}>Grade {grade.letter}</Badge>
-              <Badge tone="info" icon={<ShieldCheck size={12} />}>AI Verified</Badge>
+              <Badge tone="info" icon={<ShieldCheck size={12} />}>Explainable Score</Badge>
             </div>
           }
         />
@@ -188,7 +192,7 @@ export default function ResultPage() {
             </div>
           </div>
           <p className="mt-3 text-xs text-ink-sec">
-            {overallScore >= 80 ? 'Consistent structure with strong keyword alignment.' : overallScore >= 60 ? 'Good foundation — optimize keywords and formatting for better ATS pass rate.' : 'Needs improvement — focus on ATS keywords, formatting, and section structure.'}
+            {overallScore >= 80 ? 'Strong structure and keyword alignment — recruiters will read you easily.' : overallScore >= 60 ? 'Good foundation — tighten keywords and formatting to pass more ATS filters.' : 'You\'re closer than it feels — focus on ATS keywords, formatting, and section structure.'}
           </p>
           {salaryMin && salaryMax && (
             <div className="mt-3 rounded-xl bg-success/10 px-4 py-2 text-center">
@@ -244,7 +248,7 @@ export default function ResultPage() {
       {/* ── 2. Career Predictions ── */}
       <section>
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-ink">Career Predictions</h2>
+          <h2 className="text-xl font-bold text-ink">Career Matches</h2>
           <Badge tone="neutral">Top matches</Badge>
         </div>
         <div className="grid gap-4 md:grid-cols-3">
@@ -285,9 +289,16 @@ export default function ResultPage() {
             <div className="flex flex-wrap gap-2" aria-busy="true" aria-label="Loading skill gaps">
               {[0, 1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-6 w-20 rounded-full" />)}
             </div>
+          ) : gapError && !gap ? (
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="text-sm text-ink-sec">We couldn\'t load your skill gaps.</p>
+              <Button size="sm" variant="outline" onClick={() => { setGapError(false); setLoadingGap(true); setSkillGapData(null); }}>
+                <RotateCcw size={14} /> Retry
+              </Button>
+            </div>
           ) : (
             <div className="flex flex-wrap gap-2">
-              {gap?.missing_skills?.length ? gap.missing_skills.map((s) => <Badge key={s} tone="warning">{s}</Badge>) : <p className="text-sm text-ink-sec">No skill gaps detected</p>}
+              {gap?.missing_skills?.length ? gap.missing_skills.map((s) => <Badge key={s} tone="warning">{s}</Badge>) : <p className="text-sm text-ink-sec">Nothing missing for your top career match.</p>}
             </div>
           )}
         </Card>
@@ -307,7 +318,7 @@ export default function ResultPage() {
               </h2>
               <Card hover={false} className="flex items-center gap-3 border-success/30 bg-success/10 py-6 text-success">
                 <CheckCircle2 size={22} />
-                <p className="text-sm font-medium">No critical red flags detected in your resume.</p>
+                <p className="text-sm font-medium">No critical issues found — your resume is clean.</p>
               </Card>
             </section>
           );
@@ -385,8 +396,8 @@ export default function ResultPage() {
       <section className="grid gap-6 lg:grid-cols-2">
         {/* ATS Report Preview */}
         <Card>
-          <h2 className="mb-2 text-lg font-bold text-ink">ATS Report Preview</h2>
-          <p className="mb-4 text-sm text-ink-sec">Snapshot of your ATS readiness with critical issues flagged.</p>
+          <h2 className="mb-4 text-lg font-bold text-ink">ATS Report Preview</h2>
+          <p className="mb-4 text-sm text-ink-sec">The issues that matter most to ATS filters.</p>
           <div className="space-y-3 rounded-xl border border-line bg-elevated/60 p-4">
             {gap?.skills_analysis?.missing_required?.length ? (
               <p className="flex items-start gap-2 text-sm text-ink-sec">
@@ -481,7 +492,7 @@ export default function ResultPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-ink">Take action</h2>
-            <p className="mt-1 text-sm text-ink-sec">Download your report or jump into curated job searches.</p>
+            <p className="mt-1 text-sm text-ink-sec">Own the result — download the report, fix the resume, or start applying.</p>
           </div>
           <div className="flex flex-wrap gap-3">
             <Button onClick={downloadReport}><Download size={16} /> Download Report</Button>

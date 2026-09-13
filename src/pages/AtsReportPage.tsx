@@ -40,15 +40,15 @@ export default function AtsReportPage() {
     <div className="space-y-8">
       <SectionHeading
         title="ATS Compatibility Report"
-        subtitle="Here's how hiring software reads your resume — and what's holding you back."
-        badge={<Badge tone={overallScore >= 80 ? 'success' : overallScore >= 60 ? 'warning' : 'danger'} icon={<ShieldCheck size={12} />}>Score {overallScore}</Badge>}
+        subtitle="How applicant tracking systems read your resume — and what to fix."
+        badge={<Badge tone={overallScore >= 80 ? 'success' : overallScore >= 60 ? 'warning' : 'danger'} icon={<ShieldCheck size={12} />}>ATS Score {overallScore}</Badge>}
       />
 
       {/* Overall Score */}
       <Card hover={false} className="flex flex-col items-center text-center">
         <CircularProgress value={overallScore} size={170} strokeWidth={14} color={overallScore >= 80 ? 'rgb(var(--success))' : overallScore >= 60 ? 'rgb(var(--warning))' : 'rgb(var(--danger))'} label="ATS Score" />
         <p className="mt-3 max-w-md text-sm text-ink-sec">
-          {overallScore >= 80 ? "Nice work — your resume is well-prepared for ATS filters." : overallScore >= 60 ? "Good foundation — a few tweaks and you're there." : "Don't worry — these are the quick wins that will get you through."}
+          {overallScore >= 80 ? "Nice work — your resume clears ATS filters." : overallScore >= 60 ? "Good foundation — a few tweaks and you're through." : "No stress — the fixes below are quick wins."}
         </p>
       </Card>
 

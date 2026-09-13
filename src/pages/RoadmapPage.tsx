@@ -54,7 +54,7 @@ export default function RoadmapPage() {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
         <Map size={48} className="text-ink-sec" />
-        <p className="text-lg font-semibold text-ink">Couldn't load roadmap</p>
+        <p className="text-lg font-semibold text-ink">We couldn't load this roadmap</p>
         <p className="text-sm text-ink-sec">{error}</p>
         <Button variant="outline" onClick={() => window.location.reload()} className="mt-2">
           <RotateCcw size={16} /> Try again
@@ -67,7 +67,7 @@ export default function RoadmapPage() {
 
   return (
     <div className="space-y-8">
-      <SectionHeading title={title || `${career} Roadmap`} subtitle={`Your step-by-step plan to get there — skills, resources, and timelines.`} badge={<Badge tone="info" icon={<Map size={12} />}>AI-Generated</Badge>} />
+      <SectionHeading title={title || `${career} Roadmap`} subtitle={`The skills, resources, and timeline to get there.`} badge={<Badge tone="info" icon={<Map size={12} />}>Career Roadmap</Badge>} />
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="relative space-y-0 lg:col-span-2">
           <div className="absolute left-6 top-0 hidden h-full w-px bg-gradient-to-b from-accent/30 via-burgundy/15 to-transparent lg:block" />
@@ -126,7 +126,7 @@ export default function RoadmapPage() {
             </div>
             <h3 className="font-display text-2xl font-bold text-ink">{total}</h3>
             <p className="text-sm text-ink-sec">Learning phases to get there</p>
-            <p className="mt-4 text-sm text-ink-sec">Work through each phase top-to-bottom, and you'll be ready for the role.</p>
+            <p className="mt-4 text-sm text-ink-sec">Work through each phase in order — skills, resources, and milestones included.</p>
           </Card>
           <Card>
             <h3 className="mb-3 flex items-center gap-2 font-bold text-ink"><BookOpen size={16} className="text-accent" /> Career</h3>

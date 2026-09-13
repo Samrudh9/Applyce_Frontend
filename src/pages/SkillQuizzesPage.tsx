@@ -46,7 +46,7 @@ export default function SkillQuizzesPage() {
             setSubmitError(null);
             setView('quiz');
         } catch {
-            setQuizError('Could not load the quiz. Please try again.');
+            setQuizError('We couldn\'t load that quiz. Pick it again in a minute.');
         }
         setLoading(false);
     };
@@ -65,7 +65,7 @@ export default function SkillQuizzesPage() {
             setScore({ score: res.score, total: res.total, percentage: res.percentage });
             setView('results');
         } catch {
-            setSubmitError('We couldn\'t grade your quiz. Check your connection and try again.');
+            setSubmitError('We couldn\'t grade that. Check your connection and try again.');
         }
         setLoading(false);
     };
@@ -82,7 +82,7 @@ export default function SkillQuizzesPage() {
             }
             setBestScores(bests);
         } catch {
-            setHistoryError('Could not load quiz history.');
+            setHistoryError('We couldn\'t load your quiz history.');
         }
         setHistoryLoading(false);
     }, []);
@@ -91,7 +91,7 @@ export default function SkillQuizzesPage() {
 
     return (
         <div className="space-y-8">
-            <SectionHeading title="Skill Quizzes" subtitle="Quick quizzes to check your skills and see where to level up." />
+            <SectionHeading title="Skill Quizzes" subtitle="Check where you stand — quizzes for the skills that matter." />
 
             <div className="flex gap-2">
                 {(['select', 'history'] as View[]).map((v) => (
@@ -220,7 +220,7 @@ export default function SkillQuizzesPage() {
                             </div>
                         </Card>
                     )}
-                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No quiz history yet.</p></Card>}
+                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No quizzes taken yet — pick a skill above and start.</p></Card>}
                     {!historyLoading && !historyError && history.map((h) => (
                         <Card key={h.id} hover>
                             <div className="flex items-center justify-between">
