@@ -48,9 +48,6 @@ export default {
         '4xl': '2rem',
       },
       animation: {
-        float: 'float 6s ease-in-out infinite',
-        'float-slow': 'float 8s ease-in-out infinite',
-        'float-fast': 'float 4s ease-in-out infinite',
         pulseGlow: 'pulseGlow 2.5s ease-in-out infinite',
         shimmer: 'shimmer 2.5s ease-in-out infinite',
         'spin-slow': 'spin 8s linear infinite',
@@ -60,10 +57,6 @@ export default {
         'scale-in': 'scaleIn 0.3s ease-out forwards',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-20px)' },
-        },
         pulseGlow: {
           '0%, 100%': { boxShadow: '0 0 12px rgba(255, 87, 34, 0.1)' },
           '50%': { boxShadow: '0 0 24px rgba(255, 87, 34, 0.18)' },
