@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { AlertCircle, CheckCircle2, FileText, Loader2, Upload, X } from 'lucide-react';
+import { AlertCircle, CheckCircle2, FileText, Upload, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -63,7 +62,7 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
+    <div className="mx-auto max-w-2xl space-y-6 px-4 py-8 sm:px-6">
       <SectionHeading
         align="center"
         title="Drop Your Resume"
@@ -72,20 +71,13 @@ export default function UploadPage() {
       />
 
       {/* Error banner */}
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="flex items-center gap-3 rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger"
-          >
-            <AlertCircle size={16} className="shrink-0" />
-            <p className="flex-1">{error}</p>
-            <button onClick={() => setError(null)}><X size={14} /></button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {error && (
+        <div className="flex items-center gap-3 rounded-xl border border-danger/30 bg-danger/5 px-4 py-3 text-sm text-danger">
+          <AlertCircle size={16} className="shrink-0" />
+          <p className="flex-1">{error}</p>
+          <button onClick={() => setError(null)} className="text-ink-sec hover:text-ink"><X size={14} /></button>
+        </div>
+      )}
 
       {/* Drop zone */}
       <Card hover={false} className="p-0">
@@ -94,7 +86,7 @@ export default function UploadPage() {
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
           onClick={() => { if (!uploading) document.getElementById('file-input')?.click(); }}
-          className={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-16 transition-all duration-300 ${dragging ? 'border-accent bg-accent/5' : file ? 'border-accent/30 bg-accent/[0.02]' : 'border-line-strong bg-canvas hover:border-accent/40 hover:bg-accent/[0.02]'
+          className={`relative flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-6 py-16 transition-colors ${dragging ? 'border-accent bg-accent/5' : file ? 'border-accent/30 bg-accent/[0.02]' : 'border-line-strong bg-canvas hover:border-accent/40 hover:bg-accent/[0.02]'
             }`}
         >
           <input
@@ -106,17 +98,17 @@ export default function UploadPage() {
           />
 
           {file ? (
-            <motion.div initial={{ scale: 0.9 }} animate={{ scale: 1 }} className="text-center">
-              <FileText size={40} className="mx-auto text-accent" />
+            <div className="text-center">
+              <FileText size={40} className="mx-auto text-accent-strong" />
               <p className="mt-3 font-semibold text-ink">{file.name}</p>
               <p className="text-sm text-ink-sec">{(file.size / 1024).toFixed(0)} KB</p>
-            </motion.div>
+            </div>
           ) : (
             <div className="text-center">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-accent/8">
-                <Upload size={28} className="text-accent" />
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/10">
+                <Upload size={24} className="text-accent-strong" />
               </div>
-              <p className="text-lg font-semibold text-ink">Drop your resume here</p>
+              <p className="text-base font-semibold text-ink">Drop your resume here</p>
               <p className="mt-1 text-sm text-ink-sec">or click to browse · PDF or DOCX, up to 5 MB</p>
               <p className="mt-2 text-xs text-ink-ter">Your file stays private — we never share it.</p>
             </div>
@@ -126,29 +118,27 @@ export default function UploadPage() {
 
       {/* Upload progress */}
       {uploading && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <ProgressBar value={progress} animated />
+        <div>
+          <ProgressBar value={progress} colorClass="from-accent-strong to-accent" />
           <p className="mt-2 text-center text-sm text-ink-sec">
             {progress < 30 ? 'Uploading your resume…' : progress < 70 ? 'Scoring your ATS fit…' : progress < 100 ? 'Matching you to careers…' : 'Done!'}
           </p>
-        </motion.div>
+        </div>
       )}
 
       {/* Submit button */}
       {file && !uploading && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <Button onClick={handleUpload} className="w-full" size="lg">
-            <Upload size={18} /> Get My Results
-          </Button>
-        </motion.div>
+        <Button onClick={handleUpload} className="w-full" size="lg">
+          <Upload size={18} /> Get My Results
+        </Button>
       )}
 
       {/* Success */}
       {progress === 100 && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center justify-center gap-2 text-accent-strong">
+        <div className="flex items-center justify-center gap-2 text-accent-strong">
           <CheckCircle2 size={20} />
           <span className="font-semibold">Report ready — taking you there…</span>
-        </motion.div>
+        </div>
       )}
     </div>
   );

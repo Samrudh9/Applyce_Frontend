@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Award, BookOpen, CheckCircle, Clock, GraduationCap, Loader2, Play, RotateCcw, X, XCircle } from 'lucide-react';
+import { Award, BookOpen, CheckCircle, Clock, GraduationCap, Play, RotateCcw, XCircle } from 'lucide-react';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -90,150 +89,150 @@ export default function SkillQuizzesPage() {
     useEffect(() => { loadHistory(); }, [loadHistory]);
 
     return (
-        <div className="space-y-8">
-            <SectionHeading title="Skill Quizzes" subtitle="Check where you stand — quizzes for the skills that matter." />
+        <div className="space-y-6 px-4 py-8 sm:px-6">
+            <div className="mx-auto max-w-5xl">
+                <SectionHeading title="Skill Quizzes" subtitle="Check where you stand — quizzes for the skills that matter." />
 
-            <div className="flex gap-2">
-                {(['select', 'history'] as View[]).map((v) => (
-                    <button key={v} onClick={() => setView(v)} className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${view === v || (view === 'quiz' && v === 'select') || (view === 'results' && v === 'select') ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-line'}`}>
-                        {v === 'select' ? 'Take Quiz' : 'History'}
-                    </button>
-                ))}
-            </div>
-
-            {/* SKILL SELECTION */}
-            {view === 'select' && (
-                <div className="space-y-4">
-                    {quizError && (
-                        <p className="flex items-center gap-2 rounded-xl border border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
-                            <XCircle size={14} className="shrink-0" /> {quizError}
-                        </p>
-                    )}
-                    {loading ? (
-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-busy="true" aria-label="Loading quiz">
-                            {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} lines={2} />)}
-                        </div>
-                    ) : (
-                        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                            {SKILL_OPTIONS.map((skill) => (
-                                <Card key={skill} hover className="cursor-pointer" onClick={() => startQuiz(skill)}>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <GraduationCap size={18} className="text-accent" />
-                                            <span className="font-semibold text-ink">{skill}</span>
-                                        </div>
-                                        {bestScores[skill] !== undefined && <Badge tone="success" size="sm">Best: {bestScores[skill]}</Badge>}
-                                    </div>
-                                    <div className="mt-2 flex items-center gap-1 text-xs text-ink-sec"><Play size={12} /> Start Quiz</div>
-                                </Card>
-                            ))}
-                        </div>
-                    )}
+                <div className="flex gap-1.5">
+                    {(['select', 'history'] as View[]).map((v) => (
+                        <button key={v} onClick={() => setView(v)} className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${view === v || (view === 'quiz' && v === 'select') || (view === 'results' && v === 'select') ? 'bg-ink text-canvas' : 'bg-surface text-ink-sec hover:text-ink border border-line'}`}>
+                            {v === 'select' ? 'Take Quiz' : 'History'}
+                        </button>
+                    ))}
                 </div>
-            )}
 
-            {/* QUIZ */}
-            {view === 'quiz' && (
-                <div className="space-y-4">
-                    <Card hover={false}>
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-bold text-ink">{selectedSkill} Quiz</h2>
-                            <Badge tone="info">{Object.keys(answers).length}/{questions.length} answered</Badge>
-                        </div>
-                    </Card>
-                    {questions.map((q) => (
-                        <motion.div key={q.index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                            <Card>
+                {/* SKILL SELECTION */}
+                {view === 'select' && (
+                    <div className="space-y-4">
+                        {quizError && (
+                            <div className="flex items-center gap-2 rounded-xl border border-danger/25 bg-danger/10 px-4 py-3 text-sm text-danger">
+                                <XCircle size={14} className="shrink-0" /> {quizError}
+                            </div>
+                        )}
+                        {loading ? (
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-busy="true" aria-label="Loading quiz">
+                                {[0, 1, 2, 3].map((i) => <SkeletonCard key={i} lines={2} />)}
+                            </div>
+                        ) : (
+                            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                                {SKILL_OPTIONS.map((skill) => (
+                                    <Card key={skill} hover className="cursor-pointer" onClick={() => startQuiz(skill)}>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <GraduationCap size={16} className="text-accent-strong" />
+                                                <span className="text-sm font-semibold text-ink">{skill}</span>
+                                            </div>
+                                            {bestScores[skill] !== undefined && <Badge tone="success" size="sm">Best: {bestScores[skill]}</Badge>}
+                                        </div>
+                                        <div className="mt-2 flex items-center gap-1 text-xs text-ink-sec"><Play size={12} /> Start Quiz</div>
+                                    </Card>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* QUIZ */}
+                {view === 'quiz' && (
+                    <div className="space-y-3">
+                        <Card hover={false}>
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-base font-bold text-ink">{selectedSkill} Quiz</h2>
+                                <Badge tone="info" size="sm">{Object.keys(answers).length}/{questions.length} answered</Badge>
+                            </div>
+                        </Card>
+                        {questions.map((q) => (
+                            <Card key={q.index} hover={false}>
                                 <p className="mb-3 font-semibold text-ink">Q{q.index + 1}. {q.question}</p>
                                 <div className="space-y-2">
                                     {q.options.map((opt, oi) => (
-                                        <button key={oi} onClick={() => selectAnswer(q.index, oi)} className={`w-full rounded-xl border px-4 py-3 text-left text-sm transition-colors ${answers[q.index] === oi ? 'border-accent bg-accent/10 font-medium text-ink' : 'border-line bg-surface text-ink-sec hover:border-accent/40 hover:bg-accent/5'}`}>
+                                        <button key={oi} onClick={() => selectAnswer(q.index, oi)} className={`w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${answers[q.index] === oi ? 'border-accent bg-accent/10 font-medium text-ink' : 'border-line bg-surface text-ink-sec hover:border-accent/40 hover:bg-accent/5'}`}>
                                             <span className="mr-2 font-semibold text-ink-sec">{String.fromCharCode(65 + oi)}.</span>{opt}
                                         </button>
                                     ))}
                                 </div>
                             </Card>
-                        </motion.div>
-                    ))}
-                    <div className="flex justify-end">
-                        {submitError && (
-                            <p className="mr-4 flex items-center gap-2 text-sm text-danger">
-                                <XCircle size={14} className="shrink-0" /> {submitError}
-                            </p>
-                        )}
-                        <Button onClick={submitQuiz} disabled={loading || Object.keys(answers).length < questions.length}>
-                            {loading ? <><Loader2 size={16} className="animate-spin" /> Submitting…</> : <><Award size={16} /> Submit Quiz</>}
-                        </Button>
-                    </div>
-                </div>
-            )}
-
-            {/* RESULTS */}
-            {view === 'results' && (
-                <div className="space-y-4">
-                    <Card hover={false} className="flex flex-col items-center text-center">
-                        <CircularProgress value={score.percentage} size={120} strokeWidth={10} label="Score" />
-                        <p className="mt-3 text-xl font-bold text-ink">{score.score} / {score.total}</p>
-                        <Badge tone={score.percentage >= 80 ? 'success' : score.percentage >= 50 ? 'warning' : 'danger'} className="mt-2">
-                            {score.percentage >= 80 ? 'Excellent!' : score.percentage >= 50 ? 'Good effort' : 'Keep practicing'}
-                        </Badge>
-                    </Card>
-                    <AnimatePresence>
-                        {results.map((r) => (
-                            <motion.div key={r.index} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                                <Card className={r.is_correct ? 'border-success/30' : 'border-danger/30'}>
-                                    <div className="flex items-start gap-2">
-                                        {r.is_correct ? <CheckCircle size={18} className="mt-0.5 shrink-0 text-success" /> : <XCircle size={18} className="mt-0.5 shrink-0 text-danger" />}
-                                        <div className="flex-1">
-                                            <p className="font-semibold text-ink">{r.question}</p>
-                                            <p className="mt-1 text-sm text-ink-sec">Your answer: <strong>{r.options[r.selected]}</strong></p>
-                                            {!r.is_correct && <p className="text-sm text-success">Correct: <strong>{r.options[r.correct]}</strong></p>}
-                                            <p className="mt-2 rounded-lg bg-elevated p-2 text-xs text-ink-sec">{r.explanation}</p>
-                                        </div>
-                                    </div>
-                                </Card>
-                            </motion.div>
                         ))}
-                    </AnimatePresence>
-                    <div className="flex gap-3">
-                        <Button onClick={() => startQuiz(selectedSkill)}>Retake Quiz</Button>
-                        <Button variant="outline" onClick={() => setView('select')}>Try Another Skill</Button>
-                    </div>
-                </div>
-            )}
-
-            {/* HISTORY */}
-            {view === 'history' && (
-                <div className="space-y-3">
-                    {historyLoading && (
-                        <div className="space-y-3" aria-busy="true" aria-label="Loading quiz history">
-                            {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={1} />)}
+                        <div className="flex justify-end gap-3">
+                            {submitError && (
+                                <p className="flex items-center gap-2 text-sm text-danger">
+                                    <XCircle size={14} className="shrink-0" /> {submitError}
+                                </p>
+                            )}
+                            <Button onClick={submitQuiz} disabled={loading || Object.keys(answers).length < questions.length} size="sm">
+                                {loading ? 'Submitting…' : <><Award size={14} /> Submit Quiz</>}
+                            </Button>
                         </div>
-                    )}
-                    {!historyLoading && historyError && (
-                        <Card hover={false}>
-                            <div className="flex flex-col items-center gap-3 py-8 text-center">
-                                <p className="text-sm text-danger">{historyError}</p>
-                                <Button variant="outline" size="sm" onClick={loadHistory}>
-                                    <RotateCcw size={14} /> Try again
-                                </Button>
-                            </div>
+                    </div>
+                )}
+
+                {/* RESULTS */}
+                {view === 'results' && (
+                    <div className="space-y-3">
+                        <Card hover={false} className="flex flex-col items-center text-center">
+                            <CircularProgress value={score.percentage} size={110} strokeWidth={9} label="Score" />
+                            <p className="mt-3 text-lg font-bold text-ink">{score.score} / {score.total}</p>
+                            <Badge tone={score.percentage >= 80 ? 'success' : score.percentage >= 50 ? 'warning' : 'danger'} size="sm" className="mt-2">
+                                {score.percentage >= 80 ? 'Excellent!' : score.percentage >= 50 ? 'Good effort' : 'Keep practicing'}
+                            </Badge>
                         </Card>
-                    )}
-                    {!historyLoading && !historyError && history.length === 0 && <Card><p className="text-center text-ink-sec py-8">No quizzes taken yet — pick a skill above and start.</p></Card>}
-                    {!historyLoading && !historyError && history.map((h) => (
-                        <Card key={h.id} hover>
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <h3 className="font-semibold text-ink flex items-center gap-2"><BookOpen size={16} className="text-accent" /> {h.skill}</h3>
-                                    <p className="text-xs text-ink-sec flex items-center gap-1"><Clock size={12} />{new Date(h.completed_at).toLocaleDateString()}</p>
+                        {results.map((r) => (
+                            <Card key={r.index} hover={false} className={r.is_correct ? 'border-success/30' : 'border-danger/30'}>
+                                <div className="flex items-start gap-2">
+                                    {r.is_correct ? <CheckCircle size={18} className="mt-0.5 shrink-0 text-success" /> : <XCircle size={18} className="mt-0.5 shrink-0 text-danger" />}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-ink">{r.question}</p>
+                                        <p className="mt-1 text-sm text-ink-sec">Your answer: <strong>{r.options[r.selected]}</strong></p>
+                                        {!r.is_correct && <p className="text-sm text-success">Correct: <strong>{r.options[r.correct]}</strong></p>}
+                                        <p className="mt-2 rounded-lg bg-elevated p-2 text-xs text-ink-sec">{r.explanation}</p>
+                                    </div>
                                 </div>
-                                <Badge tone={h.score / h.total >= 0.8 ? 'success' : h.score / h.total >= 0.5 ? 'warning' : 'danger'}>{h.score}/{h.total}</Badge>
+                            </Card>
+                        ))}
+                        <div className="flex gap-2">
+                            <Button onClick={() => startQuiz(selectedSkill)} size="sm">Retake Quiz</Button>
+                            <Button variant="outline" onClick={() => setView('select')} size="sm">Try Another Skill</Button>
+                        </div>
+                    </div>
+                )}
+
+                {/* HISTORY */}
+                {view === 'history' && (
+                    <div className="space-y-2">
+                        {historyLoading && (
+                            <div className="space-y-3" aria-busy="true" aria-label="Loading quiz history">
+                                {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={1} />)}
                             </div>
-                        </Card>
-                    ))}
-                </div>
-            )}
+                        )}
+                        {!historyLoading && historyError && (
+                            <Card hover={false}>
+                                <div className="flex flex-col items-center gap-3 py-8 text-center">
+                                    <p className="text-sm text-danger">{historyError}</p>
+                                    <Button variant="outline" size="sm" onClick={loadHistory}>
+                                        <RotateCcw size={14} /> Try again
+                                    </Button>
+                                </div>
+                            </Card>
+                        )}
+                        {!historyLoading && !historyError && history.length === 0 && (
+                            <Card hover={false}>
+                                <p className="text-center text-sm text-ink-sec py-8">No quizzes taken yet — pick a skill above and start.</p>
+                            </Card>
+                        )}
+                        {!historyLoading && !historyError && history.map((h) => (
+                            <Card key={h.id} hover={false}>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <h3 className="text-sm font-semibold text-ink flex items-center gap-2"><BookOpen size={14} className="text-accent-strong" /> {h.skill}</h3>
+                                        <p className="text-xs text-ink-sec flex items-center gap-1"><Clock size={12} />{new Date(h.completed_at).toLocaleDateString()}</p>
+                                    </div>
+                                    <Badge tone={h.score / h.total >= 0.8 ? 'success' : h.score / h.total >= 0.5 ? 'warning' : 'danger'} size="sm">{h.score}/{h.total}</Badge>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
