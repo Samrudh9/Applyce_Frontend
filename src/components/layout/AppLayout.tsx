@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Award,
   ChevronDown,
   FileUp,
   LayoutDashboard,
@@ -23,6 +22,7 @@ import { useAuth } from '../../context/AuthContext';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { Logo } from './Logo';
 import { NotificationsBell } from './NotificationsBell';
+import { SiteNavLinks, SiteNavMobilePanel } from './SiteNavLinks';
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; end?: boolean };
 
@@ -59,16 +59,19 @@ const groups: { label: string; items: NavItem[] }[] = [
   },
 ];
 
+/* Award is used below but wasn't imported in the original above groups — add it */
+import { Award } from 'lucide-react';
+
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   const { user, logout } = useAuth();
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex h-16 items-center px-5">
+      <div className="flex h-12 items-center px-5">
         <Logo size="sm" />
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 space-y-5 overflow-y-auto px-3 py-4">
         {groups.map((group) => (
           <div key={group.label}>
             <p className="mb-1.5 px-2 text-[11px] font-semibold uppercase tracking-wider text-ink-ter">
@@ -142,7 +145,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             <NavLink
               to="/login"
               onClick={onNavigate}
-              className="text-xs font-medium text-accent hover:underline"
+              className="text-xs font-medium text-accent-strong hover:underline"
             >
               Sign in
             </NavLink>
@@ -235,7 +238,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  // Mobile drawer: lock body scroll while open + close on Escape.
+  /* Lock body scroll when mobile nav is open + close on Escape */
   useEffect(() => {
     if (!mobileOpen) return;
     const prevOverflow = document.body.style.overflow;
@@ -292,13 +295,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </AnimatePresence>
 
       <div className="md:pl-60">
-        <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-line bg-canvas/85 px-4 backdrop-blur-xl md:px-8">
+        {/* Top header — dense nav links + actions */}
+        <header className="sticky top-0 z-30 flex h-12 items-center gap-3 border-b border-line bg-canvas/90 backdrop-blur px-4 md:px-6">
           <button
             onClick={() => setMobileOpen(true)}
             aria-label="Open menu"
-            className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface text-ink-sec md:hidden"
+            className="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface text-ink-sec md:hidden"
           >
-            <Menu size={18} />
+            <Menu size={16} />
           </button>
 
           <div className="flex-1">
@@ -307,7 +311,10 @@ export function AppLayout({ children }: { children: ReactNode }) {
             </Link>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          {/* Dense nav links — visible lg+ (desktop sidebar covers app nav, but these give the Talentd-style top-bar feel) */}
+          <SiteNavLinks className="hidden lg:flex" />
+
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             <NotificationsBell />
             <UserMenu />

@@ -1,39 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Inter, Helvetica, Arial, sans-serif">
-  <defs>
-    <radialGradient id="blueGlow" cx="0.5" cy="0.4" r="0.6">
-      <stop offset="0" stop-color="#002fa7" stop-opacity="0.5"/>
-      <stop offset="0.6" stop-color="#002fa7" stop-opacity="0.16"/>
-      <stop offset="1" stop-color="#0a0a0a" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="burgundyGlow" cx="0.12" cy="0.92" r="0.55">
-      <stop offset="0" stop-color="#5c1d24" stop-opacity="0.4"/>
-      <stop offset="1" stop-color="#0a0a0a" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="tileFace" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#002fa7"/>
-      <stop offset="1" stop-color="#002684"/>
-    </linearGradient>
-  </defs>
+  <!-- Flat orange canvas — no gradient washes -->
+  <rect width="1200" height="630" fill="#FF5722"/>
 
-  <!-- dark canvas + brand-accent glows -->
-  <rect width="1200" height="630" fill="#0a0a0a"/>
-  <rect width="1200" height="630" fill="url(#blueGlow)"/>
-  <rect width="1200" height="630" fill="url(#burgundyGlow)"/>
+  <!-- subtle bottom depth band (flat, opaque) -->
+  <rect width="1200" height="630" fill="#C9372C" opacity="0.06"/>
 
   <!-- mark tile (176x176, centered) -->
-  <g transform="translate(512,104)">
-    <rect width="176" height="176" rx="44" fill="url(#tileFace)"/>
-    <g transform="translate(0,16.5) scale(2.75)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="butt">
-      <path d="M12 50 L29 14"/>
-      <path d="M52 50 L35 14"/>
-      <path d="M15.5 33.5 L48.5 33.5"/>
+  <g transform="translate(512,92)">
+    <rect width="176" height="176" rx="44" fill="#ffffff"/>
+    <g fill="#FF5722">
+      <rect x="44" y="110" width="22" height="44" rx="6"/>
+      <rect x="77" y="82" width="22" height="72" rx="6"/>
+      <rect x="110" y="55" width="22" height="99" rx="6"/>
     </g>
-    <path transform="translate(0,16.5) scale(2.75)" d="M32 2 L38 10.5 L32 16 L26 10.5 Z" fill="#ffffff"/>
   </g>
 
   <!-- wordmark -->
-  <text x="600" y="452" text-anchor="middle" font-size="92" font-weight="800" fill="#f5f5f5" letter-spacing="-2">Applyce</text>
+  <text x="600" y="428" text-anchor="middle" font-size="92" font-weight="800" fill="#ffffff" letter-spacing="-2">Applyce</text>
 
   <!-- tagline -->
-  <text x="600" y="520" text-anchor="middle" font-size="32" font-weight="400" fill="#a1a1aa" letter-spacing="0">AI career guidance — find your path</text>
+  <text x="600" y="494" text-anchor="middle" font-size="32" font-weight="400" fill="#ffffff" opacity="0.92" letter-spacing="0">AI career guidance — find your path</text>
 </svg>

@@ -1,10 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Applyce brand mark: "The Apex" — Klein Blue tile + white ascending-stroke A with a diamond point-of-arrival. Reads at 16px. -->
-  <rect width="64" height="64" rx="16" fill="#002fa7"/>
-  <g transform="translate(0,6)" fill="none" stroke="#ffffff" stroke-width="9" stroke-linecap="butt">
-    <path d="M12 50 L29 14"/>
-    <path d="M52 50 L35 14"/>
-    <path d="M15.5 33.5 L48.5 33.5"/>
+  <!-- Applyce brand mark: flat Talentd-orange tile + white ascending bars (career ladder). Reads at 16px. -->
+  <rect width="64" height="64" rx="16" fill="#FF5722"/>
+  <g fill="#ffffff">
+    <rect x="16" y="40" width="8" height="16" rx="2.5"/>
+    <rect x="28" y="30" width="8" height="26" rx="2.5"/>
+    <rect x="40" y="20" width="8" height="36" rx="2.5"/>
   </g>
-  <path transform="translate(0,6)" d="M32 2 L38 10.5 L32 16 L26 10.5 Z" fill="#ffffff"/>
 </svg>

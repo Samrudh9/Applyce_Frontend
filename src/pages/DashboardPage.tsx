@@ -52,7 +52,7 @@ export default function DashboardPage() {
 
   const statCards = [
     { icon: FileText, label: 'Resume Score', value: summary?.latest_score?.toString() ?? '—', trend: summary ? `+${summary.total_improvement}` : '', color: 'text-accent-strong' },
-    { icon: BarChart3, label: 'Total Scans', value: summary?.total_scans?.toString() ?? '0', trend: '', color: 'text-burgundy' },
+    { icon: BarChart3, label: 'Total Scans', value: summary?.total_scans?.toString() ?? '0', trend: '', color: 'text-accent-strong' },
     { icon: Target, label: 'Best Score', value: summary?.best_score?.toString() ?? '—', trend: '', color: 'text-success' },
     { icon: Award, label: 'Average Score', value: summary?.average_score?.toFixed(0) ?? '—', trend: '', color: 'text-warning' },
   ];
@@ -83,7 +83,7 @@ export default function DashboardPage() {
       {/* ── User Profile Header ── */}
       <section className="relative overflow-hidden rounded-2xl border border-line bg-ink p-6 text-canvas md:p-8">
         <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-accent/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-48 w-48 rounded-full bg-burgundy/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 right-1/3 h-48 w-48 rounded-full bg-accent-strong/20 blur-3xl" />
 
         <div className="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-5">
@@ -217,7 +217,7 @@ export default function DashboardPage() {
                 <h2 className="text-lg font-bold text-ink">Score Progress</h2>
                 <div className="flex gap-4 text-xs">
                   <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent" /> Resume</span>
-                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-burgundy" /> ATS</span>
+                  <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-accent-strong" /> ATS</span>
                 </div>
               </div>
               <div className="h-72">
@@ -231,7 +231,7 @@ export default function DashboardPage() {
                       itemStyle={{ color: 'var(--ink)' }}
                     />
                     <Line type="monotone" dataKey="resume" stroke="var(--accent)" strokeWidth={3} dot={{ r: 4, fill: 'var(--accent)' }} activeDot={{ r: 6 }} />
-                    <Line type="monotone" dataKey="ats" stroke="var(--burgundy)" strokeWidth={3} dot={{ r: 4, fill: 'var(--burgundy)' }} activeDot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="ats" stroke="var(--accent-strong)" strokeWidth={3} dot={{ r: 4, fill: 'var(--accent-strong)' }} activeDot={{ r: 6 }} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>

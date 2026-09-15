@@ -68,7 +68,7 @@ export default function PricingPage() {
                 )}
 
                 <div className="mb-4 flex items-center gap-3">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${tier.popular ? 'bg-burgundy/15 text-burgundy' : 'bg-accent/10 text-accent-strong'}`}>
+                  <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${tier.popular ? 'bg-accent-soft text-accent-strong' : 'bg-accent/10 text-accent-strong'}`}>
                     <Icon size={20} />
                   </div>
                   <h3 className="text-xl font-bold text-ink">{tier.name}</h3>
@@ -83,7 +83,7 @@ export default function PricingPage() {
                 <ul className="mb-6 flex-1 space-y-2.5 text-sm">
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-center gap-2">
-                      <Check size={16} className={tier.popular ? 'text-burgundy' : 'text-accent-strong'} />
+                      <Check size={16} className={tier.popular ? 'text-accent-strong' : 'text-accent-strong'} />
                       <span className="text-ink">{f}</span>
                     </li>
                   ))}

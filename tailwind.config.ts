@@ -20,9 +20,6 @@ export default {
         accent: 'rgb(var(--accent) / <alpha-value>)',
         'accent-strong': 'rgb(var(--accent-strong) / <alpha-value>)',
         'accent-soft': 'rgb(var(--accent-soft) / <alpha-value>)',
-        burgundy: 'rgb(var(--burgundy) / <alpha-value>)',
-        'burgundy-strong': 'rgb(var(--burgundy-strong) / <alpha-value>)',
-        'burgundy-soft': 'rgb(var(--burgundy-soft) / <alpha-value>)',
         success: 'rgb(var(--success) / <alpha-value>)',
         warning: 'rgb(var(--warning) / <alpha-value>)',
         danger: 'rgb(var(--danger) / <alpha-value>)',
@@ -42,8 +39,6 @@ export default {
         lift: '0 16px 40px -12px rgba(16, 16, 16, 0.18)',
         glow: '0 1px 2px rgba(16, 16, 16, 0.04)',
         'glow-lg': '0 8px 30px rgba(16, 16, 16, 0.08)',
-        violet: '0 8px 30px -12px rgba(92, 29, 36, 0.25)',
-        'violet-lg': '0 12px 40px -12px rgba(92, 29, 36, 0.3)',
         success: '0 4px 16px rgba(22, 111, 60, 0.15)',
         soft: '0 1px 2px rgba(16, 16, 16, 0.03)',
       },
@@ -53,9 +48,6 @@ export default {
         '4xl': '2rem',
       },
       animation: {
-        float: 'float 6s ease-in-out infinite',
-        'float-slow': 'float 8s ease-in-out infinite',
-        'float-fast': 'float 4s ease-in-out infinite',
         pulseGlow: 'pulseGlow 2.5s ease-in-out infinite',
         shimmer: 'shimmer 2.5s ease-in-out infinite',
         'spin-slow': 'spin 8s linear infinite',
@@ -65,13 +57,9 @@ export default {
         'scale-in': 'scaleIn 0.3s ease-out forwards',
       },
       keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-20px)' },
-        },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 12px rgba(0, 47, 167, 0.1)' },
-          '50%': { boxShadow: '0 0 24px rgba(0, 47, 167, 0.18)' },
+          '0%, 100%': { boxShadow: '0 0 12px rgba(255, 87, 34, 0.1)' },
+          '50%': { boxShadow: '0 0 24px rgba(255, 87, 34, 0.18)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },

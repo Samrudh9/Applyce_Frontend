@@ -127,7 +127,7 @@ export default function JobsPage() {
           {[
             { label: 'Open Positions', value: insights.total_jobs, color: 'text-accent-strong' },
             { label: 'Growth Rate', value: (insights.growth_rate ? (parseInt(insights.growth_rate) || 0) : null), suffix: '%', prefix: '+', color: 'text-success' },
-            { label: 'Remote Friendly', value: insights.remote_percentage, suffix: '%', color: 'text-burgundy' },
+            { label: 'Remote Friendly', value: insights.remote_percentage, suffix: '%', color: 'text-accent-strong' },
             { label: 'Demand Level', value: 0, color: 'text-warning', textOverride: insights.demand_level },
           ].map((item, i) => (
             <motion.div key={item.label} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}>
@@ -290,7 +290,7 @@ export default function JobsPage() {
 
                       <div className="grid grid-cols-2 gap-2 text-center text-sm">
                         <div className="rounded-lg bg-elevated p-3">
-                          <p className="font-display text-xl font-bold text-burgundy">{fitResult.semantic_similarity?.toFixed(0) ?? 0}%</p>
+                          <p className="font-display text-xl font-bold text-accent-strong">{fitResult.semantic_similarity?.toFixed(0) ?? 0}%</p>
                           <p className="text-xs text-ink-sec">Semantic Match</p>
                         </div>
                         <div className="rounded-lg bg-elevated p-3">

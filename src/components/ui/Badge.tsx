@@ -12,7 +12,7 @@ const tones: Record<Tone, string> = {
     'bg-danger/10 text-danger border-danger/25',
   info: 'bg-accent-soft text-accent border-accent/15 dark:text-accent-strong',
   violet:
-    'bg-burgundy-soft text-burgundy border-burgundy/15 dark:text-burgundy-strong',
+    'bg-accent-soft text-accent-strong border-accent/15',
   neutral: 'bg-elevated text-ink-sec border-line dark:text-ink-sec',
 };
 
@@ -21,7 +21,7 @@ const dotColors: Record<Tone, string> = {
   warning: 'bg-warning',
   danger: 'bg-danger',
   info: 'bg-accent',
-  violet: 'bg-burgundy',
+  violet: 'bg-accent-strong',
   neutral: 'bg-ink-ter',
 };
 
