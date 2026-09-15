@@ -175,7 +175,7 @@ export default function ResultPage() {
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-ink-sec">Score Breakdown</h3>
           <div className="space-y-4">
             <ProgressBar label="Keywords" value={keywordScore} showValue animated colorClass="from-accent-strong to-accent" />
-            <ProgressBar label="Format" value={formatScore} showValue animated colorClass="from-burgundy/80 to-burgundy/50" />
+            <ProgressBar label="Format" value={formatScore} showValue animated colorClass="from-accent-strong/80 to-accent/50" />
             <ProgressBar label="Sections" value={sectionScore} showValue animated colorClass="from-warning/80 to-warning/50" />
             <ProgressBar label="Content" value={contentScore} showValue animated colorClass="from-success/80 to-success/50" />
           </div>
@@ -468,7 +468,7 @@ export default function ResultPage() {
         <section className="grid gap-6 lg:grid-cols-3">
           {result.education && result.education.length > 0 && (
             <Card>
-              <h3 className="mb-3 text-lg font-bold text-ink flex items-center gap-2"><GraduationCap size={18} className="text-burgundy" /> Education</h3>
+              <h3 className="mb-3 text-lg font-bold text-ink flex items-center gap-2"><GraduationCap size={18} className="text-accent-strong" /> Education</h3>
               <ul className="space-y-1">{result.education.map((e, i) => <li key={i} className="text-sm text-ink-sec">{e}</li>)}</ul>
             </Card>
           )}

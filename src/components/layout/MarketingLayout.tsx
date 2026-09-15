@@ -7,12 +7,7 @@ import { Button } from '../ui/Button';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { Footer } from './Footer';
 import { Logo } from './Logo';
-
-const links = [
-  { to: '/', label: 'Home' },
-  { to: '/pricing', label: 'Pricing' },
-  { to: '/about', label: 'About' },
-];
+import { SiteNavLinks, SiteNavMobilePanel } from './SiteNavLinks';
 
 export function MarketingLayout({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -24,40 +19,27 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-canvas text-ink">
-      <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-xl">
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:px-8">
-          <Logo />
+      <header className="sticky top-0 z-50 border-b border-line bg-canvas/90 backdrop-blur">
+        <nav className="mx-auto flex h-12 max-w-6xl items-center justify-between px-4 md:px-6">
+          <Logo size="sm" />
 
-          {/* Desktop nav */}
-          <div className="hidden items-center gap-1 md:flex">
-            {links.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                end={l.to === '/'}
-                className={({ isActive }) =>
-                  `rounded-md px-3 py-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-ink' : 'text-ink-sec hover:text-ink'
-                  }`
-                }
-              >
-                {l.label}
-              </NavLink>
-            ))}
-          </div>
+          {/* Desktop nav — dense grouped links (hidden below lg) */}
+          <SiteNavLinks className="hidden lg:flex" />
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             <div className="hidden md:block">
               {user ? (
                 <NavLink to="/dashboard">
                   <Button size="sm" variant="secondary">
-                    Open Dashboard
+                    Dashboard
                   </Button>
                 </NavLink>
               ) : (
                 <NavLink to="/login">
-                  <Button size="sm">Get started</Button>
+                  <Button size="sm" variant="accent">
+                    Get started
+                  </Button>
                 </NavLink>
               )}
             </div>
@@ -66,9 +48,9 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
             <button
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-              className="grid h-9 w-9 place-items-center rounded-lg border border-line bg-surface text-ink-sec transition-colors hover:bg-elevated hover:text-ink md:hidden"
+              className="grid h-8 w-8 place-items-center rounded-lg border border-line bg-surface text-ink-sec transition-colors hover:bg-elevated hover:text-ink lg:hidden"
             >
-              {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              {mobileOpen ? <X size={16} /> : <Menu size={16} />}
             </button>
           </div>
         </nav>
@@ -81,38 +63,23 @@ export function MarketingLayout({ children }: { children: ReactNode }) {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="overflow-hidden border-t border-line bg-canvas md:hidden"
+              className="overflow-hidden border-t border-line bg-canvas lg:hidden"
             >
-              <div className="space-y-1 px-4 py-3">
-                {links.map((l) => (
-                  <NavLink
-                    key={l.to}
-                    to={l.to}
-                    end={l.to === '/'}
-                    className={({ isActive }) =>
-                      `block rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                        isActive ? 'bg-elevated text-ink' : 'text-ink-sec hover:bg-elevated/60 hover:text-ink'
-                      }`
-                    }
-                  >
-                    {l.label}
+              <SiteNavMobilePanel onNavigate={() => setMobileOpen(false)} />
+              <div className="px-4 pb-4">
+                {user ? (
+                  <NavLink to="/dashboard" className="block" onClick={() => setMobileOpen(false)}>
+                    <Button size="lg" variant="secondary" className="w-full">
+                      Dashboard
+                    </Button>
                   </NavLink>
-                ))}
-                <div className="pt-2">
-                  {user ? (
-                    <NavLink to="/dashboard" className="block">
-                      <Button size="lg" variant="secondary" className="w-full">
-                        Open Dashboard
-                      </Button>
-                    </NavLink>
-                  ) : (
-                    <NavLink to="/login" className="block">
-                      <Button size="lg" className="w-full">
-                        Get started
-                      </Button>
-                    </NavLink>
-                  )}
-                </div>
+                ) : (
+                  <NavLink to="/login" className="block" onClick={() => setMobileOpen(false)}>
+                    <Button size="lg" variant="accent" className="w-full">
+                      Get started
+                    </Button>
+                  </NavLink>
+                )}
               </div>
             </motion.div>
           )}

@@ -23,7 +23,7 @@ export function Logo({ size = 'md' }: { size?: 'sm' | 'md' }) {
         className="shrink-0 transition-transform duration-200 group-hover:scale-[1.05]"
       />
       <span
-        className={`font-semibold text-ink ${wordClass}`}
+        className={`font-bold text-ink ${wordClass}`}
         style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
       >
         Applyce

@@ -1,7 +1,7 @@
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { ReactNode } from 'react';
 
-type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'purple';
+type Variant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'accent';
 type Size = 'sm' | 'md' | 'lg';
 
 type Props = HTMLMotionProps<'button'> & {
@@ -28,8 +28,8 @@ const styles: Record<Variant, string> = {
   ghost: 'bg-transparent text-ink-sec hover:text-ink hover:bg-elevated',
   danger:
     'bg-danger/10 text-danger border border-danger/25 hover:bg-danger/20',
-  purple:
-    'bg-burgundy text-white border border-transparent hover:bg-burgundy-strong shadow-sm dark:bg-burgundy dark:text-white',
+  accent:
+    'bg-accent-strong text-white border border-transparent hover:bg-accent shadow-sm dark:bg-accent dark:text-white dark:hover:bg-accent-strong',
 };
 
 export function Button({ children, variant = 'primary', size = 'md', className = '', ...rest }: Props) {

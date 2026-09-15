@@ -10,7 +10,7 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 const stats = [
   { label: 'Career Paths Mapped', value: 84, suffix: '+', color: 'text-accent' },
   { label: 'Skills Tracked', value: 100, suffix: '+', color: 'text-accent-strong' },
-  { label: 'Industries Covered', value: 6, suffix: '', color: 'text-burgundy' },
+  { label: 'Industries Covered', value: 6, suffix: '', color: 'text-accent-strong' },
   { label: 'ATS Checks', value: 1000, suffix: '+', color: 'text-success' },
 ];
 

@@ -80,13 +80,13 @@ function HeroScoreCard() {
       aria-label="Sample resume analysis illustration"
     >
       {/* soft glow bed behind the card */}
-      <div className="absolute -inset-5 -z-10 rounded-[2rem] bg-gradient-to-tr from-accent/15 via-accent/5 to-burgundy/10 blur-2xl" />
+      <div className="absolute -inset-5 -z-10 rounded-[2rem] bg-gradient-to-tr from-accent/15 via-accent/5 to-accent/10 blur-2xl" />
 
       <div className={reduceMotion ? '' : 'animate-float'}>
         <Card hover={false} className="relative overflow-hidden">
           {/* inner color washes for depth */}
           <div className="pointer-events-none absolute -right-14 -top-14 h-44 w-44 rounded-full bg-accent/10 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-burgundy/10 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-accent/10 blur-3xl" />
 
           <div className="relative flex items-center justify-between">
             <Badge tone="neutral" size="sm" icon={<Sparkles size={11} className="text-accent" />}>
@@ -156,7 +156,7 @@ export default function LandingPage() {
         {/* Subtle geometric accents */}
         <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-accent/[0.05] to-transparent" />
         <div className="absolute bottom-0 left-12 h-2/3 w-px bg-gradient-to-t from-accent/20 to-transparent" />
-        <div className="absolute right-16 top-0 h-1/2 w-px bg-gradient-to-b from-burgundy/10 to-transparent hidden md:block" />
+        <div className="absolute right-16 top-0 h-1/2 w-px bg-gradient-to-b from-accent-strong/10 to-transparent hidden md:block" />
 
         <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-14 xl:grid-cols-[1.05fr_0.95fr] xl:gap-16">
           {/* Copy column */}
@@ -426,7 +426,7 @@ export default function LandingPage() {
           subtitle="From upload to career clarity in under 5 minutes."
         />
         <div className="relative">
-          <div className="absolute left-1/2 top-8 hidden h-[calc(100%-4rem)] w-px -translate-x-1/2 bg-gradient-to-b from-accent/20 via-burgundy/10 to-transparent md:block lg:left-0 lg:right-0 lg:top-1/2 lg:mx-auto lg:h-px lg:w-[calc(100%-6rem)] lg:-translate-x-0 lg:-translate-y-1/2" />
+          <div className="absolute left-1/2 top-8 hidden h-[calc(100%-4rem)] w-px -translate-x-1/2 bg-gradient-to-b from-accent/20 via-accent/10 to-transparent md:block lg:left-0 lg:right-0 lg:top-1/2 lg:mx-auto lg:h-px lg:w-[calc(100%-6rem)] lg:-translate-x-0 lg:-translate-y-1/2" />
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {steps.map((step, i) => (

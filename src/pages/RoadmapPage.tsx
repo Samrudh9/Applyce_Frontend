@@ -70,7 +70,7 @@ export default function RoadmapPage() {
       <SectionHeading title={title || `${career} Roadmap`} subtitle={`The skills, resources, and timeline to get there.`} badge={<Badge tone="info" icon={<Map size={12} />}>Career Roadmap</Badge>} />
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="relative space-y-0 lg:col-span-2">
-          <div className="absolute left-6 top-0 hidden h-full w-px bg-gradient-to-b from-accent/30 via-burgundy/15 to-transparent lg:block" />
+          <div className="absolute left-6 top-0 hidden h-full w-px bg-gradient-to-b from-accent/30 via-accent/15 to-transparent lg:block" />
           {phases.map((phase, i) => (
             <motion.div key={phase.name} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.12 }} className="relative pb-6">
               <div className="absolute left-[18px] top-6 z-10 hidden lg:block">

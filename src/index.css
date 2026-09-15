@@ -18,13 +18,9 @@
   --ink-sec: 82 88 97;
   --ink-ter: 148 155 165;
 
-  --accent: 0 47 167;          /* International Klein Blue */
-  --accent-strong: 0 38 132;
-  --accent-soft: 233 238 255;
-
-  --burgundy: 92 29 36;        /* Deep Burgundy */
-  --burgundy-strong: 74 21 28;
-  --burgundy-soft: 250 239 240;
+  --accent: 255 87 34;         /* Talentd orange (#FF5722) — bright, for tiles & highlights */
+  --accent-strong: 201 55 44;  /* Burnt orange (#C9372C) — text/link color + filled buttons (passes WCAG AA on white) */
+  --accent-soft: 255 241 234;  /* Orange-tinted surface */
 
   --success: 22 111 60;
   --warning: 178 90 15;
@@ -49,13 +45,9 @@
   --ink-sec: 161 161 170;
   --ink-ter: 113 113 122;
 
-  --accent: 108 133 247;       /* lifted IKB for contrast on dark */
-  --accent-strong: 133 155 255;
-  --accent-soft: 30 38 82;
-
-  --burgundy: 175 91 100;
-  --burgundy-strong: 196 118 127;
-  --burgundy-soft: 48 26 30;
+  --accent: 255 120 84;        /* lifted bright orange for contrast on dark (#FF7854) */
+  --accent-strong: 255 151 120;/* brighter orange for text on dark (#FF9778) */
+  --accent-soft: 64 28 16;     /* dark orange-tinted surface */
 
   --success: 52 199 89;
   --warning: 251 191 36;
@@ -123,11 +115,11 @@ a {
 
 .gradient-text {
   @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(120deg, rgb(var(--accent)), rgb(var(--burgundy)));
-  background-image: -webkit-linear-gradient(120deg, rgb(var(--accent)), rgb(var(--burgundy)));
+  background-image: linear-gradient(120deg, rgb(var(--accent-strong)), rgb(var(--accent)));
+  background-image: -webkit-linear-gradient(120deg, rgb(var(--accent-strong)), rgb(var(--accent)));
 }
 
-/* Input focus ring – Klein Blue */
+/* Input focus ring – orange accent */
 .input-glow:focus {
   box-shadow: 0 0 0 3px rgb(var(--accent-soft));
 }

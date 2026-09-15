@@ -3,16 +3,17 @@ import type { CSSProperties } from 'react';
 /**
  * LogoMark — the Applyce brand mark.
  *
- * Concept: "The Apex" — two ascending strokes (the career path) rise from the
- * baseline to a diamond point-of-arrival at the apex, forming an abstract "A".
- * The diamond doubles as a compass needle / target marker: find your path.
+ * Concept: a flat orange tile with three ascending bars (the career ladder).
+ * The bars climb left-to-right — growth, progress, applying upward — and read
+ * as a simple, honest "levels" glyph for a job-hunt utility. No gradients,
+ * no glass, no text shadows: it survives favicon sizes.
  *
  * Geometry is token-driven so it adapts to light/dark automatically:
- *   - tile  -> fill-accent   (Klein Blue in light, lifted Klein Blue in dark)
- *   - glyph -> fill/stroke-surface (canvas-white in light, near-ink on dark blue)
+ *   - tile  -> fill-accent   (Talentd orange in light, lifted orange in dark)
+ *   - glyph -> fill-surface  (white on orange)
  *
- * Bars are 9/64 units (≈2.25px at a 16px favicon) — no fine strokes anywhere,
- * so the silhouette survives tiny sizes.
+ * Bars are 8/64 units wide (2px at a 16px favicon) with 4/64 gaps — no fine
+ * strokes anywhere, so the silhouette stays legible at tiny sizes.
  */
 export function LogoMark({
   size = 28,
@@ -37,25 +38,12 @@ export function LogoMark({
       {/* Rounded-square tile */}
       <rect width="64" height="64" rx="16" className="fill-accent" />
 
-      {/* The Apex — two ascending strokes + crossbar (the path) */}
-      <g
-        transform="translate(0 6)"
-        fill="none"
-        strokeWidth={9}
-        strokeLinecap="butt"
-        className="stroke-surface"
-      >
-        <path d="M12 50 L29 14" />
-        <path d="M52 50 L35 14" />
-        <path d="M15.5 33.5 L48.5 33.5" />
+      {/* Ascending bars — the career ladder */}
+      <g className="fill-surface">
+        <rect x="16" y="40" width="8" height="16" rx="2.5" />
+        <rect x="28" y="30" width="8" height="26" rx="2.5" />
+        <rect x="40" y="20" width="8" height="36" rx="2.5" />
       </g>
-
-      {/* Point-of-arrival diamond (compass needle / target) */}
-      <path
-        transform="translate(0 6)"
-        d="M32 2 L38 10.5 L32 16 L26 10.5 Z"
-        className="fill-surface"
-      />
     </svg>
   );
 }
