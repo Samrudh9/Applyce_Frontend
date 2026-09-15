@@ -6,7 +6,57 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://applyce.tech/about</loc>
+    <loc>https://applyce.tech/jobs</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/upload</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/ats-report</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/roadmap</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/resume-builder</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/cover-letter</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/interview</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/quizzes</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/tracker</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/apply-agent</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://applyce.tech/scorecard</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -16,9 +66,9 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://applyce.tech/jobs</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>https://applyce.tech/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://applyce.tech/login</loc>

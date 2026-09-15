@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom';
  */
 
 const ROUTE_TITLES: Record<string, string> = {
-  '/': 'Applyce - AI Career Recommendation Platform',
+  '/': 'Applyce — AI career tools, from resume to offer',
   '/about': 'About - Applyce',
   '/pricing': 'Pricing - Applyce',
   '/login': 'Sign in - Applyce',
@@ -30,7 +30,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/auth/callback': 'Signing you in... - Applyce',
 };
 
-const DEFAULT_TITLE = 'Applyce - AI Career Recommendation Platform';
+const DEFAULT_TITLE = 'Applyce — AI career tools, from resume to offer';
 
 function titleFor(pathname: string): string {
   return ROUTE_TITLES[pathname] ?? DEFAULT_TITLE;
