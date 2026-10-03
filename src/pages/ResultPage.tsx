@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
   AlertTriangle, ArrowRight, Award, BookOpen, Briefcase, CheckCircle2, Download,
   Eye, EyeOff, ExternalLink, FileText, GraduationCap, Lightbulb, Map, RotateCcw, Search,
-  ShieldCheck, Star, Target, TrendingUp, Wrench,
+  Share2, ShieldCheck, Star, Target, TrendingUp, Wrench,
 } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Badge } from '../components/ui/Badge';
@@ -12,7 +12,9 @@ import { CircularProgress } from '../components/ui/CircularProgress';
 import { ProgressBar } from '../components/ui/ProgressBar';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { Skeleton } from '../components/ui/Skeleton';
+import { ShareResultSheet } from '../components/share/ShareResultSheet';
 import { api } from '../lib/api';
+import { buildShareCardData } from '../lib/share';
 import type { AnalyzeResumeResponse, SkillGap } from '../types/api';
 
 const icons = [Target, Briefcase, Lightbulb];
@@ -40,6 +42,7 @@ export default function ResultPage() {
   const [loadingGap, setLoadingGap] = useState(false);
   const [gapError, setGapError] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   useEffect(() => { if (!state?.analysisResult) navigate('/upload', { replace: true }); }, [state, navigate]);
 
@@ -74,6 +77,17 @@ export default function ResultPage() {
 
   const salaryMin = result.estimated_salary?.min;
   const salaryMax = result.estimated_salary?.max;
+
+  /* Shareable card — built only from what this analysis actually returned. */
+  /* Shareable card — built only from what this analysis actually returned.
+     ResultPage resolves these scores across several possible payload shapes;
+     we pass `null` when nothing in the payload carried a value, so the card
+     omits the block instead of showing a made-up zero. */
+  const shareData = buildShareCardData({
+    result,
+    atsScore: result.overall_score ?? ad.overall_score ?? ad.ats_score ?? null,
+    keywordScore: ad.keyword_score ?? ad.keyword_analysis?.score ?? null,
+  });
   const currency = result.estimated_salary?.currency ?? 'INR';
   const formatSalary = (val: number) => {
     if (val >= 100000) return `${currency === 'INR' ? '₹' : '$'}${(val / 100000).toFixed(1)}L`;
@@ -132,6 +146,19 @@ export default function ResultPage() {
               </div>
             }
           />
+          <div className="mt-4 flex flex-wrap items-center gap-2.5">
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setShareOpen(true)}
+              aria-haspopup="dialog"
+            >
+              <Share2 size={14} /> Share my result
+            </Button>
+            <p className="text-xs text-ink-ter">
+              Turn this into a card for WhatsApp or LinkedIn.
+            </p>
+          </div>
         </div>
 
         {/* ── 1. Score Row: Overall Score · Score Breakdown · Grade · Resume ── */}
@@ -482,6 +509,9 @@ export default function ResultPage() {
             </div>
             <div className="flex flex-wrap gap-2">
               <Button onClick={downloadReport} size="sm"><Download size={14} /> Download Report</Button>
+              <Button variant="secondary" size="sm" onClick={() => setShareOpen(true)} aria-haspopup="dialog">
+                <Share2 size={14} /> Share my result
+              </Button>
               <Link to="/resume-builder" state={{ analysisResult: result }}>
                 <Button variant="secondary" size="sm"><Wrench size={14} /> Fix in Resume Builder</Button>
               </Link>
@@ -495,6 +525,8 @@ export default function ResultPage() {
           </div>
         </Card>
       </div>
+
+      <ShareResultSheet open={shareOpen} onClose={() => setShareOpen(false)} data={shareData} />
     </div>
   );
 }
