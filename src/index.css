@@ -104,6 +104,37 @@ a {
 }
 
 /* ── Shared utilities ─────────────────────────────── */
+/* ── Share card — theme-locked light surface ─────────────────────
+   The shareable result card must look identical in the app and in
+   the exported PNG, whatever the reader's light/dark theme is. We
+   re-declare the LIGHT palette tokens on the card root, so every
+   token utility inside (text-ink, bg-surface, bg-accent…) resolves
+   to the light values instead of inheriting `.dark`.
+   Kept here rather than in the component so the card stays
+   hex-free and token-driven like the rest of the system.
+   ───────────────────────────────────────────────────────────── */
+.share-card {
+  color-scheme: light;
+
+  --canvas: 247 248 250;
+  --surface: 255 255 255;
+  --elevated: 244 245 247;
+  --line: 228 230 235;
+  --line-strong: 212 216 223;
+
+  --ink: 17 17 17;
+  --ink-sec: 82 88 97;
+  --ink-ter: 148 155 165;
+
+  --accent: 255 87 34;
+  --accent-strong: 201 55 44;
+  --accent-soft: 255 241 234;
+
+  --success: 22 111 60;
+  --warning: 178 90 15;
+  --danger: 203 30 30;
+}
+
 .glass,
 .glass-strong {
   @apply border border-line bg-surface;
