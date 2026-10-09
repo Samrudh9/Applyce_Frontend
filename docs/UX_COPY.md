@@ -48,3 +48,21 @@ Keep this file in sync when you change user-facing copy.
 | Generic "something failed" toast          | We couldn't load jobs. Check your connection and try again. |
 | No applications yet. Click "Add Application" to get started. | Nothing tracked yet — add your first application and never lose a follow-up. |
 | Loading…                              | Checking for updates… / Matching you to careers… |
+
+## Newsletter (daily digest)
+
+Honest, no hype. The digest is opt-in, off by default, and one-click to leave.
+
+| Surface                        | String |
+|--------------------------------|--------|
+| Settings row title             | Daily digest |
+| Settings row explanation       | A daily email with the newest roles in your fields. You control it — off by default, one-click unsubscribe in every mail. |
+| Settings status load error     | We couldn't load your email preference. Check your connection and try again. |
+| Settings save error (turning on)| We couldn't turn the digest on. Try again. |
+| Settings save error (turning off)| We couldn't turn the digest off. Try again. |
+| Login opt-in label             | Send me the daily career digest |
+| Login opt-in microcopy         | New roles in your fields, once a day. Off by default — change it anytime in settings. |
+| Unsubscribe success            | You're unsubscribed from the daily digest. |
+| Unsubscribe success link       | Changed your mind? Re-subscribe from settings. |
+| Unsubscribe invalid            | This link is invalid or already used. |
+| Unsubscribe network error      | We couldn't confirm that link. / Check your connection and try again. |

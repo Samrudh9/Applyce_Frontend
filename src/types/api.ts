@@ -752,3 +752,19 @@ export interface ProgressResponse {
     success: true;
     [key: string]: unknown;
 }
+
+// ── 17. Newsletter (daily digest) ────────────────────────────
+export interface NewsletterStatusResponse {
+    ok: true;
+    subscribed: boolean;
+}
+
+export interface NewsletterSubscribeResponse {
+    ok: true;
+    subscribed: boolean;
+}
+
+export interface NewsletterUnsubscribeResponse {
+    ok: true;
+    unsubscribed: boolean;
+}
