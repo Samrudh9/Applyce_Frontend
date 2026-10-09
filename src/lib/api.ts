@@ -30,6 +30,9 @@ import type {
     JobAlertCreateResponse,
     JobAlertListResponse,
     JobAlertActionResponse,
+    NewsletterStatusResponse,
+    NewsletterSubscribeResponse,
+    NewsletterUnsubscribeResponse,
     NotificationListResponse,
     UnreadCountResponse,
     ApplyPrepareRequest,
@@ -283,6 +286,13 @@ export const api = {
 
     // 16. Progress
     progress: () => get<ProgressResponse>('/api/progress'),
+
+    // 17. Newsletter (daily digest)
+    newsletterStatus: () => get<NewsletterStatusResponse>('/api/newsletter/status'),
+    newsletterSubscribe: (subscribed: boolean) =>
+        post<NewsletterSubscribeResponse>('/api/newsletter/subscribe', { subscribed }),
+    newsletterUnsubscribe: (token: string) =>
+        get<NewsletterUnsubscribeResponse>(`/api/newsletter/unsubscribe/${encodeURIComponent(token)}`),
 } as const;
 
 export { ApiError };

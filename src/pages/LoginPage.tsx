@@ -10,6 +10,8 @@ const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 const TOKEN_KEY = 'applyce_token';
 const USER_KEY = 'applyce_user';
 const OAUTH_PROVIDER_KEY = 'applyce_oauth_provider';
+const DIGEST_OPTIN_KEY = 'applyce_digest_optin';
+const SUBSCRIBE_TIMEOUT_MS = 4000;
 
 export default function LoginPage() {
   const { user, login, loginWithGoogle, loginWithLinkedin } = useAuth();
@@ -19,8 +21,11 @@ export default function LoginPage() {
     searchParams.get('oauth') === 'error' ? 'That sign-in option isn\'t available yet. Try another one.' : '',
   );
   const [pendingProvider, setPendingProvider] = useState<string | null>(null);
+  const [digestOptIn, setDigestOptIn] = useState(false);
 
   const handleOAuth = (provider: string, fn: () => void) => {
+    // Remember the digest choice across the OAuth redirect (applied in the callback).
+    sessionStorage.setItem(DIGEST_OPTIN_KEY, digestOptIn ? '1' : '0');
     setPendingProvider(provider);
     fn();
   };
@@ -85,6 +90,26 @@ export default function LoginPage() {
           </Button>
         </div>
 
+        <label
+          htmlFor="digest-optin"
+          className="mt-6 flex cursor-pointer items-start gap-3 rounded-lg border border-line bg-elevated/50 p-3 transition-colors hover:border-line-strong"
+        >
+          <input
+            id="digest-optin"
+            type="checkbox"
+            checked={digestOptIn}
+            onChange={(e) => setDigestOptIn(e.target.checked)}
+            className="mt-0.5 h-4 w-4 shrink-0 rounded border-line-strong"
+            style={{ accentColor: 'rgb(var(--accent))' }}
+          />
+          <span className="min-w-0">
+            <span className="block text-sm font-medium text-ink">Send me the daily career digest</span>
+            <span className="mt-0.5 block text-xs text-ink-sec">
+              New roles in your fields, once a day. Off by default — change it anytime in settings.
+            </span>
+          </span>
+        </label>
+
         <p className="mt-6 text-center text-xs text-ink-ter">
           By continuing you agree to our terms &amp; privacy policy.
         </p>
@@ -101,6 +126,10 @@ export function AuthCallbackPage() {
 
   useEffect(() => {
     const queryError = searchParams.get('error');
+    const wantsDigest = sessionStorage.getItem(DIGEST_OPTIN_KEY) === '1';
+    // Consume the opt-in flag on any callback outcome so a canceled or failed
+    // sign-in can't leak a stale opt-in into a later one.
+    sessionStorage.removeItem(DIGEST_OPTIN_KEY);
     if (queryError) {
       setError(
         queryError === 'access_denied'
@@ -127,10 +156,31 @@ export function AuthCallbackPage() {
       body: JSON.stringify({ code, redirect_uri: `${window.location.origin}/auth/callback` }),
     })
       .then((r) => r.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.success && data.token) {
           localStorage.setItem(TOKEN_KEY, data.token);
           localStorage.setItem(USER_KEY, JSON.stringify(data.user));
+
+          if (wantsDigest) {
+            // Best-effort opt-in — a failure here must never block sign-in.
+            try {
+              await Promise.race([
+                fetch(`${API_BASE}/api/newsletter/subscribe`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${data.token}`,
+                  },
+                  credentials: 'include',
+                  body: JSON.stringify({ subscribed: true }),
+                }),
+                new Promise((resolve) => setTimeout(resolve, SUBSCRIBE_TIMEOUT_MS)),
+              ]);
+            } catch {
+              /* best-effort: ignore, the user still lands in the app */
+            }
+          }
+
           window.location.href = '/dashboard';
         } else {
           setError(data.error || 'Sign-in didn\'t complete');

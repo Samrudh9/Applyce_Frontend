@@ -28,6 +28,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/scorecard': 'Scorecard - Applyce',
   '/apply-agent': 'Apply Agent - Applyce',
   '/auth/callback': 'Signing you in... - Applyce',
+  '/newsletter/unsubscribed': 'Unsubscribed - Applyce',
 };
 
 const DEFAULT_TITLE = 'Applyce — AI career tools, from resume to offer';

@@ -3,5 +3,8 @@
 User-agent: *
 Allow: /
 
+# Tokenized one-click unsubscribe links — never index.
+Disallow: /newsletter/
+
 # Public sitemap
 Sitemap: https://applyce.tech/sitemap.xml

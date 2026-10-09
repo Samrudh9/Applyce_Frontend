@@ -6,6 +6,7 @@ import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Skeleton, SkeletonCard } from '../components/ui/Skeleton';
+import { DigestToggle } from '../components/newsletter/DigestToggle';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import type { DashboardStatsResponse, ScoreTrendsResponse } from '../types/api';
@@ -35,6 +36,13 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => { loadAll(); }, [loadAll]);
+
+  /* Deep links like /dashboard#settings (e.g. "Re-subscribe from settings") */
+  useEffect(() => {
+    if (loading || !window.location.hash) return;
+    const el = document.getElementById(window.location.hash.slice(1));
+    if (el) el.scrollIntoView({ block: 'start' });
+  }, [loading]);
 
   const chartData = trends?.has_data
     ? trends.trends.dates.map((d, i) => ({
@@ -131,6 +139,11 @@ export default function DashboardPage() {
               </Link>
             </div>
           </div>
+        </section>
+
+        {/* ── Email preferences (settings) ── */}
+        <section id="settings" className="scroll-mt-20">
+          <DigestToggle />
         </section>
 
         {/* ── Error ── */}

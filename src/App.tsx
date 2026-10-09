@@ -15,6 +15,7 @@ import InterviewPrepPage from './pages/InterviewPrepPage';
 import JobsPage from './pages/JobsPage';
 import LandingPage from './pages/LandingPage';
 import LoginPage, { AuthCallbackPage } from './pages/LoginPage';
+import NewsletterUnsubscribedPage from './pages/NewsletterUnsubscribedPage';
 import PricingPage from './pages/PricingPage';
 import ResumeBuilderPage from './pages/ResumeBuilderPage';
 import ResultPage from './pages/ResultPage';
@@ -60,6 +61,7 @@ function App() {
           <Route path="/about" element={marketing(<AboutPage />)} />
           <Route path="/login" element={marketing(<LoginPage />)} />
           <Route path="/auth/callback" element={marketing(<AuthCallbackPage />)} />
+          <Route path="/newsletter/unsubscribed" element={marketing(<NewsletterUnsubscribedPage />)} />
 
           {/* Product */}
           <Route path="/dashboard" element={app(<DashboardPage />)} />
